@@ -45,7 +45,13 @@ public class Personagem {
 
     // Métodos
     public int atacar() {
-        int danoAleatorio = random.nextInt(10); 
+        int danoAleatorio = random.nextInt(10);
+
+        if (danoAleatorio == 9) {
+            System.out.println(">>> ACERTO CRÍTICO!!! <<<");
+            return (this.forca + danoAleatorio) * 2;
+        }
+        
         return this.forca + danoAleatorio;
     }
 

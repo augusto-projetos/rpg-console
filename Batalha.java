@@ -11,13 +11,34 @@ public class Batalha {
     }
 
     public void iniciar() {
-        monstro = new Personagem("Goblin", 60, 15, 2);
+
+        System.out.println("Escolha o modo de jogo:" +
+                            "\n1. Justo" + 
+                            "\n2. Dark Souls");
+        int modo = scanner.nextInt();
+        scanner.nextLine(); // Consumir a nova linha
+
         this.random = new java.util.Random();
 
         System.out.println("=== BEM-VINDO À BATALHA ===");
         System.out.println("Digite o nome do seu Herói: ");
         String nomeHeroi = scanner.nextLine();
-        heroi = new Personagem(nomeHeroi, 100, 15, 8);
+
+        switch (modo) {
+            case 1:
+                monstro = new Personagem("Goblin Furioso", 60, 15, 2); 
+                heroi = new Personagem(nomeHeroi, 100, 15, 8);
+                break;
+        
+            case 2:
+                monstro = new Personagem("Goblin Chefe", 100, 18, 8);
+                heroi = new Personagem(nomeHeroi, 80, 15, 5);
+                break;
+
+            default:
+                System.out.println("Modo inválido! Escolha novamente.");
+                return;
+        }
 
         System.out.println("\nA batalha vai começar entre " + heroi.getNome() + " vs " + monstro.getNome());
 
@@ -68,6 +89,13 @@ public class Batalha {
                 break;
 
             } else {
+
+                try {
+                    System.out.println("O monstro está se preparando...");
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 int danoDoMonstro = monstro.atacar();
                 System.out.println("\nO " + monstro.getNome() + " te atacou com força " + danoDoMonstro + "!");
