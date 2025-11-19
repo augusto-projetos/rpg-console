@@ -13,6 +13,11 @@ public class Main {
             System.out.println("Deseja iniciar uma nova batalha? (s/n)");
             String resposta = scanner.nextLine().toLowerCase();
 
+            while (!resposta.equals("s") && !resposta.equals("n")) {
+                System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
+                resposta = scanner.nextLine().toLowerCase();
+            }
+
             if (resposta.equals("n")) {
                 continuar = false;
                 System.out.println("Obrigado por jogar! Até a próxima.");
