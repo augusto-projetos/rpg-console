@@ -12,27 +12,34 @@ public class Batalha {
 
     public void iniciar() {
 
-        System.out.println("Escolha o modo de jogo:" +
-                            "\n1. Justo" + 
-                            "\n2. Dark Souls");
-        int modo = scanner.nextInt();
-        scanner.nextLine(); // Consumir a nova linha
-
         this.random = new java.util.Random();
 
         System.out.println("=== BEM-VINDO À BATALHA ===");
-        System.out.println("Digite o nome do seu Herói: ");
-        String nomeHeroi = scanner.nextLine();
+        if (heroi == null) {
+        
+            System.out.println("Digite o nome do seu Herói: ");
+            String nomeHeroi = scanner.nextLine();
+            heroi = new Personagem(nomeHeroi, 100, 15, 10);
+
+        } else {
+
+            System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") retorna para a arena!");
+            heroi.setVida(100 + (heroi.getNivel() * 10));
+        }
+
+        System.out.println("Escolha o modo de jogo:" +
+                            "\n1. Normal" + 
+                            "\n2. Difícil (Dark Souls)");
+        int modo = scanner.nextInt();
+        scanner.nextLine(); // Consumir a nova linha
 
         switch (modo) {
             case 1:
                 monstro = new Personagem("Goblin Furioso", 60, 15, 2); 
-                heroi = new Personagem(nomeHeroi, 100, 15, 8);
                 break;
         
             case 2:
                 monstro = new Personagem("Goblin Chefe", 100, 18, 8);
-                heroi = new Personagem(nomeHeroi, 80, 15, 5);
                 break;
 
             default:
@@ -42,10 +49,10 @@ public class Batalha {
 
         System.out.println("\nA batalha vai começar entre " + heroi.getNome() + " vs " + monstro.getNome());
 
-        while (heroi.getVida() > 0 && monstro.getVida() > 0) {
+        System.out.println(heroi.getNome() + ": " + heroi.getVida() + " HP" + " |  Força: " + heroi.getForca() + " | Defesa: " + heroi.getDefesa() + "\n" +
+                           monstro.getNome() + ": " + monstro.getVida() + " HP" + " |  Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa());
 
-            System.out.println(heroi.getNome() + ": " + heroi.getVida() + " HP | " + heroi.getForca() + " Força | " + heroi.getDefesa() + " Defesa\n" +
-                               monstro.getNome() + ": " + monstro.getVida() + " HP | " + monstro.getForca() + " Força | " + monstro.getDefesa() + " Defesa");
+        while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
             System.out.println("\nEscolha uma ação:" + 
                                "\n1. Atacar" + 
@@ -103,6 +110,16 @@ public class Batalha {
             }
 
             System.out.println("=============================\n");
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(heroi.getNome() + ": " + heroi.getVida() + " HP" + "\n" +
+                               monstro.getNome() + ": " + monstro.getVida() + " HP");
+
         }
         
         System.out.println("=============================\n");
@@ -110,9 +127,17 @@ public class Batalha {
 
             System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
 
+            if (modo == 1) {
+                heroi.ganharXp(50);
+                System.out.println("\nVocê escolheu o modo Normal e ganhou 50 XP.\n");
+            } else {
+                heroi.ganharXp(100);
+                System.out.println("\nVocê escolheu o modo Difícil e ganhou 100 XP.\n");
+            }
+
         } else {
 
-            System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.");
+            System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.\n");
         }
     }
 }

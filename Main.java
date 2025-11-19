@@ -12,7 +12,6 @@ public class Main {
 
             System.out.println("Deseja iniciar uma nova batalha? (s/n)");
             String resposta = scanner.nextLine().toLowerCase();
-            scanner.nextLine(); // Consumir a nova linha
 
             if (resposta.equals("n")) {
                 continuar = false;

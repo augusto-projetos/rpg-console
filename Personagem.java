@@ -3,6 +3,8 @@ public class Personagem {
     private int vida;
     private int forca;
     private int defesa;
+    private int nivel = 1;
+    private int xp = 0;
     private java.util.Random random;
 
     // Construtor
@@ -43,7 +45,21 @@ public class Personagem {
         this.defesa = defesa;
     }
 
-    // Métodos
+    public int getNivel() {
+        return nivel;
+    }
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+
+    // Métodos de combate
     public int atacar() {
         int danoAleatorio = random.nextInt(10);
 
@@ -68,5 +84,19 @@ public class Personagem {
         }
 
         System.out.println(this.nome + " recebeu " + danoReal + " de dano. Vida restante: " + this.vida);
+    }
+
+    public void ganharXp(int xpGanho) {
+        this.xp += xpGanho;
+        System.out.println(this.nome + " ganhou " + xpGanho + " XP.");
+
+        if (this.xp >= this.nivel * 100) {
+            xp -= (this.nivel * 100);
+            this.nivel += 1;
+            this.forca += 3;
+            this.defesa += 2;
+
+            System.out.println("PARABÉNS! Você subiu para o nível " + this.nivel + "!");
+        }
     }
 }
