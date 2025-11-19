@@ -1,6 +1,25 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         Batalha batalha = new Batalha();
-        batalha.iniciar();
+        
+        boolean continuar = true;
+
+        do {
+            batalha.iniciar();
+
+            System.out.println("Deseja iniciar uma nova batalha? (s/n)");
+            String resposta = scanner.nextLine().toLowerCase();
+            scanner.nextLine(); // Consumir a nova linha
+
+            if (resposta.equals("n")) {
+                continuar = false;
+                System.out.println("Obrigado por jogar! Até a próxima.");
+            }
+        } while (continuar);
+
+        scanner.close();
     }
 }
