@@ -122,16 +122,29 @@ public class Personagem {
     public void ganharXp(int xpGanho) {
         this.xp += xpGanho;
         System.out.println(this.nome + " ganhou " + xpGanho + " XP.");
-        System.out.println("XP atual: " + this.xp + "/" + (this.nivel * 100));
 
-        if (this.xp >= this.nivel * 100) {
-            xp -= (this.nivel * 100);
-            this.nivel += 1;
+        while (this.xp >= this.nivel * 100) {
+            
+            // Tira o custo do nível atual
+            this.xp -= (this.nivel * 100);
+            
+            // Sobe de nível
+            this.nivel++;
             this.forca += 3;
             this.defesa += 2;
+            
+            // Recupera vida e aumenta o teto
+            this.vidaMaxima += 20; // Bônus de vida máxima
+            this.vida = this.vidaMaxima; // Cura total
 
+            System.out.println("\n------------------------------------------------");
             System.out.println("PARABÉNS! Você subiu para o nível " + this.nivel + "!");
+            System.out.println("Vida recuperada e aumentada para: " + this.vidaMaxima);
+            System.out.println("------------------------------------------------\n");
         }
+        
+        // Mostra quanto falta para o próximo (ajuda o jogador)
+        System.out.println("XP Atual: " + this.xp + "/" + (this.nivel * 100) + "\n");
     }
 
     // Perde uma porcentagem do XP atual
@@ -139,7 +152,7 @@ public class Personagem {
         int perda = (this.xp * porcentagem) / 100;
         this.xp -= perda;
         
-        System.out.println("☠️ PENALIDADE: Você perdeu " + perda + " XP por ter sido derrotado.");
+        System.out.println("PENALIDADE: Você perdeu " + perda + " XP por ter sido derrotado.");
         System.out.println("XP Atual: " + this.xp + "/" + (this.nivel * 100));
     }
 }

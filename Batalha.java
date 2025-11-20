@@ -26,7 +26,8 @@ public class Batalha {
         } else {
 
             System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") retorna para a arena!\n");
-            heroi.setVida(100 + (heroi.getNivel() * 10));
+            heroi.setVida(heroi.getVidaMaxima());
+            System.out.println("Vida recuperada totalmente: " + heroi.getVida() + "/" + heroi.getVidaMaxima() + "\n");
         }
 
         System.out.println("Escolha o modo de jogo:" +
@@ -38,27 +39,27 @@ public class Batalha {
         scanner.nextLine(); // Consumir a nova linha
 
         switch (modo) {
-            case 1:
-                monstro = new Personagem("Slime Gosmento", 30, 5, 0); 
+            case 1: // Fácil
+                monstro = new Personagem("Slime Gosmento", 30, 7, 0); 
                 monstro.setEMonstro(true);
                 xpRecompensa = 20;
                 break;
         
-            case 2:
+            case 2: // Médio
                 monstro = new Personagem("Goblin Furioso", 60, 15, 2);
                 monstro.setEMonstro(true);
                 xpRecompensa = 50;
                 xpPenalidade = 10; // Perde 10% do XP ao ser derrotado
                 break;
 
-            case 3:
+            case 3: // Difícil
                 monstro = new Personagem("Orc da Guerra", 100, 20, 8);
                 monstro.setEMonstro(true);
                 xpRecompensa = 100;
                 xpPenalidade = 30; // Perde 30% do XP ao ser derrotado
                 break;
 
-            case 4:
+            case 4: // Impossível
                 monstro = new Personagem("Dragão Ancião", 200, 30, 15);
                 monstro.setEMonstro(true);
                 xpRecompensa = 500;
@@ -79,7 +80,7 @@ public class Batalha {
 
             System.out.println("\nEscolha uma ação:" + 
                                "\n1. Atacar" + 
-                               "\n2. Defender (+15 HP)" +
+                               "\n2. Defender (+10 HP)" +
                                "\n3. Fugir");
             int escolha = scanner.nextInt();
             scanner.nextLine(); // Consumir a nova linha
@@ -94,8 +95,8 @@ public class Batalha {
                     break;
             
                 case 2:
-                    System.out.println("Você assume uma postura defensiva e recupera 15 de vida.");
-                    heroi.setVida(heroi.getVida() + 15);
+                    System.out.println("Você assume uma postura defensiva e recupera 10 de vida.");
+                    heroi.setVida(heroi.getVida() + 10);
 
                     break;
 
@@ -152,13 +153,10 @@ public class Batalha {
             System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
 
             heroi.ganharXp(xpRecompensa);
-            System.out.println("\nVocê ganhou " + xpRecompensa + " de XP pela vitória.\n");
-
         } else {
 
             System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.");
             heroi.perderXp(xpPenalidade);
-            System.out.println("\nVocê perdeu " + xpPenalidade + " de XP pela derrota.\n");
         }
     }
 }
