@@ -13,6 +13,7 @@ public class Batalha {
     public void iniciar() {
 
         this.random = new java.util.Random();
+        int xpRecompensa = 0;
 
         System.out.println("=== BEM-VINDO À BATALHA ===");
         if (heroi == null) {
@@ -23,23 +24,41 @@ public class Batalha {
 
         } else {
 
-            System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") retorna para a arena!");
+            System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") retorna para a arena!\n");
             heroi.setVida(100 + (heroi.getNivel() * 10));
         }
 
         System.out.println("Escolha o modo de jogo:" +
-                            "\n1. Normal" + 
-                            "\n2. Difícil (Dark Souls)");
+                           "\n1. Fácil (Slime)" + 
+                           "\n2. Médio (Padrão)" +
+                           "\n3. Difícil (Dark Souls)" +
+                           "\n4. Impossível (Lenda)");
         int modo = scanner.nextInt();
         scanner.nextLine(); // Consumir a nova linha
 
         switch (modo) {
             case 1:
-                monstro = new Personagem("Goblin Furioso", 60, 15, 2); 
+                monstro = new Personagem("Slime Gosmento", 30, 5, 0); 
+                monstro.setEMonstro(true);
+                xpRecompensa = 20;
                 break;
         
             case 2:
-                monstro = new Personagem("Goblin Chefe", 100, 18, 8);
+                monstro = new Personagem("Goblin Furioso", 60, 15, 2);
+                monstro.setEMonstro(true);
+                xpRecompensa = 50;
+                break;
+
+            case 3:
+                monstro = new Personagem("Orc da Guerra", 100, 20, 8);
+                monstro.setEMonstro(true);
+                xpRecompensa = 100;
+                break;
+
+            case 4:
+                monstro = new Personagem("Dragão Ancião", 200, 30, 15);
+                monstro.setEMonstro(true);
+                xpRecompensa = 500;
                 break;
 
             default:
@@ -56,7 +75,7 @@ public class Batalha {
 
             System.out.println("\nEscolha uma ação:" + 
                                "\n1. Atacar" + 
-                               "\n2. Defender (+5 HP)" +
+                               "\n2. Defender (+15 HP)" +
                                "\n3. Fugir");
             int escolha = scanner.nextInt();
             scanner.nextLine(); // Consumir a nova linha
@@ -71,14 +90,15 @@ public class Batalha {
                     break;
             
                 case 2:
-                    System.out.println("Você assume uma postura defensiva e recupera 5 de vida.");
-                    heroi.setVida(heroi.getVida() + 5);
+                    System.out.println("Você assume uma postura defensiva e recupera 15 de vida.");
+                    heroi.setVida(heroi.getVida() + 15);
 
                     break;
 
                 case 3:
-                    if (random.nextInt(10) < 3) {
+                    if (random.nextInt(10) < 3) { // 30% de chance de fuga bem-sucedida
                         System.out.println("Você conseguiu fugir da batalha!");
+                        System.out.println("Porém não ganhou XP.\n");
                         return;
                     } else {
                         System.out.println("Você tentou fugir mas tropeçou!");
@@ -98,7 +118,7 @@ public class Batalha {
             } else {
 
                 try {
-                    System.out.println("O monstro está se preparando...");
+                    System.out.println("\nO monstro está se preparando...");
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -127,13 +147,8 @@ public class Batalha {
 
             System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
 
-            if (modo == 1) {
-                heroi.ganharXp(50);
-                System.out.println("\nVocê escolheu o modo Normal e ganhou 50 XP.\n");
-            } else {
-                heroi.ganharXp(100);
-                System.out.println("\nVocê escolheu o modo Difícil e ganhou 100 XP.\n");
-            }
+            heroi.ganharXp(xpRecompensa);
+            System.out.println("\nVocê ganhou " + xpRecompensa + " de XP pela vitória.");
 
         } else {
 

@@ -1,18 +1,24 @@
 public class Personagem {
     private String nome;
     private int vida;
+    private int vidaMaxima;
     private int forca;
     private int defesa;
-    private int nivel = 1;
-    private int xp = 0;
+    private int nivel;
+    private int xp;
+    private boolean eMonstro;
     private java.util.Random random;
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa) {
         this.nome = nome;
         this.vida = vida;
+        this.vidaMaxima = vida;
         this.forca = forca;
         this.defesa = defesa;
+        this.nivel = 1;
+        this.xp = 0;
+        this.eMonstro = false;
         this.random = new java.util.Random();
     }
 
@@ -29,6 +35,13 @@ public class Personagem {
     }
     public void setVida(int vida) {
         this.vida = vida;
+    }
+
+    public int getVidaMaxima() {
+        return vidaMaxima;
+    }
+    public void setVidaMaxima(int vidaMaxima) {
+        this.vidaMaxima = vidaMaxima;
     }
 
     public int getForca() {
@@ -59,12 +72,30 @@ public class Personagem {
         this.xp = xp;
     }
 
+    public boolean getEMonstro() {
+        return eMonstro;
+    }
+    public void setEMonstro(boolean eMonstro) {
+        this.eMonstro = eMonstro;
+    }
+
     // Métodos de combate
     public int atacar() {
         int danoAleatorio = random.nextInt(10);
 
+        // Lógica para o Monstro
+        if (this.eMonstro && (this.vida * 100) / this.vidaMaxima <= 40) {
+            // A chance do monstro sobe para 40% se a vida chegar a 40%
+            if (danoAleatorio >= 6) {
+                System.out.println("\n>>> O MONSTRO FICOU FURIOSO! CRÍTICO! <<<");
+                return (this.forca + danoAleatorio) * 2;
+            }
+        }
+
+        // Lógica para o Herói
         if (danoAleatorio == 9) {
-            System.out.println(">>> ACERTO CRÍTICO!!! <<<");
+            // 10% de chance de cair crítico
+            System.out.println("\n>>> ACERTO CRÍTICO!!! <<<");
             return (this.forca + danoAleatorio) * 2;
         }
         
