@@ -15,8 +15,10 @@ O projeto simula uma experiência completa de RPG textual:
 - **⚔️ Sistema de Combate:** Lógica de turnos onde o jogador escolhe entre Atacar, Defender ou Fugir.
 - **🎲 Fator Aleatoriedade (RNG):** Dano variável e chance de **Acerto Crítico** (dano dobrado).
 - **🛡️ Modos de Dificuldade:**
-    - *Normal:* Inimigos balanceados.
-    - *Difícil (Dark Souls):* Inimigos com status elevados e herói com desvantagem.
+    - 🟢 Fácil: Slime (Ideal para farmar XP).
+    - 🟡 Médio: Goblin (O desafio clássico).
+    - 🔴 Difícil: Orc de Guerra (Para quem gosta de sofrer).
+    - 💀 IMPOSSÍVEL: Dragão Ancião (Desafio para lendas).
 - **📈 Progressão de Personagem:** Sistema de XP e Nível. Ao subir de nível, o herói ganha vida máxima, força e defesa.
 - **💾 Persistência em Memória:** O herói é mantido entre as batalhas (não reseta ao iniciar uma nova luta), permitindo acumular poder.
 - **🏃 Mecânica de Fuga:** Sistema de risco vs. recompensa (30% de chance de fugir ou perder o turno).
