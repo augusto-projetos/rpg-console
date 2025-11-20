@@ -14,6 +14,7 @@ public class Batalha {
 
         this.random = new java.util.Random();
         int xpRecompensa = 0;
+        int xpPenalidade = 0;
 
         System.out.println("=== BEM-VINDO À BATALHA ===");
         if (heroi == null) {
@@ -47,18 +48,21 @@ public class Batalha {
                 monstro = new Personagem("Goblin Furioso", 60, 15, 2);
                 monstro.setEMonstro(true);
                 xpRecompensa = 50;
+                xpPenalidade = 10; // Perde 10% do XP ao ser derrotado
                 break;
 
             case 3:
                 monstro = new Personagem("Orc da Guerra", 100, 20, 8);
                 monstro.setEMonstro(true);
                 xpRecompensa = 100;
+                xpPenalidade = 30; // Perde 30% do XP ao ser derrotado
                 break;
 
             case 4:
                 monstro = new Personagem("Dragão Ancião", 200, 30, 15);
                 monstro.setEMonstro(true);
                 xpRecompensa = 500;
+                xpPenalidade = 100; // Perde 100% do XP ao ser derrotado
                 break;
 
             default:
@@ -148,11 +152,13 @@ public class Batalha {
             System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
 
             heroi.ganharXp(xpRecompensa);
-            System.out.println("\nVocê ganhou " + xpRecompensa + " de XP pela vitória.");
+            System.out.println("\nVocê ganhou " + xpRecompensa + " de XP pela vitória.\n");
 
         } else {
 
-            System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.\n");
+            System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.");
+            heroi.perderXp(xpPenalidade);
+            System.out.println("\nVocê perdeu " + xpPenalidade + " de XP pela derrota.\n");
         }
     }
 }

@@ -102,6 +102,7 @@ public class Personagem {
         return this.forca + danoAleatorio;
     }
 
+    // Recebe dano considerando a defesa
     public void receberDano(int danoRecebido) {
         int danoReal = danoRecebido - this.defesa;
 
@@ -117,9 +118,11 @@ public class Personagem {
         System.out.println(this.nome + " recebeu " + danoReal + " de dano. Vida restante: " + this.vida);
     }
 
+    // Ganha XP e verifica se sobe de nível
     public void ganharXp(int xpGanho) {
         this.xp += xpGanho;
         System.out.println(this.nome + " ganhou " + xpGanho + " XP.");
+        System.out.println("XP atual: " + this.xp + "/" + (this.nivel * 100));
 
         if (this.xp >= this.nivel * 100) {
             xp -= (this.nivel * 100);
@@ -129,5 +132,14 @@ public class Personagem {
 
             System.out.println("PARABÉNS! Você subiu para o nível " + this.nivel + "!");
         }
+    }
+
+    // Perde uma porcentagem do XP atual
+    public void perderXp(int porcentagem) {
+        int perda = (this.xp * porcentagem) / 100;
+        this.xp -= perda;
+        
+        System.out.println("☠️ PENALIDADE: Você perdeu " + perda + " XP por ter sido derrotado.");
+        System.out.println("XP Atual: " + this.xp + "/" + (this.nivel * 100));
     }
 }
