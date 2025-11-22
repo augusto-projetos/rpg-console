@@ -179,32 +179,50 @@ public class Personagem {
     }
 
     // Ganha XP e verifica se sobe de nível
-    public void ganharXp(int xpGanho) {
+        public void ganharXp(int xpGanho) {
         this.xp += xpGanho;
+        int xpNecessario = this.nivel * 100; // Meta para o próximo nível
+        
         System.out.println(this.nome + " ganhou " + xpGanho + " XP.");
 
-        while (this.xp >= this.nivel * 100) {
+        // Exibe a barra de progresso de XP
+        // O (double) serve para forçar a conta a ser decimal antes de virar inteira
+        int porcentagemXP = (int) ((double) this.xp / xpNecessario * 100);
+        
+        int blocosPreenchidos = porcentagemXP / 5; // Cada bloco vale 5% (100% / 20 blocos)
+        int blocosVazios = 20 - blocosPreenchidos;
+
+        System.out.print("\nXP: [");
+        // Imprime os quadrados cheios (█)
+        for (int i = 0; i < blocosPreenchidos; i++) {
+            System.out.print("█");
+        }
+        // Imprime os traços vazios (-)
+        for (int i = 0; i < blocosVazios; i++) {
+            System.out.print("-");
+        }
+        System.out.println("] " + porcentagemXP + "% (" + this.xp + "/" + xpNecessario + ")\n");
+
+        // Lógica de subir de nível (While)
+        while (this.xp >= xpNecessario) {
             
-            // Tira o custo do nível atual
-            this.xp -= (this.nivel * 100);
-            
-            // Sobe de nível
+            this.xp -= xpNecessario; // Tira o XP gasto
             this.nivel++;
             this.forca += 3;
             this.defesa += 2;
             
-            // Recupera vida e aumenta o teto
-            this.vidaMaxima += 20; // Bônus de vida máxima
-            this.vida = this.vidaMaxima; // Cura total
+            // Atualiza a meta para o novo nível
+            xpNecessario = this.nivel * 100; 
+            
+            this.vidaMaxima += 20; 
+            this.vida = this.vidaMaxima; 
 
-            System.out.println("\n------------------------------------------------");
+            System.out.println("\n---------------- LEVEL UP! ----------------");
             System.out.println("PARABÉNS! Você subiu para o nível " + this.nivel + "!");
-            System.out.println("Vida recuperada e aumentada para: " + this.vidaMaxima);
-            System.out.println("------------------------------------------------\n");
+            System.out.println("Vida aumentada para: " + this.vidaMaxima);
+            System.out.println("Força +3 | Defesa +2");
+            System.out.println("------------------------------------------\n");
         }
-        
-        // Mostra quanto falta para o próximo (ajuda o jogador)
-        System.out.println("XP Atual: " + this.xp + "/" + (this.nivel * 100) + "\n");
     }
 
     // Perde uma porcentagem do XP atual
