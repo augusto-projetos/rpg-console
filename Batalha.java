@@ -165,7 +165,21 @@ public class Batalha {
             
                 case 2:
                     System.out.println("Você assume uma postura defensiva e recupera 10 de vida.");
-                    heroi.setVida(heroi.getVida() + 10);
+                    
+                    int vidaAtual = heroi.getVida();
+                    int cura = 10;
+                    int vidaMaxima = heroi.getVidaMaxima();
+
+                    // Se a cura for fazer a vida ultrapassar o máximo...
+                    if (vidaAtual + cura > vidaMaxima) {
+                        // ... a vida vira exatamente o máximo (enche o tanque e para)
+                        heroi.setVida(vidaMaxima);
+                    } else {
+                        // Se não encher tudo, cura normal
+                        heroi.setVida(vidaAtual + cura);
+                    }
+                    
+                    System.out.println("Vida atual: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
 
                     break;
 
