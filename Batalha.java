@@ -54,40 +54,85 @@ public class Batalha {
             System.out.println("Vida recuperada totalmente: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
         }
 
-        System.out.println("Escolha o modo de jogo:" +
-                           "\n1. Fácil (Slime)" + 
-                           "\n2. Médio (Padrão)" +
-                           "\n3. Difícil (Dark Souls)" +
-                           "\n4. Impossível (Lenda)");
+        System.out.println("\nEscolha seu Oponente:" +
+                           "\n1. Slime Gosmento (Tutorial)" + 
+                           "\n2. Esqueleto Arqueiro (Frágil mas Dano Alto)" +
+                           "\n3. Goblin Furioso (Equilibrado)" +
+                           "\n4. Necromante Sombrio (Dano Explosivo)" +
+                           "\n5. Orc Blindado (Muita Defesa)" +
+                           "\n6. Aranha Rainha (Muita Vida)" +
+                           "\n7. Golem de Pedra (O Tanque)" +
+                           "\n8. Dragão Ancião (Chefe Final)" +
+                           "\n9. ??? (Secreto)"); // O Easter Egg
         int modo = scanner.nextInt();
         scanner.nextLine(); // Consumir a nova linha
 
         switch (modo) {
-            case 1: // Fácil
-                monstro = new Personagem("Slime Gosmento", 30, 7, 0, "monstro");
+            case 1: // Tutorial
+                monstro = new Personagem("Slime Gosmento", 30, 8, 0, "Fera");
                 monstro.setEMonstro(true);
                 xpRecompensa = 20;
+                break; // Não tem penalidade no tutorial
+
+            case 2: // Glass Cannon (Canhão de Vidro)
+                // Pouca vida, mas bate forte. Bom para testar quem tem reflexo.
+                monstro = new Personagem("Esqueleto Arqueiro", 50, 18, 2, "Arqueiro");
+                monstro.setEMonstro(true);
+                xpRecompensa = 40;
+                xpPenalidade = 5;
                 break;
         
-            case 2: // Médio
-                monstro = new Personagem("Goblin Furioso", 60, 15, 2, "monstro");
+            case 3: // O Padrão
+                monstro = new Personagem("Goblin Furioso", 70, 15, 5, "Guerreiro");
                 monstro.setEMonstro(true);
-                xpRecompensa = 50;
-                xpPenalidade = 10; // Perde 10% do XP ao ser derrotado
+                xpRecompensa = 60;
+                xpPenalidade = 10; 
                 break;
 
-            case 3: // Difícil
-                monstro = new Personagem("Orc da Guerra", 100, 20, 8, "monstro");
+            case 4: // O Mago Inimigo
+                monstro = new Personagem("Necromante Sombrio", 80, 25, 3, "Mago");
                 monstro.setEMonstro(true);
-                xpRecompensa = 100;
-                xpPenalidade = 30; // Perde 30% do XP ao ser derrotado
+                xpRecompensa = 90;
+                xpPenalidade = 15;
                 break;
 
-            case 4: // Impossível
-                monstro = new Personagem("Dragão Ancião", 200, 30, 15, "monstro");
+            case 5: // O Teste de Dano
+                // Defesa 12 é alta! Quem bater fraco vai tirar 0 ou 1 de dano.
+                monstro = new Personagem("Orc Blindado", 100, 22, 12, "Guerreiro");
                 monstro.setEMonstro(true);
-                xpRecompensa = 500;
-                xpPenalidade = 100; // Perde 100% do XP ao ser derrotado
+                xpRecompensa = 120;
+                xpPenalidade = 20; 
+                break;
+
+            case 6: // O Teste de Resistência
+                // Muita vida, a luta vai ser longa.
+                monstro = new Personagem("Aranha Rainha", 150, 20, 8, "Fera");
+                monstro.setEMonstro(true);
+                xpRecompensa = 180;
+                xpPenalidade = 25; 
+                break;
+
+            case 7: // O Porteiro do Chefe
+                // Golem é quase imune a ataques fracos (Defesa 18).
+                monstro = new Personagem("Golem de Pedra", 180, 25, 18, "Guerreiro");
+                monstro.setEMonstro(true);
+                xpRecompensa = 300;
+                xpPenalidade = 40; 
+                break;
+
+            case 8: // O Chefe Final
+                monstro = new Personagem("Dragão Ancião", 250, 35, 15, "Fera");
+                monstro.setEMonstro(true);
+                xpRecompensa = 1000; // Vale muito a pena
+                xpPenalidade = 100; // Tudo ou nada
+                break;
+
+            case 9: // O Easter Egg (Impossível)
+                // Vida 999 e Defesa absurda. Só ganha com nível muito alto.
+                monstro = new Personagem("Augusto, o Criador", 999, 50, 50, "Dev");
+                monstro.setEMonstro(true);
+                xpRecompensa = 9999;
+                xpPenalidade = 100;
                 break;
 
             default:
@@ -172,11 +217,18 @@ public class Batalha {
         }
         
         System.out.println("=============================\n");
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (heroi.getVida() > 0) {
 
             System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
             heroi.ganharXp(xpRecompensa);
-            
+
         } else {
 
             System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.");
