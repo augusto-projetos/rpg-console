@@ -7,10 +7,11 @@ public class Personagem {
     private int nivel;
     private int xp;
     private boolean eMonstro;
+    private String classe;
     private java.util.Random random;
 
     // Construtor
-    public Personagem(String nome, int vida, int forca, int defesa) {
+    public Personagem(String nome, int vida, int forca, int defesa, String classe) {
         this.nome = nome;
         this.vida = vida;
         this.vidaMaxima = vida;
@@ -19,6 +20,7 @@ public class Personagem {
         this.nivel = 1;
         this.xp = 0;
         this.eMonstro = false;
+        this.classe = classe;
         this.random = new java.util.Random();
     }
 
@@ -79,27 +81,41 @@ public class Personagem {
         this.eMonstro = eMonstro;
     }
 
+    public String getClasse() {
+        return classe;
+    }
+    public void setClasse(String classe) {
+        this.classe = classe;
+    }
+
     // Métodos de combate
     public int atacar() {
-        int danoAleatorio = random.nextInt(10);
+        int dado = random.nextInt(10);
+        int danoTotal = this.forca + dado;
 
         // Lógica para o Monstro
-        if (this.eMonstro && (this.vida * 100) / this.vidaMaxima <= 40) {
-            // A chance do monstro sobe para 40% se a vida chegar a 40%
-            if (danoAleatorio >= 6) {
+        if (this.eMonstro && (this.vida * 100) / this.vidaMaxima <= 40) { // A chance do monstro sobe para 40% se a vida chegar a 40%
+            if (dado >= 6) { // 40% de chance de crítico
                 System.out.println("\n>>> O MONSTRO FICOU FURIOSO! CRÍTICO! <<<");
-                return (this.forca + danoAleatorio) * 2;
+                danoTotal = danoTotal * 2;
+            }
+
+        } else if (this.eMonstro) {
+            if (dado == 9) { // 10% de chance de crítico
+                System.out.println("\n>>> O MONSTRO ACERTOU UM CRÍTICO! <<<");
+                danoTotal = danoTotal * 2;
             }
         }
 
         // Lógica para o Herói
-        if (danoAleatorio == 9) {
-            // 10% de chance de cair crítico
-            System.out.println("\n>>> ACERTO CRÍTICO!!! <<<");
-            return (this.forca + danoAleatorio) * 2;
+        else {
+            if (dado == 9) { // 10% de chance de crítico
+                System.out.println(">>> CRÍTICO! <<<");
+                danoTotal = danoTotal * 2;
+            }
         }
         
-        return this.forca + danoAleatorio;
+        return danoTotal;
     }
 
     // Recebe dano considerando a defesa

@@ -21,13 +21,37 @@ public class Batalha {
         
             System.out.println("Digite o nome do seu Herói: ");
             String nomeHeroi = scanner.nextLine();
-            heroi = new Personagem(nomeHeroi, 100, 15, 10);
+
+            System.out.println("Escolha sua Classe:" +
+                               "\n1. Guerreiro (Vida Alta, Defesa Alta)" +
+                               "\n2. Mago (Dano Alto, Vida Baixa)" +
+                               "\n3. Arqueiro (Crítico Alto, Equilibrado)");
+            int escolhaClasse = scanner.nextInt();
+            scanner.nextLine(); // Consumir a nova linha
+
+            switch(escolhaClasse) {
+                case 1: // Guerreiro: Tanque
+                    heroi = new Personagem(nomeHeroi, 120, 12, 15, "Guerreiro");
+                    break;
+
+                case 2: // Mago: Canhão de vidro
+                    heroi = new Personagem(nomeHeroi, 70, 25, 5, "Mago");
+                    break;
+
+                case 3: // Arqueiro: Crítico
+                    heroi = new Personagem(nomeHeroi, 90, 18, 8, "Arqueiro");
+                    break;
+
+                default: // Classe genérica
+                    System.out.println("Classe inválida, você virou um Camponês!");
+                    heroi = new Personagem(nomeHeroi, 80, 10, 5, "Camponês");
+            }
 
         } else {
 
-            System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") retorna para a arena!\n");
+            System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") da classe " + heroi.getClasse() + " retorna para a arena!\n");
             heroi.setVida(heroi.getVidaMaxima());
-            System.out.println("Vida recuperada totalmente: " + heroi.getVida() + "/" + heroi.getVidaMaxima() + "\n");
+            System.out.println("Vida recuperada totalmente: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
         }
 
         System.out.println("Escolha o modo de jogo:" +
@@ -40,27 +64,27 @@ public class Batalha {
 
         switch (modo) {
             case 1: // Fácil
-                monstro = new Personagem("Slime Gosmento", 30, 7, 0); 
+                monstro = new Personagem("Slime Gosmento", 30, 7, 0, "monstro");
                 monstro.setEMonstro(true);
                 xpRecompensa = 20;
                 break;
         
             case 2: // Médio
-                monstro = new Personagem("Goblin Furioso", 60, 15, 2);
+                monstro = new Personagem("Goblin Furioso", 60, 15, 2, "monstro");
                 monstro.setEMonstro(true);
                 xpRecompensa = 50;
                 xpPenalidade = 10; // Perde 10% do XP ao ser derrotado
                 break;
 
             case 3: // Difícil
-                monstro = new Personagem("Orc da Guerra", 100, 20, 8);
+                monstro = new Personagem("Orc da Guerra", 100, 20, 8, "monstro");
                 monstro.setEMonstro(true);
                 xpRecompensa = 100;
                 xpPenalidade = 30; // Perde 30% do XP ao ser derrotado
                 break;
 
             case 4: // Impossível
-                monstro = new Personagem("Dragão Ancião", 200, 30, 15);
+                monstro = new Personagem("Dragão Ancião", 200, 30, 15, "monstro");
                 monstro.setEMonstro(true);
                 xpRecompensa = 500;
                 xpPenalidade = 100; // Perde 100% do XP ao ser derrotado
@@ -151,8 +175,8 @@ public class Batalha {
         if (heroi.getVida() > 0) {
 
             System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
-
             heroi.ganharXp(xpRecompensa);
+            
         } else {
 
             System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.");
