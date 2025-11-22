@@ -157,7 +157,7 @@ public class Batalha {
 
             switch (escolha) {
                 case 1:
-                    int danoDoHeroi = heroi.atacar();
+                    int danoDoHeroi = heroi.atacar(monstro);
                     System.out.println("Você atacou com força " + danoDoHeroi + "!");
                     monstro.receberDano(danoDoHeroi);
 
@@ -198,7 +198,7 @@ public class Batalha {
                     e.printStackTrace();
                 }
 
-                int danoDoMonstro = monstro.atacar();
+                int danoDoMonstro = monstro.atacar(heroi);
                 System.out.println("\nO " + monstro.getNome() + " te atacou com força " + danoDoMonstro + "!");
                 heroi.receberDano(danoDoMonstro);
             }
