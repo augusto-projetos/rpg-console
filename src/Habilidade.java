@@ -1,3 +1,4 @@
+package src;
 public class Habilidade {
     private String nome;
     private int custoMana;

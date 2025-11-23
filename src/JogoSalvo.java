@@ -1,3 +1,4 @@
+package src;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -5,7 +6,7 @@ import java.util.Scanner;
 
 public class JogoSalvo {
     
-    private static final String CAMINHO_ARQUIVO = "save.txt";
+    private static final String CAMINHO_ARQUIVO = "saves/save.txt";
 
     // --- SALVAR O PROGRESSO ---
     public static void salvar(Personagem heroi) {

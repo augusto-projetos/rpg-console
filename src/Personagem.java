@@ -1,3 +1,4 @@
+package src;
 public class Personagem {
     private java.util.Random random;
     private String nome;

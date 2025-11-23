@@ -1,3 +1,4 @@
+package src;
 public class Item {
     private String nome;
     private String tipo; // Ex: "Cura", "Buff", etc.
