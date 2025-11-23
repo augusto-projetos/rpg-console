@@ -333,14 +333,18 @@ public class Batalha {
         while (true) {
             System.out.println("\n================ LOJA ================");
             System.out.println("Seu Ouro: " + heroi.getOuro());
-            System.out.println("1. " + pocaoVida.getNome() + " (Recupera 50 HP) - Preço: " + pocaoVida.getPreco() + " ouro");
-            System.out.println("2. " + pocaoMana.getNome() + " (Recupera 30 MP) - Preço: " + pocaoMana.getPreco() + " ouro");
-            System.out.println("3. " + pocaoVidaGrande.getNome() + " (Recupera 100 HP) - Preço: " + pocaoVidaGrande.getPreco() + " ouro");
-            System.out.println("4. Sair da Loja");
+            System.out.println("--- CONSUMÍVEIS ---");
+            System.out.println("1. " + pocaoVida.getNome() + " (Recupera 50 HP) - " + pocaoVida.getPreco() + "g");
+            System.out.println("2. " + pocaoMana.getNome() + " (Recupera 30 MP) - " + pocaoMana.getPreco() + "g");
+            System.out.println("3. " + pocaoVidaGrande.getNome() + " (Recupera 100 HP) - " + pocaoVidaGrande.getPreco() + "g");
+            System.out.println("--- UPGRADES (Permanentes) ---");
+            System.out.println("4. Afiar Arma (+2 Força) - 150g");
+            System.out.println("5. Reforçar Armadura (+2 Defesa) - 150g");
+            System.out.println("6. Sair da Loja");
             System.out.println("======================================");
             
             int escolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha
+            scanner.nextLine(); 
 
             switch (escolha) {
                 case 1:
@@ -354,11 +358,30 @@ public class Batalha {
                 case 3:
                     heroi.comprarItem(pocaoVidaGrande);
                     break;
-
+                
                 case 4:
-                    System.out.println("Mercador: 'Volte sempre!'");
-                    return; // Sai do método loja e volta pro jogo
+                    if (heroi.getOuro() >= 150) {
+                        heroi.setOuro(heroi.getOuro() - 150);
+                        heroi.setForca(heroi.getForca() + 2);
+                        System.out.println("O ferreiro afiou sua arma! Sua Força subiu para " + heroi.getForca() + "!");
+                    } else {
+                        System.out.println("Ouro insuficiente! Você precisa de 150g.");
+                    }
+                    break;
 
+                case 5:
+                    if (heroi.getOuro() >= 150) {
+                        heroi.setOuro(heroi.getOuro() - 150);
+                        heroi.setDefesa(heroi.getDefesa() + 2);
+                        System.out.println("O ferreiro reforçou sua armadura! Sua Defesa subiu para " + heroi.getDefesa() + "!");
+                    } else {
+                        System.out.println("Ouro insuficiente! Você precisa de 150g.");
+                    }
+                    break;
+
+                case 6:
+                    System.out.println("Mercador: 'Volte sempre!'");
+                    return;
                 default:
                     System.out.println("Opção inválida.");
             }

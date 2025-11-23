@@ -52,7 +52,7 @@ public class Personagem {
         }
 
         this.mana = this.manaMaxima; // Começa cheio
-        this.ouro = 50; // Começa com um trocado
+        this.ouro = 0; // Começa sem ouro
         this.inventario = new Inventario(); // Cria a mochila vazia
     }
 

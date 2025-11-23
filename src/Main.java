@@ -89,7 +89,7 @@ public class Main {
                     System.out.println("O sistema de salvamento mantém seu Nível, XP, Ouro e Status.");
                     System.out.println("Porém, os ITENS DO INVENTÁRIO (Poções) serão perdidos ao fechar o jogo.");
                     System.out.println("Dica: Gaste suas poções ou guarde seu Ouro para comprar mais depois!");
-                    System.out.println("------------------------------------------------------------------");
+                    System.out.println("------------------------------------------------------------------\n");
                     
                     JogoSalvo.salvar(batalha.getHeroi());
                 }
