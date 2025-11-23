@@ -135,66 +135,63 @@ public class Personagem {
         int dado = random.nextInt(10);
         int danoTotal = this.forca + dado;
 
-        // Lógica para o Monstro
-        if (this.eMonstro && (this.vida * 100) / this.vidaMaxima <= 40) { // A chance do monstro sobe para 40% se a vida chegar a 40%
-            if (dado >= 6) { // 40% de chance de crítico
+        // --- 1. CRÍTICO E FÚRIA ---
+        if (this.eMonstro && (this.vida * 100) / this.vidaMaxima <= 40) {
+            if (dado >= 6) {
                 System.out.println("\n>>> O MONSTRO FICOU FURIOSO! CRÍTICO! <<<");
                 danoTotal = danoTotal * 2;
             }
-
         } else if (this.eMonstro) {
-            if (dado == 9) { // 10% de chance de crítico
+            if (dado == 9) {
                 System.out.println("\n>>> O MONSTRO ACERTOU UM CRÍTICO! <<<");
                 danoTotal = danoTotal * 2;
             }
-        }
-
-        // Lógica para o Herói
-        else {
-            if (dado == 9) { // 10% de chance de crítico
+        } else {
+            // Herói
+            if (dado == 9) {
                 System.out.println(">>> CRÍTICO! <<<");
                 danoTotal = danoTotal * 2;
             }
         }
 
-        // Sistema de Vantagem de Classe
-        // Verificamos se existe vantagem do ATACANTE sobre o ALVO
-
-        // GUERREIRO: Forte contra Arqueiros (Esqueleto) e Feras (Slime)
-        if (this.classe.equalsIgnoreCase("Guerreiro")) {
-            if (alvo.getClasse().equalsIgnoreCase("Arqueiro") || alvo.getClasse().equalsIgnoreCase("Fera")) {
-                System.out.println("VANTAGEM: Sua lâmina corta fundo em " + alvo.getNome() + "!");
-                danoTotal += 5; // Dano Bônus
+        // --- 2. VANTAGEM DO HERÓI ---
+        if (!this.eMonstro) {
+            
+            // GUERREIRO bate em Arqueiro/Fera
+            if (this.classe.equalsIgnoreCase("Guerreiro")) {
+                if (alvo.getClasse().equalsIgnoreCase("Arqueiro") || alvo.getClasse().equalsIgnoreCase("Fera")) {
+                    System.out.println("VANTAGEM: Sua lâmina corta fundo em " + alvo.getNome() + "!");
+                    danoTotal += 5;
+                }
             }
-        } 
-        
-        // MAGO: Forte contra Guerreiros (Orcs e Golems têm armadura pesada, magia ignora)
-        else if (this.classe.equalsIgnoreCase("Mago")) {
-            if (alvo.getClasse().equalsIgnoreCase("Guerreiro")) {
-                System.out.println("VANTAGEM: Sua magia derrete a armadura de " + alvo.getNome() + "!");
-                danoTotal += 8; // Mago bate muito forte na vantagem
+
+            // MAGO bate em Guerreiro
+            else if (this.classe.equalsIgnoreCase("Mago")) {
+                if (alvo.getClasse().equalsIgnoreCase("Guerreiro")) {
+                    System.out.println("VANTAGEM: Sua magia derrete a armadura de " + alvo.getNome() + "!");
+                    danoTotal += 8;
+                }
+            }
+
+            // ARQUEIRO bate em Fera/Mago
+            else if (this.classe.equalsIgnoreCase("Arqueiro")) {
+                if (alvo.getClasse().equalsIgnoreCase("Fera") || alvo.getClasse().equalsIgnoreCase("Mago")) {
+                    System.out.println("VANTAGEM: Tiro preciso no ponto fraco de " + alvo.getNome() + "!");
+                    danoTotal += 6;
+                }
             }
         }
-        
-        // ARQUEIRO: Forte contra Feras (Dragão/Aranha) e Magos (Necromante)
-        else if (this.classe.equalsIgnoreCase("Arqueiro")) {
-            if (alvo.getClasse().equalsIgnoreCase("Fera") || alvo.getClasse().equalsIgnoreCase("Mago")) {
-                System.out.println("VANTAGEM: Tiro preciso no ponto fraco de " + alvo.getNome() + "!");
-                danoTotal += 6;
-            }
-        }
 
-        // Sistema de Fraqueza (O Monstro batendo no Herói)
-        // Se o monstro for o atacante, verificamos se o herói (alvo) é fraco
-        
-        if (this.eMonstro) {
-            // Monstros Guerreiros (Orc) esmagam Magos (que usam roupão)
+        // --- 3. FRAQUEZA DO HERÓI ---
+        else { // O "else" aqui garante que se entrou no de cima, não entra aqui
+            
+            // Monstro Guerreiro bate em Mago Herói
             if (this.classe.equalsIgnoreCase("Guerreiro") && alvo.getClasse().equalsIgnoreCase("Mago")) {
                 System.out.println("FRAQUEZA: O " + alvo.getNome() + " não tem armadura para aguentar a pancada!");
                 danoTotal += 5;
             }
 
-            // Monstros Magos derretem Guerreiros
+            // Monstro Mago bate em Guerreiro Herói
             else if (this.classe.equalsIgnoreCase("Mago") && alvo.getClasse().equalsIgnoreCase("Guerreiro")) {
                 System.out.println("FRAQUEZA: A magia do " + this.nome + " ignorou a armadura pesada do Guerreiro!");
                 danoTotal += 6;

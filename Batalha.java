@@ -251,7 +251,9 @@ public class Batalha {
 
         }
         
-        System.out.println("=============================\n");
+        if (heroi.getVida() != 0) {
+            System.out.println("=============================\n");
+        }
 
         try {
             Thread.sleep(2000);
