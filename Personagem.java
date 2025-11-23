@@ -43,7 +43,7 @@ public class Personagem {
                 this.habilidade = new Habilidade("Flecha Explosiva", 15, 20, "Dano");
                 break;
 
-            default: // Monstros ou Camponês
+            default: // Camponês
                 this.manaMaxima = 10;
                 this.habilidade = new Habilidade("Ataque Básico", 0, 5, "Dano");
         }
@@ -217,6 +217,19 @@ public class Personagem {
         System.out.println(this.nome + " recebeu " + danoReal + " de dano. Vida restante: " + this.vida);
     }
 
+    // Exibe a barra de XP
+    private void exibirBarraXp() {
+        int xpNecessario = this.nivel * 100;
+        int porcentagemXP = (int) ((double) this.xp / xpNecessario * 100);
+        int blocosPreenchidos = porcentagemXP / 5;
+        int blocosVazios = 20 - blocosPreenchidos;
+
+        System.out.print("XP: [");
+        for (int i = 0; i < blocosPreenchidos; i++) System.out.print("█");
+        for (int i = 0; i < blocosVazios; i++) System.out.print("-");
+        System.out.println("] " + porcentagemXP + "% (" + this.xp + "/" + xpNecessario + ")\n");
+    }
+
     // Ganha XP e verifica se sobe de nível
         public void ganharXp(int xpGanho) {
         this.xp += xpGanho;
@@ -224,23 +237,7 @@ public class Personagem {
         
         System.out.println(this.nome + " ganhou " + xpGanho + " XP.");
 
-        // Exibe a barra de progresso de XP
-        // O (double) serve para forçar a conta a ser decimal antes de virar inteira
-        int porcentagemXP = (int) ((double) this.xp / xpNecessario * 100);
-        
-        int blocosPreenchidos = porcentagemXP / 5; // Cada bloco vale 5% (100% / 20 blocos)
-        int blocosVazios = 20 - blocosPreenchidos;
-
-        System.out.print("\nXP: [");
-        // Imprime os quadrados cheios (█)
-        for (int i = 0; i < blocosPreenchidos; i++) {
-            System.out.print("█");
-        }
-        // Imprime os traços vazios (-)
-        for (int i = 0; i < blocosVazios; i++) {
-            System.out.print("-");
-        }
-        System.out.println("] " + porcentagemXP + "% (" + this.xp + "/" + xpNecessario + ")\n");
+        exibirBarraXp();
 
         // Lógica de subir de nível (While)
         while (this.xp >= xpNecessario) {
@@ -269,7 +266,11 @@ public class Personagem {
         int perda = (this.xp * porcentagem) / 100;
         this.xp -= perda;
         
+        // Garante que o XP não fique negativo
+        if (this.xp < 0) this.xp = 0; 
+        
         System.out.println("PENALIDADE: Você perdeu " + perda + " XP por ter sido derrotado.");
-        System.out.println("XP Atual: " + this.xp + "/" + (this.nivel * 100));
+
+        exibirBarraXp();
     }
 }

@@ -144,8 +144,8 @@ public class Batalha {
                 return;
         }
 
-        System.out.println("\nA batalha vai começar entre " + heroi.getNome() + " (Defesa: " + heroi.getDefesa() + " | Força: " + heroi.getForca() + ") vs " + 
-                            monstro.getNome() + " (Defesa: " + monstro.getDefesa() + " | Força: " + monstro.getForca() + ")");
+        System.out.println("\nA batalha vai começar entre " + heroi.getNome() + " (Força: " + heroi.getForca() + " | Defesa: " + heroi.getDefesa() + ") vs " + 
+                            monstro.getNome() + " (Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa() + ")");
 
         while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
@@ -241,7 +241,7 @@ public class Batalha {
                 heroi.receberDano(danoDoMonstro);
             }
 
-            System.out.println("=============================");
+            System.out.println("=============================\n");
 
             try {
                 Thread.sleep(2000);
@@ -250,7 +250,7 @@ public class Batalha {
             }
 
         }
-        
+
         if (heroi.getVida() != 0) {
             System.out.println("=============================\n");
         }
