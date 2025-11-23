@@ -6,51 +6,75 @@ import java.util.Scanner;
 
 public class JogoSalvo {
     
-    private static final String CAMINHO_ARQUIVO = "saves/save.txt";
+    // Caminho relativo: pasta "saves" na mesma raiz do executável
+    private static final String NOME_PASTA = "saves";
+    private static final String NOME_ARQUIVO = "save.txt";
 
-    // --- SALVAR O PROGRESSO ---
+    // --- MÉTODO SALVAR ---
     public static void salvar(Personagem heroi) {
         try {
-            FileWriter escritor = new FileWriter(CAMINHO_ARQUIVO);
+            // 1. Identifica a pasta
+            File pasta = new File(NOME_PASTA);
             
-            // 1. Dados Básicos
+            // 2. Se a pasta não existe, CRIA (mkdirs cria até subpastas se precisar)
+            if (!pasta.exists()) {
+                boolean criou = pasta.mkdirs();
+                if (criou) {
+                    System.out.println("Pasta 'saves' criada com sucesso.");
+                } else {
+                    System.out.println("Erro: Não foi possível criar a pasta 'saves'. Verifique as permissões.");
+                }
+            }
+
+            // 3. Cria o arquivo dentro da pasta
+            File arquivo = new File(pasta, NOME_ARQUIVO);
+            
+            // DEBUG: Mostra onde o computador está tentando salvar
+            System.out.println("Tentando salvar em: " + arquivo.getAbsolutePath());
+
+            FileWriter escritor = new FileWriter(arquivo);
+            
+            // --- DADOS DO HEROI ---
             escritor.write(heroi.getNome() + "\n");
             escritor.write(heroi.getClasse() + "\n");
             escritor.write(heroi.getNivel() + "\n");
             escritor.write(heroi.getXp() + "\n");
             escritor.write(heroi.getOuro() + "\n");
             
-            // 2. Status Vitais
+            // Status
             escritor.write(heroi.getVida() + "\n");
             escritor.write(heroi.getVidaMaxima() + "\n");
             escritor.write(heroi.getMana() + "\n");
             escritor.write(heroi.getManaMaxima() + "\n");
             
-            // 3. Atributos de Combate
+            // Atributos
             escritor.write(heroi.getForca() + "\n");
             escritor.write(heroi.getDefesa() + "\n");
             
             escritor.close();
-            System.out.println("Jogo salvo com sucesso em 'save.txt'!");
+            System.out.println("Jogo salvo com sucesso!");
             
         } catch (IOException e) {
-            System.out.println("Erro ao salvar o jogo: " + e.getMessage());
+            System.out.println("ERRO CRÍTICO AO SALVAR: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // --- CARREGAR O PROGRESSO ---
+    // --- MÉTODO CARREGAR ---
     public static Personagem carregar() {
-        File arquivo = new File(CAMINHO_ARQUIVO);
+        // Procura na pasta saves/save.txt
+        File arquivo = new File(NOME_PASTA, NOME_ARQUIVO);
         
+        System.out.println("Tentando carregar de: " + arquivo.getAbsolutePath());
+
         if (!arquivo.exists()) {
-            System.out.println("Nenhum jogo salvo encontrado.");
+            System.out.println("Nenhum save encontrado.");
             return null;
         }
 
         try {
             Scanner leitor = new Scanner(arquivo);
             
-            // Lê na EXATA ordem que escreveu
             String nome = leitor.nextLine();
             String classe = leitor.nextLine();
             int nivel = Integer.parseInt(leitor.nextLine());
@@ -67,24 +91,21 @@ public class JogoSalvo {
             
             leitor.close();
 
-            // Recria o herói
-            // O construtor vai configurar a habilidade certa baseado na 'classe'
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
-            // Sobrescreve os valores padrão com os salvos
             heroiCarregado.setNivel(nivel);
             heroiCarregado.setXp(xp);
             heroiCarregado.setOuro(ouro);
             heroiCarregado.setVida(vida);
-            heroiCarregado.setVidaMaxima(vidaMax); // Importante setar o máximo evoluído
+            heroiCarregado.setVidaMaxima(vidaMax);
             heroiCarregado.setMana(mana);
             heroiCarregado.setManaMaxima(manaMax);
             
-            System.out.println("Jogo carregado com sucesso! Bem-vindo de volta, " + nome + ".");
+            System.out.println("Jogo carregado com sucesso!");
             return heroiCarregado;
 
         } catch (Exception e) {
-            System.out.println("Erro ao ler o save (Arquivo corrompido ou versão antiga): " + e.getMessage());
+            System.out.println("Erro ao ler o save: " + e.getMessage());
             return null;
         }
     }
