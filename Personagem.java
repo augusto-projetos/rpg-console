@@ -1,4 +1,5 @@
 public class Personagem {
+    private java.util.Random random;
     private String nome;
     private int vida;
     private int vidaMaxima;
@@ -8,10 +9,13 @@ public class Personagem {
     private int xp;
     private boolean eMonstro;
     private String classe;
-    private java.util.Random random;
+    private int mana;
+    private int manaMaxima;
+    private Habilidade habilidade;
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
+        this.random = new java.util.Random();
         this.nome = nome;
         this.vida = vida;
         this.vidaMaxima = vida;
@@ -21,7 +25,30 @@ public class Personagem {
         this.xp = 0;
         this.eMonstro = false;
         this.classe = classe;
-        this.random = new java.util.Random();
+        
+        // Configura Mana e Skill baseado na classe
+        switch (classe) {
+            case "Mago":
+                this.manaMaxima = 50;
+                this.habilidade = new Habilidade("Bola de Fogo", 20, 30, "Dano");
+                break;
+
+            case "Guerreiro":
+                this.manaMaxima = 20;
+                this.habilidade = new Habilidade("Golpe Pesado", 10, 15, "Dano");
+                break;
+
+            case "Arqueiro":
+                this.manaMaxima = 30;
+                this.habilidade = new Habilidade("Flecha Explosiva", 15, 20, "Dano");
+                break;
+
+            default: // Monstros ou Camponês
+                this.manaMaxima = 10;
+                this.habilidade = new Habilidade("Ataque Básico", 0, 5, "Dano");
+        }
+
+        this.mana = this.manaMaxima; // Começa cheio
     }
 
     // Getters e Setters
@@ -86,6 +113,21 @@ public class Personagem {
     }
     public void setClasse(String classe) {
         this.classe = classe;
+    }
+
+    public int getMana() {
+        return mana; 
+    }
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    public int getManaMaxima() {
+        return manaMaxima;
+    }
+
+    public Habilidade getHabilidade() {
+        return habilidade;
     }
 
     // Métodos de combate

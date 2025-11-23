@@ -50,8 +50,12 @@ public class Batalha {
         } else {
 
             System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") da classe " + heroi.getClasse() + " retorna para a arena!\n");
+            
+            // Recupera Vida e Mana
             heroi.setVida(heroi.getVidaMaxima());
-            System.out.println("Vida recuperada totalmente: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
+            heroi.setMana(heroi.getManaMaxima());
+            
+            System.out.println("Vida e Mana recuperadas totalmente!");
         }
 
         System.out.println("\nEscolha seu Oponente:" +
@@ -140,17 +144,22 @@ public class Batalha {
                 return;
         }
 
-        System.out.println("\nA batalha vai começar entre " + heroi.getNome() + " vs " + monstro.getNome());
-
-        System.out.println(heroi.getNome() + ": " + heroi.getVida() + " HP" + " |  Força: " + heroi.getForca() + " | Defesa: " + heroi.getDefesa() + "\n" +
-                           monstro.getNome() + ": " + monstro.getVida() + " HP" + " |  Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa());
+        System.out.println("\nA batalha vai começar entre " + heroi.getNome() + " (Defesa: " + heroi.getDefesa() + " | Força: " + heroi.getForca() + ") vs " + 
+                            monstro.getNome() + " (Defesa: " + monstro.getDefesa() + " | Força: " + monstro.getForca() + ")");
 
         while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
+            System.out.println("\n-------------------------------------------------");
+            System.out.println(heroi.getNome() + ": " + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP | " +
+                               heroi.getMana() + "/" + heroi.getManaMaxima() + " MP");
+            System.out.println(monstro.getNome() + ": " + monstro.getVida() + "/" + monstro.getVidaMaxima() + " HP");
+            System.out.println("-------------------------------------------------");
+
             System.out.println("\nEscolha uma ação:" + 
                                "\n1. Atacar" + 
-                               "\n2. Defender (+10 HP)" +
-                               "\n3. Fugir");
+                               "\n2. Habilidade: " + heroi.getHabilidade().getNome() + " (" + heroi.getHabilidade().getCustoMana() + " MP)" + 
+                               "\n3. Defender (+10 HP)" +
+                               "\n4. Fugir");
             int escolha = scanner.nextInt();
             scanner.nextLine(); // Consumir a nova linha
             System.out.println("\n=============================");
@@ -162,8 +171,16 @@ public class Batalha {
                     monstro.receberDano(danoDoHeroi);
 
                     break;
-            
+
                 case 2:
+                    boolean funcionou = heroi.getHabilidade().usar(heroi, monstro);
+                    
+                    if (!funcionou) {
+                        System.out.println("Você se atrapalhou na conjuração e perdeu a vez!");
+                    }
+                    break;
+            
+                case 3:
                     System.out.println("Você assume uma postura defensiva e recupera 10 de vida.");
                     
                     int vidaAtual = heroi.getVida();
@@ -181,9 +198,16 @@ public class Batalha {
                     
                     System.out.println("Vida atual: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
 
+                    // Recupera um pouquinho de mana também ao defender
+                    int manaAtual = heroi.getMana();
+                    if (manaAtual + 5 <= heroi.getManaMaxima()) {
+                        heroi.setMana(manaAtual + 5);
+                        System.out.println("Recuperou 5 MP descansando.");
+                    }
+
                     break;
 
-                case 3:
+                case 4:
                     if (random.nextInt(10) < 3) { // 30% de chance de fuga bem-sucedida
                         System.out.println("Você conseguiu fugir da batalha!");
                         System.out.println("Porém não ganhou XP.\n");
@@ -217,16 +241,13 @@ public class Batalha {
                 heroi.receberDano(danoDoMonstro);
             }
 
-            System.out.println("=============================\n");
+            System.out.println("=============================");
 
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            System.out.println(heroi.getNome() + ": " + heroi.getVida() + " HP" + "\n" +
-                               monstro.getNome() + ": " + monstro.getVida() + " HP");
 
         }
         
@@ -238,6 +259,7 @@ public class Batalha {
             e.printStackTrace();
         }
 
+        // Fim da Batalha: Verifica quem ganhou
         if (heroi.getVida() > 0) {
 
             System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
