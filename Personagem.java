@@ -12,6 +12,8 @@ public class Personagem {
     private int mana;
     private int manaMaxima;
     private Habilidade habilidade;
+    private int ouro;
+    private Inventario inventario;
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -49,6 +51,8 @@ public class Personagem {
         }
 
         this.mana = this.manaMaxima; // Começa cheio
+        this.ouro = 50; // Começa com um trocado
+        this.inventario = new Inventario(); // Cria a mochila vazia
     }
 
     // Getters e Setters
@@ -128,6 +132,10 @@ public class Personagem {
 
     public Habilidade getHabilidade() {
         return habilidade;
+    }
+
+    public int getOuro() {
+        return ouro;
     }
 
     // Métodos de combate
@@ -272,5 +280,41 @@ public class Personagem {
         System.out.println("PENALIDADE: Você perdeu " + perda + " XP por ter sido derrotado.");
 
         exibirBarraXp();
+    }
+
+    // Ganha Ouro
+    public void ganharOuro(int quantidade) {
+        this.ouro += quantidade;
+        System.out.println(this.nome + " encontrou " + quantidade + " moedas de ouro!");
+    }
+
+    // Perde uma porcentagem de Ouro (cai do bolso na derrota)
+    public void perderOuro(int porcentagem) {
+        int perda = (this.ouro * porcentagem) / 100;
+        this.ouro -= perda;
+        
+        if (this.ouro < 0) this.ouro = 0;
+        
+        System.out.println("BOLSO FURADO: Você deixou cair " + perda + " moedas de ouro na fuga.");
+        System.out.println("Ouro Restante: " + this.ouro);
+    }
+
+    public void comprarItem(Item item) {
+        if (this.ouro >= item.getPreco()) {
+            this.ouro -= item.getPreco();
+            this.inventario.adicionar(item); // Guarda na mochila
+            System.out.println("Compra realizada! Saldo atual: " + this.ouro);
+        } else {
+            System.out.println("Ouro insuficiente! (" + this.ouro + "/" + item.getPreco() + ")");
+        }
+    }
+
+    public void usarPocao(int indice) {
+        this.inventario.usarItem(indice, this);
+    }
+    
+    // Expoe o inventário para o menu saber o que tem dentro
+    public Inventario getInventario() {
+        return this.inventario;
     }
 }
