@@ -40,6 +40,12 @@ public class Main {
             }
         } else if (opcao == 3) {
             System.out.println("Até mais!");
+            // Pequena pausa antes de fechar
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             scanner.close();
             return;
         } else {
@@ -93,8 +99,16 @@ public class Main {
             }
             
         } while (continuar);
-        
-        scanner.close();
+
         System.out.println("Obrigado por jogar! Até a próxima.");
+
+        // Pequena pausa antes de fechar
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        scanner.close();
     }
 }

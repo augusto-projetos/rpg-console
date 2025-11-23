@@ -33,7 +33,7 @@ public class Batalha {
             System.out.println("Digite o nome do seu Herói: ");
             String nomeHeroi = scanner.nextLine();
 
-            System.out.println("Escolha sua Classe:" +
+            System.out.println("\nEscolha sua Classe:" +
                                "\n1. Guerreiro (Vida Alta, Defesa Alta)" +
                                "\n2. Mago (Dano Alto, Vida Baixa)" +
                                "\n3. Arqueiro (Crítico Alto, Equilibrado)");

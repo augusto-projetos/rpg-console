@@ -1,71 +1,58 @@
 package src;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
+import java.util.Base64;
 
 public class JogoSalvo {
     
-    // Caminho relativo: pasta "saves" na mesma raiz do executável
     private static final String NOME_PASTA = "saves";
-    private static final String NOME_ARQUIVO = "save.txt";
+    private static final String NOME_ARQUIVO = "save.dat";
 
-    // --- MÉTODO SALVAR ---
+    // --- MÉTODO SALVAR (CRIPTOGRAFADO) ---
     public static void salvar(Personagem heroi) {
         try {
-            // 1. Identifica a pasta
+            // 1. Prepara a pasta
             File pasta = new File(NOME_PASTA);
-            
-            // 2. Se a pasta não existe, CRIA (mkdirs cria até subpastas se precisar)
-            if (!pasta.exists()) {
-                boolean criou = pasta.mkdirs();
-                if (criou) {
-                    System.out.println("Pasta 'saves' criada com sucesso.");
-                } else {
-                    System.out.println("Erro: Não foi possível criar a pasta 'saves'. Verifique as permissões.");
-                }
-            }
+            if (!pasta.exists()) pasta.mkdirs();
 
-            // 3. Cria o arquivo dentro da pasta
             File arquivo = new File(pasta, NOME_ARQUIVO);
-            
-            // DEBUG: Mostra onde o computador está tentando salvar
-            System.out.println("Tentando salvar em: " + arquivo.getAbsolutePath());
 
-            FileWriter escritor = new FileWriter(arquivo);
+            // 2. Monta os dados numa String única
+            StringBuilder dados = new StringBuilder();
             
-            // --- DADOS DO HEROI ---
-            escritor.write(heroi.getNome() + "\n");
-            escritor.write(heroi.getClasse() + "\n");
-            escritor.write(heroi.getNivel() + "\n");
-            escritor.write(heroi.getXp() + "\n");
-            escritor.write(heroi.getOuro() + "\n");
-            
-            // Status
-            escritor.write(heroi.getVida() + "\n");
-            escritor.write(heroi.getVidaMaxima() + "\n");
-            escritor.write(heroi.getMana() + "\n");
-            escritor.write(heroi.getManaMaxima() + "\n");
-            
-            // Atributos
-            escritor.write(heroi.getForca() + "\n");
-            escritor.write(heroi.getDefesa() + "\n");
-            
+            dados.append(heroi.getNome()).append("\n");
+            dados.append(heroi.getClasse()).append("\n");
+            dados.append(heroi.getNivel()).append("\n");
+            dados.append(heroi.getXp()).append("\n");
+            dados.append(heroi.getOuro()).append("\n");
+            dados.append(heroi.getVida()).append("\n");
+            dados.append(heroi.getVidaMaxima()).append("\n");
+            dados.append(heroi.getMana()).append("\n");
+            dados.append(heroi.getManaMaxima()).append("\n");
+            dados.append(heroi.getForca()).append("\n");
+            dados.append(heroi.getDefesa()).append("\n");
+
+            // 3. CRIPTOGRAFIA (Codifica para Base64)
+            String dadosCriptografados = Base64.getEncoder().encodeToString(dados.toString().getBytes());
+
+            // 4. Escreve o código doido no arquivo
+            FileWriter escritor = new FileWriter(arquivo); // Sobrescreve por padrão
+            escritor.write(dadosCriptografados);
             escritor.close();
-            System.out.println("Jogo salvo com sucesso!");
+            
+            System.out.println("Jogo salvo e protegido em '" + arquivo.getAbsolutePath() + "'!");
             
         } catch (IOException e) {
-            System.out.println("ERRO CRÍTICO AO SALVAR: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("Erro ao salvar: " + e.getMessage());
         }
     }
 
-    // --- MÉTODO CARREGAR ---
+    // --- MÉTODO CARREGAR (DESCRIPTOGRAFAR) ---
     public static Personagem carregar() {
-        // Procura na pasta saves/save.txt
         File arquivo = new File(NOME_PASTA, NOME_ARQUIVO);
-        
-        System.out.println("Tentando carregar de: " + arquivo.getAbsolutePath());
 
         if (!arquivo.exists()) {
             System.out.println("Nenhum save encontrado.");
@@ -73,23 +60,33 @@ public class JogoSalvo {
         }
 
         try {
-            Scanner leitor = new Scanner(arquivo);
-            
-            String nome = leitor.nextLine();
-            String classe = leitor.nextLine();
-            int nivel = Integer.parseInt(leitor.nextLine());
-            int xp = Integer.parseInt(leitor.nextLine());
-            int ouro = Integer.parseInt(leitor.nextLine());
-            
-            int vida = Integer.parseInt(leitor.nextLine());
-            int vidaMax = Integer.parseInt(leitor.nextLine());
-            int mana = Integer.parseInt(leitor.nextLine());
-            int manaMax = Integer.parseInt(leitor.nextLine());
-            
-            int forca = Integer.parseInt(leitor.nextLine());
-            int defesa = Integer.parseInt(leitor.nextLine());
-            
+            // 1. Lê o arquivo criptografado inteiro
+            BufferedReader leitor = new BufferedReader(new FileReader(arquivo));
+            String dadosCriptografados = leitor.readLine();
             leitor.close();
+
+            if (dadosCriptografados == null) return null;
+
+            // 2. DESCRIPTOGRAFA (Decodifica de Base64 para texto normal)
+            byte[] bytesDecodificados = Base64.getDecoder().decode(dadosCriptografados);
+            String dadosReais = new String(bytesDecodificados);
+
+            // 3. Separa as linhas novamente (o \n que colocamos antes)
+            String[] linhas = dadosReais.split("\n");
+
+            // 4. Reconstrói o herói (Lendo do array 'linhas')
+            // A ordem tem que ser IGUAL à do salvar
+            String nome = linhas[0];
+            String classe = linhas[1];
+            int nivel = Integer.parseInt(linhas[2]);
+            int xp = Integer.parseInt(linhas[3]);
+            int ouro = Integer.parseInt(linhas[4]);
+            int vida = Integer.parseInt(linhas[5]);
+            int vidaMax = Integer.parseInt(linhas[6]);
+            int mana = Integer.parseInt(linhas[7]);
+            int manaMax = Integer.parseInt(linhas[8]);
+            int forca = Integer.parseInt(linhas[9]);
+            int defesa = Integer.parseInt(linhas[10]);
 
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
@@ -105,7 +102,7 @@ public class JogoSalvo {
             return heroiCarregado;
 
         } catch (Exception e) {
-            System.out.println("Erro ao ler o save: " + e.getMessage());
+            System.out.println("Save corrompido ou modificado! Iniciando novo jogo.");
             return null;
         }
     }
