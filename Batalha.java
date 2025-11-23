@@ -10,6 +10,16 @@ public class Batalha {
         this.scanner = new Scanner(System.in);
     }
 
+    // Permite que o Main defina quem é o herói (usado no Load Game)
+    public void setHeroi(Personagem heroiCarregado) {
+        this.heroi = heroiCarregado;
+    }
+
+    // Permite que o Main pegue o herói para salvar
+    public Personagem getHeroi() {
+        return this.heroi;
+    }
+
     public void iniciar() {
 
         this.random = new java.util.Random();

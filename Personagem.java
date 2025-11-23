@@ -129,13 +129,22 @@ public class Personagem {
     public int getManaMaxima() {
         return manaMaxima;
     }
+    public void setManaMaxima(int manaMaxima) {
+        this.manaMaxima = manaMaxima;
+    }
 
     public Habilidade getHabilidade() {
         return habilidade;
     }
+    public void setHabilidade(Habilidade habilidade) {
+        this.habilidade = habilidade;
+    }
 
     public int getOuro() {
         return ouro;
+    }
+    public void setOuro(int ouro) {
+        this.ouro = ouro;
     }
 
     // Métodos de combate
