@@ -228,13 +228,25 @@ public class Personagem {
     // Exibe a barra de XP
     private void exibirBarraXp() {
         int xpNecessario = this.nivel * 100;
+        
+        // Calcula a porcentagem real (pode passar de 100%)
         int porcentagemXP = (int) ((double) this.xp / xpNecessario * 100);
-        int blocosPreenchidos = porcentagemXP / 5;
+        
+        // Trava em 100% o desenho da barra
+        int porcentagemParaDesenho = porcentagemXP;
+        if (porcentagemParaDesenho > 100) {
+            porcentagemParaDesenho = 100;
+        }
+
+        // Calculamos os blocos usando a porcentagem travada
+        int blocosPreenchidos = porcentagemParaDesenho / 5; 
         int blocosVazios = 20 - blocosPreenchidos;
 
         System.out.print("XP: [");
         for (int i = 0; i < blocosPreenchidos; i++) System.out.print("█");
         for (int i = 0; i < blocosVazios; i++) System.out.print("-");
+        
+        // No texto final, mantemos o porcentagemXP real para o jogador entender que sobrou XP
         System.out.println("] " + porcentagemXP + "% (" + this.xp + "/" + xpNecessario + ")\n");
     }
 
