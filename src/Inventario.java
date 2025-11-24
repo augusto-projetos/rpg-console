@@ -62,4 +62,47 @@ public class Inventario {
     public int getTotalItens() {
         return itens.size();
     }
+
+    // MÉTODOS DE SAVE/LOAD
+
+    // 1. Transforma a mochila inteira numa String única
+    // Exemplo: "PoçãoVida,Vida,50,20###ElixirMana,Mana,30,25"
+    public String toSaveString() {
+        if (itens.isEmpty()) {
+            return "VAZIO";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < itens.size(); i++) {
+            Item item = itens.get(i);
+            // Adiciona o código do item
+            sb.append(item.toSaveString());
+            
+            // Se NÃO for o último item, adiciona o separador ###
+            if (i < itens.size() - 1) {
+                sb.append("###");
+            }
+        }
+        return sb.toString();
+    }
+
+    // 2. Recebe a String gigante e enche a mochila
+    public void carregarDoSave(String dados) {
+        // Limpa a mochila atual antes de carregar
+        this.itens.clear();
+
+        if (dados.equals("VAZIO") || dados.isEmpty()) {
+            return; // Mochila fica vazia mesmo
+        }
+
+        // Corta a string onde tem ###
+        String[] itensTexto = dados.split("###");
+
+        for (String itemString : itensTexto) {
+            // Pede para a classe Item criar o objeto a partir do texto
+            Item item = Item.fromSaveString(itemString);
+            this.itens.add(item);
+        }
+    }
 }

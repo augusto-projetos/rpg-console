@@ -34,6 +34,8 @@ public class JogoSalvo {
             dados.append(heroi.getManaMaxima()).append("\n");
             dados.append(heroi.getForca()).append("\n");
             dados.append(heroi.getDefesa()).append("\n");
+            // Pede para o inventário se transformar em string e salva
+            dados.append(heroi.getInventario().toSaveString()).append("\n");
 
             // 3. CRIPTOGRAFIA (Codifica para Base64)
             String dadosCriptografados = Base64.getEncoder().encodeToString(dados.toString().getBytes());
@@ -88,6 +90,9 @@ public class JogoSalvo {
             int forca = Integer.parseInt(linhas[9]);
             int defesa = Integer.parseInt(linhas[10]);
 
+            // --- CARREGAR INVENTÁRIO ---
+            String dadosInventario = (linhas.length > 11) ? linhas[11] : "VAZIO";
+
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
             heroiCarregado.setNivel(nivel);
@@ -97,6 +102,7 @@ public class JogoSalvo {
             heroiCarregado.setVidaMaxima(vidaMax);
             heroiCarregado.setMana(mana);
             heroiCarregado.setManaMaxima(manaMax);
+            heroiCarregado.getInventario().carregarDoSave(dadosInventario);
             
             System.out.println(Cores.GREEN + "Jogo carregado com sucesso!" + Cores.RESET);
             return heroiCarregado;

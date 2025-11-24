@@ -25,4 +25,25 @@ public class Item {
     public int getPreco() {
         return preco;
     }
+
+    // MÉTODOS PARA O SISTEMA DE SAVE
+
+    // 1. Transforma o Item em uma linha de texto
+    // Exemplo de retorno: "Poção de Vida,Vida,50,20"
+    public String toSaveString() {
+        return nome + "," + tipo + "," + valorEfeito + "," + preco;
+    }
+
+    // 2. Cria um Item a partir de uma linha de texto (Método Estático "Fábrica")
+    public static Item fromSaveString(String linha) {
+        // Corta o texto onde tem vírgula
+        String[] partes = linha.split(",");
+        
+        // partes[0] = Nome
+        // partes[1] = Tipo
+        // partes[2] = Valor (precisa converter pra int)
+        // partes[3] = Preço (precisa converter pra int)
+        
+        return new Item(partes[0], partes[1], Integer.parseInt(partes[2]), Integer.parseInt(partes[3]));
+    }
 }

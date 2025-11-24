@@ -86,11 +86,6 @@ public class Main {
             if (escolha == 2) {
                 // SALVAR
                 if (batalha.getHeroi() != null) {
-                    System.out.println(Cores.YELLOW + "\nAVISO IMPORTANTE:" + Cores.RESET);
-                    System.out.println("O sistema de salvamento mantém seu Nível, XP, Ouro e Status.");
-                    System.out.println(Cores.RED + "Porém, os ITENS DO INVENTÁRIO (Poções) serão perdidos ao fechar o jogo." + Cores.RESET);
-                    System.out.println("Dica: Gaste suas poções ou guarde seu Ouro para comprar mais depois!");
-                    System.out.println("------------------------------------------------------------------\n");
                     
                     JogoSalvo.salvar(batalha.getHeroi());
                 }
