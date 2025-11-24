@@ -102,6 +102,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 20;
                 ouroRecompensa = 10;
+                monstro.setAgilidade(2); monstro.setDestreza(5);
                 break; // Não tem penalidade no tutorial
 
             case 2: // Glass Cannon (Canhão de Vidro)
@@ -110,6 +111,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 40; xpPenalidade = 5;
                 ouroRecompensa = 25; ouroPenalidade = 5;
+                monstro.setAgilidade(18); monstro.setDestreza(18);
                 break;
         
             case 3: // O Padrão
@@ -117,6 +119,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 60; xpPenalidade = 10; 
                 ouroRecompensa = 35; ouroPenalidade = 10;
+                monstro.setAgilidade(10); monstro.setDestreza(12);
                 break;
 
             case 4: // O Mago Inimigo
@@ -124,6 +127,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 90; xpPenalidade = 15;
                 ouroRecompensa = 50; ouroPenalidade = 15;
+                monstro.setAgilidade(12); monstro.setDestreza(15);
                 break;
 
             case 5: // O Teste de Dano
@@ -132,6 +136,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 120; xpPenalidade = 20;
                 ouroRecompensa = 60; ouroPenalidade = 20;
+                monstro.setAgilidade(4); monstro.setDestreza(12);
                 break;
 
             case 6: // O Teste de Resistência
@@ -140,6 +145,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 180; xpPenalidade = 25;
                 ouroRecompensa = 80; ouroPenalidade = 25;
+                monstro.setAgilidade(22); monstro.setDestreza(18);
                 break;
 
             case 7: // O Porteiro do Chefe
@@ -148,6 +154,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 300; xpPenalidade = 40;
                 ouroRecompensa = 150; ouroPenalidade = 30;
+                monstro.setAgilidade(0); monstro.setDestreza(8);
                 break;
 
             case 8: // O Chefe Final
@@ -155,6 +162,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 1000; xpPenalidade = 100; // Tudo ou nada
                 ouroRecompensa = 500; ouroPenalidade = 50;
+                monstro.setAgilidade(15); monstro.setDestreza(25);
                 break;
 
             case 9: // O Easter Egg (Impossível)
@@ -163,6 +171,7 @@ public class Batalha {
                 monstro.setEMonstro(true);
                 xpRecompensa = 9999; xpPenalidade = 100;
                 ouroRecompensa = 999; ouroPenalidade = 100;
+                monstro.setAgilidade(50); monstro.setDestreza(50);
                 break;
 
             default:
@@ -193,9 +202,15 @@ public class Batalha {
 
             switch (escolha) {
                 case 1: // ATACAR
-                    int danoDoHeroi = heroi.atacar(monstro);
-                    System.out.println("Você atacou com força " + danoDoHeroi + "!");
-                    monstro.receberDano(danoDoHeroi);
+                    // Pergunta ao monstro: "Você desviou?"
+                    if (monstro.tentarEsquivar(heroi)) {
+                        System.out.println(Cores.WHITE_BOLD + "MISS! O " + monstro.getNome() + " desviou do seu ataque!" + Cores.RESET);
+                    } else {
+                        // Se NÃO desviou, o pau quebra normal
+                        int danoDoHeroi = heroi.atacar(monstro);
+                        System.out.println("Você atacou com força " + danoDoHeroi + "!");
+                        monstro.receberDano(danoDoHeroi);
+                    }
 
                     break;
 
@@ -280,9 +295,15 @@ public class Batalha {
                     e.printStackTrace();
                 }
 
-                int danoDoMonstro = monstro.atacar(heroi);
-                System.out.println("\nO " + monstro.getNome() + " te atacou com força " + danoDoMonstro + "!");
-                heroi.receberDano(danoDoMonstro);
+                // Pergunta ao herói: "Você desviou?"
+                if (heroi.tentarEsquivar(monstro)) {
+                    System.out.println(Cores.WHITE_BOLD + "MISS! Você desviou do ataque do " + monstro.getNome() + "!" + Cores.RESET);
+                } else {
+                    // Se não desviou, toma dano
+                    int danoDoMonstro = monstro.atacar(heroi);
+                    System.out.println("O " + monstro.getNome() + " te acertou com força " + danoDoMonstro + "!");
+                    heroi.receberDano(danoDoMonstro);
+                }
             }
 
             System.out.println("=============================\n");

@@ -23,18 +23,26 @@ public class JogoSalvo {
             // 2. Monta os dados numa String única
             StringBuilder dados = new StringBuilder();
             
+            // Dados Básicos
             dados.append(heroi.getNome()).append("\n");
             dados.append(heroi.getClasse()).append("\n");
             dados.append(heroi.getNivel()).append("\n");
             dados.append(heroi.getXp()).append("\n");
             dados.append(heroi.getOuro()).append("\n");
+            
+            // Vida e Mana
             dados.append(heroi.getVida()).append("\n");
             dados.append(heroi.getVidaMaxima()).append("\n");
             dados.append(heroi.getMana()).append("\n");
             dados.append(heroi.getManaMaxima()).append("\n");
+            
+            // Atributos de Combate
             dados.append(heroi.getForca()).append("\n");
             dados.append(heroi.getDefesa()).append("\n");
-            // Pede para o inventário se transformar em string e salva
+            dados.append(heroi.getAgilidade()).append("\n");
+            dados.append(heroi.getDestreza()).append("\n");
+            
+            // Inventário
             dados.append(heroi.getInventario().toSaveString()).append("\n");
 
             // 3. CRIPTOGRAFIA (Codifica para Base64)
@@ -89,9 +97,11 @@ public class JogoSalvo {
             int manaMax = Integer.parseInt(linhas[8]);
             int forca = Integer.parseInt(linhas[9]);
             int defesa = Integer.parseInt(linhas[10]);
-
-            // --- CARREGAR INVENTÁRIO ---
-            String dadosInventario = (linhas.length > 11) ? linhas[11] : "VAZIO";
+            int agilidade = Integer.parseInt(linhas[11]);
+            int destreza = Integer.parseInt(linhas[12]);
+            
+            // Inventário (Linha 13)
+            String dadosInventario = (linhas.length > 13) ? linhas[13] : "VAZIO";
 
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
@@ -102,6 +112,8 @@ public class JogoSalvo {
             heroiCarregado.setVidaMaxima(vidaMax);
             heroiCarregado.setMana(mana);
             heroiCarregado.setManaMaxima(manaMax);
+            heroiCarregado.setAgilidade(agilidade);
+            heroiCarregado.setDestreza(destreza);
             heroiCarregado.getInventario().carregarDoSave(dadosInventario);
             
             System.out.println(Cores.GREEN + "Jogo carregado com sucesso!" + Cores.RESET);

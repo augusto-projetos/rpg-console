@@ -15,6 +15,8 @@ public class Personagem {
     private Habilidade habilidade;
     private int ouro;
     private Inventario inventario;
+    private int destreza;  // Influencia a chance de acertar
+    private int agilidade; // Influencia a chance de esquivar
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -34,21 +36,29 @@ public class Personagem {
             case "Mago":
                 this.manaMaxima = 50;
                 this.habilidade = new Habilidade("Bola de Fogo", 20, 30, "Dano");
+                this.destreza = 10; // Mago não tem mira física muito boa
+                this.agilidade = 12; // Mas é ligeiro (tecido leve)
                 break;
 
             case "Guerreiro":
                 this.manaMaxima = 20;
                 this.habilidade = new Habilidade("Golpe Pesado", 10, 15, "Dano");
+                this.destreza = 12; // Razoável
+                this.agilidade = 5; // Lento (Armadura pesada)
                 break;
 
             case "Arqueiro":
                 this.manaMaxima = 30;
                 this.habilidade = new Habilidade("Flecha Explosiva", 15, 20, "Dano");
+                this.destreza = 20; // Excelente mira
+                this.agilidade = 18; // Muito rápido
                 break;
 
             default: // Camponês
                 this.manaMaxima = 10;
                 this.habilidade = new Habilidade("Ataque Básico", 0, 5, "Dano");
+                this.destreza = 12;
+                this.agilidade = 8;
         }
 
         this.mana = this.manaMaxima; // Começa cheio
@@ -146,6 +156,20 @@ public class Personagem {
     }
     public void setOuro(int ouro) {
         this.ouro = ouro;
+    }
+
+    public int getDestreza() {
+        return destreza;
+    }
+    public void setDestreza(int destreza) {
+        this.destreza = destreza;
+    }
+
+    public int getAgilidade() {
+        return agilidade;
+    }
+    public void setAgilidade(int agilidade) {
+        this.agilidade = agilidade;
     }
 
     // Métodos de combate
@@ -262,7 +286,7 @@ public class Personagem {
     }
 
     // Ganha XP e verifica se sobe de nível
-        public void ganharXp(int xpGanho) {
+    public void ganharXp(int xpGanho) {
         this.xp += xpGanho;
         int xpNecessario = this.nivel * 100; // Meta para o próximo nível
         
@@ -277,6 +301,8 @@ public class Personagem {
             this.nivel++;
             this.forca += 3;
             this.defesa += 2;
+            this.destreza += 1; 
+            this.agilidade += 1;
             
             // Atualiza a meta para o novo nível
             xpNecessario = this.nivel * 100; 
@@ -287,7 +313,7 @@ public class Personagem {
             System.out.println(Cores.YELLOW_BOLD + "\n---------------- LEVEL UP! ----------------");
             System.out.println("PARABÉNS! Você subiu para o nível " + this.nivel + "!");
             System.out.println("Vida aumentada para: " + this.vidaMaxima);
-            System.out.println("Força +3 | Defesa +2");
+            System.out.println("Força +3 | Defesa +2 | Des/Agi +1");
             System.out.println("------------------------------------------\n" + Cores.RESET);
         }
     }
@@ -322,6 +348,7 @@ public class Personagem {
         System.out.println(Cores.YELLOW + "Ouro Restante: " + this.ouro + Cores.RESET);
     }
 
+    // Compra um item se tiver ouro suficiente
     public void comprarItem(Item item) {
         if (this.ouro >= item.getPreco()) {
             this.ouro -= item.getPreco();
@@ -332,6 +359,7 @@ public class Personagem {
         }
     }
 
+    // Usa uma poção do inventário
     public void usarPocao(int indice) {
         this.inventario.usarItem(indice, this);
     }
@@ -339,5 +367,25 @@ public class Personagem {
     // Expoe o inventário para o menu saber o que tem dentro
     public Inventario getInventario() {
         return this.inventario;
+    }
+
+    // Retorna TRUE se esquivou, FALSE se foi atingido
+    public boolean tentarEsquivar(Personagem atacante) {
+        // Fórmula: 75% base + (Destreza do Atacante - Minha Agilidade)
+        int chanceAcerto = 75 + atacante.getDestreza() - this.agilidade;
+        
+        // Trava a chance entre 20% e 100% (para não ficar impossível acertar ou errar)
+        if (chanceAcerto > 100) chanceAcerto = 100;
+        if (chanceAcerto < 20) chanceAcerto = 20;
+
+        int dado = random.nextInt(100) + 1; // Roda um dado de 1 a 100
+
+        System.out.println(Cores.CYAN + "(Chance de Acerto: " + chanceAcerto + "%)" + Cores.RESET);
+
+        // Se o dado for MAIOR que a chance, o ataque ERROU (Esquiva)
+        if (dado > chanceAcerto) {
+            return true; // Esquivou!
+        }
+        return false; // Foi atingido
     }
 }
