@@ -25,20 +25,20 @@ public class Habilidade {
         
         // Verifica se o dono tem mana
         if (atacante.getMana() < this.custoMana) {
-            System.out.println("Mana insuficiente! (" + atacante.getMana() + "/" + this.custoMana + ")");
+            System.out.println(Cores.RED + "Mana insuficiente! (" + atacante.getMana() + "/" + this.custoMana + ")" + Cores.RESET);
             return false;
         }
 
         // Gasta a Mana do atacante
         atacante.setMana(atacante.getMana() - this.custoMana);
-        System.out.println(atacante.getNome() + " conjurou " + this.nome + "!");
+        System.out.println(Cores.CYAN + atacante.getNome() + " conjurou " + this.nome + "!" + Cores.RESET);
 
         // Aplica o efeito
         if (this.tipo.equals("Dano")) {
             // A magia soma a força do mago + o poder da magia
             int danoTotal = atacante.getForca() + this.poder;
             
-            System.out.println("A habilidade causou " + danoTotal + " de impacto!");
+            System.out.println(Cores.PURPLE + "A habilidade causou " + danoTotal + " de impacto!" + Cores.RESET);
             alvo.receberDano(danoTotal);
         }
 

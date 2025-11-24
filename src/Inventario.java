@@ -11,21 +11,22 @@ public class Inventario {
     // Adiciona um item na mochila
     public void adicionar(Item item) {
         itens.add(item);
-        System.out.println(item.getNome() + " foi adicionado ao inventário.");
+        System.out.println(Cores.GREEN + item.getNome() + " foi adicionado ao inventário." + Cores.RESET);
     }
 
     // Mostra o que tem dentro (Listar)
     public void exibir() {
         if (itens.isEmpty()) {
-            System.out.println("Sua mochila está vazia.");
+            System.out.println(Cores.YELLOW + "Sua mochila está vazia." + Cores.RESET);
         } else {
-            System.out.println("\n=== MOCHILA ===");
+            System.out.println(Cores.YELLOW_BOLD + "\n=== MOCHILA ===" + Cores.RESET);
             // Loop "For-Each": Para cada 'item' dentro de 'itens'
             for (int i = 0; i < itens.size(); i++) {
                 Item item = itens.get(i);
-                System.out.println((i + 1) + ". " + item.getNome() + " (Recupera " + item.getValorEfeito() + " " + item.getTipo() + ")");
+                System.out.println((i + 1) + ". " + Cores.WHITE_BOLD + item.getNome() + Cores.RESET + 
+                                   " (Recupera " + item.getValorEfeito() + " " + item.getTipo() + ")");
             }
-            System.out.println("===============\n");
+            System.out.println(Cores.YELLOW_BOLD + "===============\n" + Cores.RESET);
         }
     }
 
@@ -42,19 +43,19 @@ public class Inventario {
                 int novaVida = dono.getVida() + item.getValorEfeito();
                 if (novaVida > dono.getVidaMaxima()) novaVida = dono.getVidaMaxima();
                 dono.setVida(novaVida);
-                System.out.println("Você usou " + item.getNome() + " e recuperou vida!");
+                System.out.println(Cores.GREEN + "Você usou " + item.getNome() + " e recuperou vida!" + Cores.RESET);
             
             } else if (item.getTipo().equals("Mana")) {
                 int novaMana = dono.getMana() + item.getValorEfeito();
                 if (novaMana > dono.getManaMaxima()) novaMana = dono.getManaMaxima();
                 dono.setMana(novaMana);
-                System.out.println("Você usou " + item.getNome() + " e recuperou mana!");
+                System.out.println(Cores.BLUE + "Você usou " + item.getNome() + " e recuperou mana!" + Cores.RESET);
             }
 
             // Remove da lista (Gasta o item)
             itens.remove(indiceReal);
         } else {
-            System.out.println("Item inválido!");
+            System.out.println(Cores.RED + "Item inválido!" + Cores.RESET);
         }
     }
     

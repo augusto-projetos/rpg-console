@@ -43,10 +43,10 @@ public class JogoSalvo {
             escritor.write(dadosCriptografados);
             escritor.close();
             
-            System.out.println("Jogo salvo e protegido em '" + arquivo.getAbsolutePath() + "'!");
+            System.out.println(Cores.GREEN + "Jogo salvo e protegido em '" + arquivo.getAbsolutePath() + "'!" + Cores.RESET);
             
         } catch (IOException e) {
-            System.out.println("Erro ao salvar: " + e.getMessage());
+            System.out.println(Cores.RED + "Erro ao salvar: " + e.getMessage() + Cores.RESET);
         }
     }
 
@@ -55,7 +55,7 @@ public class JogoSalvo {
         File arquivo = new File(NOME_PASTA, NOME_ARQUIVO);
 
         if (!arquivo.exists()) {
-            System.out.println("Nenhum save encontrado.");
+            System.out.println(Cores.YELLOW + "Nenhum save encontrado." + Cores.RESET);
             return null;
         }
 
@@ -98,11 +98,11 @@ public class JogoSalvo {
             heroiCarregado.setMana(mana);
             heroiCarregado.setManaMaxima(manaMax);
             
-            System.out.println("Jogo carregado com sucesso!");
+            System.out.println(Cores.GREEN + "Jogo carregado com sucesso!" + Cores.RESET);
             return heroiCarregado;
 
         } catch (Exception e) {
-            System.out.println("Save corrompido ou modificado! Iniciando novo jogo.");
+            System.out.println(Cores.RED + "Save corrompido ou modificado! Iniciando novo jogo." + Cores.RESET);
             return null;
         }
     }

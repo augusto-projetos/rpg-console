@@ -27,16 +27,16 @@ public class Batalha {
         int xpRecompensa = 0; int xpPenalidade = 0;
         int ouroRecompensa = 0; int ouroPenalidade = 0;
 
-        System.out.println("=== BEM-VINDO À BATALHA ===");
+        System.out.println(Cores.YELLOW_BOLD + "\n=== BEM-VINDO À BATALHA ===" + Cores.RESET);
         if (heroi == null) {
         
             System.out.println("Digite o nome do seu Herói: ");
             String nomeHeroi = scanner.nextLine();
 
             System.out.println("\nEscolha sua Classe:" +
-                               "\n1. Guerreiro (Vida Alta, Defesa Alta)" +
-                               "\n2. Mago (Dano Alto, Vida Baixa)" +
-                               "\n3. Arqueiro (Crítico Alto, Equilibrado)");
+                               "\n1. " + Cores.GREEN + "Guerreiro" + Cores.RESET + " (Vida Alta, Defesa Alta)" +
+                               "\n2. " + Cores.BLUE + "Mago" + Cores.RESET + " (Dano Alto, Vida Baixa)" +
+                               "\n3. " + Cores.YELLOW + "Arqueiro" + Cores.RESET + " (Crítico Alto, Equilibrado)");
             int escolhaClasse = scanner.nextInt();
             scanner.nextLine(); // Consumir a nova linha
 
@@ -60,17 +60,17 @@ public class Batalha {
 
         } else {
 
-            System.out.println("O herói " + heroi.getNome() + " (Nível " + heroi.getNivel() + ") da classe " + heroi.getClasse() + " retorna para a arena!\n");
+            System.out.println("O herói " + Cores.GREEN + heroi.getNome() + Cores.RESET + " (Nível " + heroi.getNivel() + ") da classe " + heroi.getClasse() + " retorna para a arena!\n");
             
             // Recupera Vida e Mana
             heroi.setVida(heroi.getVidaMaxima());
             heroi.setMana(heroi.getManaMaxima());
             
-            System.out.println("Vida e Mana recuperadas totalmente!");
+            System.out.println(Cores.CYAN + "Vida e Mana recuperadas totalmente!" + Cores.RESET);
         }
 
         // Pergunta se quer ir na loja antes da batalha
-        System.out.println("\nDeseja visitar o Mercador antes da batalha? (s/n)");
+        System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
         String irLoja = scanner.nextLine().toLowerCase();
 
         while (!irLoja.equals("s") && !irLoja.equals("n")) {
@@ -83,7 +83,7 @@ public class Batalha {
         }
 
         // Escolhe o monstro
-        System.out.println("\nEscolha seu Oponente:" +
+        System.out.println(Cores.RED_BOLD + "\nEscolha seu Oponente:" + Cores.RESET +
                            "\n1. Slime Gosmento (Tutorial)" + 
                            "\n2. Esqueleto Arqueiro (Frágil mas Dano Alto)" +
                            "\n3. Goblin Furioso (Equilibrado)" +
@@ -170,20 +170,20 @@ public class Batalha {
                 return;
         }
 
-        System.out.println("\nA batalha vai começar entre " + heroi.getNome() + " (Força: " + heroi.getForca() + " | Defesa: " + heroi.getDefesa() + ") vs " + 
-                            monstro.getNome() + " (Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa() + ")");
+        System.out.println(Cores.RED + "\nBatalha Iniciada: " + Cores.GREEN + heroi.getNome() + " (Força: " + heroi.getForca() + " | Defesa: " + heroi.getDefesa() + ")" + Cores.RESET + " vs " + 
+                           Cores.RED_BOLD + monstro.getNome() + " (Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa() + ")" + Cores.RESET);
 
         while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
             System.out.println("\n-------------------------------------------------");
-            System.out.println(heroi.getNome() + ": " + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP | " +
-                               heroi.getMana() + "/" + heroi.getManaMaxima() + " MP");
-            System.out.println(monstro.getNome() + ": " + monstro.getVida() + "/" + monstro.getVidaMaxima() + " HP");
+            System.out.println(Cores.GREEN + heroi.getNome() + ": " + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " +
+                               Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
+            System.out.println(Cores.RED + monstro.getNome() + ": " + monstro.getVida() + "/" + monstro.getVidaMaxima() + " HP" + Cores.RESET);
             System.out.println("-------------------------------------------------");
 
             System.out.println("\nEscolha uma ação:" + 
                                "\n1. Atacar" + 
-                               "\n2. Habilidade: " + heroi.getHabilidade().getNome() + " (" + heroi.getHabilidade().getCustoMana() + " MP)" + 
+                               "\n2. Habilidade: " + Cores.CYAN + heroi.getHabilidade().getNome() + " (" + heroi.getHabilidade().getCustoMana() + " MP)" + Cores.RESET + 
                                "\n3. Defender (+10 HP)" +
                                "\n4. Usar Item" +
                                "\n5. Fugir");
@@ -208,7 +208,7 @@ public class Batalha {
                     break;
             
                 case 3: // DEFENDER
-                    System.out.println("Você assume uma postura defensiva e recupera 10 de vida.");
+                    System.out.println("Você assume uma postura defensiva e " + Cores.GREEN + "recupera 10 de vida." + Cores.RESET);
                     
                     int vidaAtual = heroi.getVida();
                     int cura = 10;
@@ -229,7 +229,7 @@ public class Batalha {
                     int manaAtual = heroi.getMana();
                     if (manaAtual + 5 <= heroi.getManaMaxima()) {
                         heroi.setMana(manaAtual + 5);
-                        System.out.println("Recuperou 5 MP descansando.");
+                        System.out.println(Cores.BLUE + "Recuperou 5 MP descansando." + Cores.RESET);
                     }
 
                     break;
@@ -253,11 +253,11 @@ public class Batalha {
 
                 case 5: // FUGIR
                     if (random.nextInt(10) < 3) { // 30% de chance de fuga bem-sucedida
-                        System.out.println("Você conseguiu fugir da batalha!");
+                        System.out.println(Cores.GREEN + "Você fugiu com sucesso!" + Cores.RESET);
                         System.out.println("Porém não ganhou XP.\n");
                         return;
                     } else {
-                        System.out.println("Você tentou fugir mas tropeçou!");
+                        System.out.println(Cores.RED + "Você tropeçou e não conseguiu fugir!" + Cores.RESET);
                     }
 
                     break;
@@ -268,7 +268,7 @@ public class Batalha {
 
             if (monstro.getVida() <= 0) {
 
-                System.out.println("O monstro foi derrotado!");
+                System.out.println(Cores.GREEN_BOLD + "\nO monstro foi derrotado!" + Cores.RESET);
                 break;
 
             } else {
@@ -308,13 +308,13 @@ public class Batalha {
         // Fim da Batalha: Verifica quem ganhou
         if (heroi.getVida() > 0) {
 
-            System.out.println("VITÓRIA! O " + monstro.getNome() + " caiu!");
+            System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
             heroi.ganharXp(xpRecompensa);
             heroi.ganharOuro(ouroRecompensa);
 
         } else {
 
-            System.out.println("GAME OVER... " + heroi.getNome() + " caiu em combate.");
+            System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
             heroi.perderXp(xpPenalidade);
             heroi.perderOuro(ouroPenalidade);
         }
@@ -322,7 +322,7 @@ public class Batalha {
 
     // Método exclusivo para gerenciar a compra de itens
     private void loja() {
-        System.out.println("\nO Mercador acena para você!");
+        System.out.println(Cores.PURPLE + "\nO Mercador acena para você!" + Cores.RESET);
         System.out.println("Mercador: 'Tenho ótimas poções para sua jornada.'");
         
         // Itens à venda
@@ -331,17 +331,19 @@ public class Batalha {
         Item pocaoVidaGrande = new Item("Poção de Vida Grande", "Vida", 100, 40);
 
         while (true) {
-            System.out.println("\n================ LOJA ================");
-            System.out.println("Seu Ouro: " + heroi.getOuro());
-            System.out.println("--- CONSUMÍVEIS ---");
-            System.out.println("1. " + pocaoVida.getNome() + " (Recupera 50 HP) - " + pocaoVida.getPreco() + "g");
-            System.out.println("2. " + pocaoMana.getNome() + " (Recupera 30 MP) - " + pocaoMana.getPreco() + "g");
-            System.out.println("3. " + pocaoVidaGrande.getNome() + " (Recupera 100 HP) - " + pocaoVidaGrande.getPreco() + "g");
-            System.out.println("--- UPGRADES (Permanentes) ---");
-            System.out.println("4. Afiar Arma (+2 Força) - 150g");
-            System.out.println("5. Reforçar Armadura (+2 Defesa) - 150g");
+            System.out.println(Cores.YELLOW_BOLD + "\n================ LOJA ================" + Cores.RESET);
+            System.out.println("Seu Ouro: " + Cores.YELLOW + heroi.getOuro() + Cores.RESET);
+            
+            System.out.println(Cores.CYAN + "--- CONSUMÍVEIS ---" + Cores.RESET);
+            System.out.println("1. " + pocaoVida.getNome() + " (Recupera 50 HP) - " + Cores.YELLOW + pocaoVida.getPreco() + "g" + Cores.RESET);
+            System.out.println("2. " + pocaoMana.getNome() + " (Recupera 30 MP) - " + Cores.YELLOW + pocaoMana.getPreco() + "g" + Cores.RESET);
+            System.out.println("3. " + pocaoVidaGrande.getNome() + " (Recupera 100 HP) - " + Cores.YELLOW + pocaoVidaGrande.getPreco() + "g" + Cores.RESET);
+            
+            System.out.println(Cores.CYAN + "--- UPGRADES (Permanentes) ---" + Cores.RESET);
+            System.out.println("4. Afiar Arma (+2 Força) - " + Cores.YELLOW + "150g" + Cores.RESET);
+            System.out.println("5. Reforçar Armadura (+2 Defesa) - " + Cores.YELLOW + "150g" + Cores.RESET);
             System.out.println("6. Sair da Loja");
-            System.out.println("======================================");
+            System.out.println(Cores.YELLOW_BOLD + "======================================" + Cores.RESET);
             
             int escolha = scanner.nextInt();
             scanner.nextLine(); 
@@ -363,9 +365,9 @@ public class Batalha {
                     if (heroi.getOuro() >= 150) {
                         heroi.setOuro(heroi.getOuro() - 150);
                         heroi.setForca(heroi.getForca() + 2);
-                        System.out.println("O ferreiro afiou sua arma! Sua Força subiu para " + heroi.getForca() + "!");
+                        System.out.println(Cores.GREEN + "O ferreiro afiou sua arma! Sua Força subiu para " + heroi.getForca() + "!" + Cores.RESET);
                     } else {
-                        System.out.println("Ouro insuficiente! Você precisa de 150g.");
+                        System.out.println(Cores.RED + "Ouro insuficiente! Você precisa de 150g." + Cores.RESET);
                     }
                     break;
 
@@ -373,9 +375,9 @@ public class Batalha {
                     if (heroi.getOuro() >= 150) {
                         heroi.setOuro(heroi.getOuro() - 150);
                         heroi.setDefesa(heroi.getDefesa() + 2);
-                        System.out.println("O ferreiro reforçou sua armadura! Sua Defesa subiu para " + heroi.getDefesa() + "!");
+                        System.out.println(Cores.GREEN + "O ferreiro reforçou sua armadura! Sua Defesa subiu para " + heroi.getDefesa() + "!" + Cores.RESET);
                     } else {
-                        System.out.println("Ouro insuficiente! Você precisa de 150g.");
+                        System.out.println(Cores.RED + "Ouro insuficiente! Você precisa de 150g." + Cores.RESET);
                     }
                     break;
 
@@ -383,7 +385,7 @@ public class Batalha {
                     System.out.println("Mercador: 'Volte sempre!'");
                     return;
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println(Cores.RED + "Opção inválida." + Cores.RESET);
             }
         }
     }

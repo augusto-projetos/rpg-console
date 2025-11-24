@@ -232,7 +232,8 @@ public class Personagem {
             this.vida = 0;
         }
 
-        System.out.println(this.nome + " recebeu " + danoReal + " de dano. Vida restante: " + this.vida);
+        System.out.println(Cores.RED + this.nome + " recebeu " + danoReal + " de dano." + Cores.RESET + 
+                           " Vida restante: " + Cores.GREEN + this.vida + Cores.RESET);
     }
 
     // Exibe a barra de XP
@@ -252,12 +253,12 @@ public class Personagem {
         int blocosPreenchidos = porcentagemParaDesenho / 5; 
         int blocosVazios = 20 - blocosPreenchidos;
 
-        System.out.print("XP: [");
+        System.out.print(Cores.CYAN + "XP: [");
         for (int i = 0; i < blocosPreenchidos; i++) System.out.print("█");
         for (int i = 0; i < blocosVazios; i++) System.out.print("-");
         
         // No texto final, mantemos o porcentagemXP real para o jogador entender que sobrou XP
-        System.out.println("] " + porcentagemXP + "% (" + this.xp + "/" + xpNecessario + ")\n");
+        System.out.println("] " + porcentagemXP + "% (" + this.xp + "/" + xpNecessario + ")\n" + Cores.RESET);
     }
 
     // Ganha XP e verifica se sobe de nível
@@ -265,7 +266,7 @@ public class Personagem {
         this.xp += xpGanho;
         int xpNecessario = this.nivel * 100; // Meta para o próximo nível
         
-        System.out.println(this.nome + " ganhou " + xpGanho + " XP.");
+        System.out.println(Cores.GREEN + this.nome + " ganhou " + xpGanho + " XP." + Cores.RESET);
 
         exibirBarraXp();
 
@@ -283,11 +284,11 @@ public class Personagem {
             this.vidaMaxima += 20; 
             this.vida = this.vidaMaxima; 
 
-            System.out.println("\n---------------- LEVEL UP! ----------------");
+            System.out.println(Cores.YELLOW_BOLD + "\n---------------- LEVEL UP! ----------------");
             System.out.println("PARABÉNS! Você subiu para o nível " + this.nivel + "!");
             System.out.println("Vida aumentada para: " + this.vidaMaxima);
             System.out.println("Força +3 | Defesa +2");
-            System.out.println("------------------------------------------\n");
+            System.out.println("------------------------------------------\n" + Cores.RESET);
         }
     }
 
@@ -299,7 +300,7 @@ public class Personagem {
         // Garante que o XP não fique negativo
         if (this.xp < 0) this.xp = 0; 
         
-        System.out.println("PENALIDADE: Você perdeu " + perda + " XP por ter sido derrotado.");
+        System.out.println(Cores.RED + "PENALIDADE: Você perdeu " + perda + " XP por ter sido derrotado." + Cores.RESET);
 
         exibirBarraXp();
     }
@@ -307,7 +308,7 @@ public class Personagem {
     // Ganha Ouro
     public void ganharOuro(int quantidade) {
         this.ouro += quantidade;
-        System.out.println(this.nome + " encontrou " + quantidade + " moedas de ouro!");
+        System.out.println(Cores.YELLOW + this.nome + " encontrou " + quantidade + " moedas de ouro!" + Cores.RESET);
     }
 
     // Perde uma porcentagem de Ouro (cai do bolso na derrota)
@@ -317,17 +318,17 @@ public class Personagem {
         
         if (this.ouro < 0) this.ouro = 0;
         
-        System.out.println("BOLSO FURADO: Você deixou cair " + perda + " moedas de ouro na fuga.");
-        System.out.println("Ouro Restante: " + this.ouro);
+        System.out.println(Cores.RED + "BOLSO FURADO: Você deixou cair " + perda + " moedas de ouro na fuga." + Cores.RESET);
+        System.out.println(Cores.YELLOW + "Ouro Restante: " + this.ouro + Cores.RESET);
     }
 
     public void comprarItem(Item item) {
         if (this.ouro >= item.getPreco()) {
             this.ouro -= item.getPreco();
             this.inventario.adicionar(item); // Guarda na mochila
-            System.out.println("Compra realizada! Saldo atual: " + this.ouro);
+            System.out.println(Cores.GREEN + "Compra realizada! Saldo atual: " + this.ouro + Cores.RESET);
         } else {
-            System.out.println("Ouro insuficiente! (" + this.ouro + "/" + item.getPreco() + ")");
+            System.out.println(Cores.RED + "Ouro insuficiente! (" + this.ouro + "/" + item.getPreco() + ")" + Cores.RESET);
         }
     }
 

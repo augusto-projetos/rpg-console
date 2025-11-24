@@ -8,7 +8,7 @@ public class Main {
         Batalha batalha = new Batalha();
         Personagem heroi = null;
         
-        System.out.println("=== RPG CONSOLE v2.0 ===");
+        System.out.println(Cores.YELLOW_BOLD + "=== RPG CONSOLE v2.0 ===" + Cores.RESET);
         System.out.println("1. Novo Jogo");
         System.out.println("2. Carregar Jogo");
         System.out.println("3. Sair");
@@ -24,7 +24,7 @@ public class Main {
                 scanner.nextLine(); // Limpar buffer
                 entradaValida = true; // Se passou daqui, deu certo
             } catch (InputMismatchException e) {
-                System.out.println("Erro: Digite apenas números!");
+                System.out.println(Cores.RED + "Erro: Digite apenas números!" + Cores.RESET);
                 scanner.nextLine(); // Limpa o "lixo" (letra) que ficou no scanner
             }
         }
@@ -36,10 +36,11 @@ public class Main {
             // Tenta carregar
             heroi = JogoSalvo.carregar();
             if (heroi == null) {
-                System.out.println("Iniciando novo jogo...");
+                System.out.println(Cores.CYAN + "Iniciando novo jogo..." + Cores.RESET);
             }
         } else if (opcao == 3) {
             System.out.println("Até mais!");
+
             // Pequena pausa antes de fechar
             try {
                 Thread.sleep(2000);
@@ -49,7 +50,7 @@ public class Main {
             scanner.close();
             return;
         } else {
-            System.out.println("Opção inválida! Iniciando novo jogo por padrão...");
+            System.out.println(Cores.RED + "Opção inválida! Iniciando novo jogo por padrão..." + Cores.RESET);
         }
 
         // Passamos o herói carregado (ou null) para a batalha
@@ -76,7 +77,7 @@ public class Main {
                     scanner.nextLine(); 
                     escolhaValida = true;
                 } catch (InputMismatchException e) {
-                    System.out.println("Erro: Digite apenas números (1, 2 ou 3)!");
+                    System.out.println(Cores.RED + "Erro: Digite apenas números (1, 2 ou 3)!" + Cores.RESET);
                     scanner.nextLine(); 
                 }
             }
@@ -85,9 +86,9 @@ public class Main {
             if (escolha == 2) {
                 // SALVAR
                 if (batalha.getHeroi() != null) {
-                    System.out.println("\nAVISO IMPORTANTE:");
+                    System.out.println(Cores.YELLOW + "\nAVISO IMPORTANTE:" + Cores.RESET);
                     System.out.println("O sistema de salvamento mantém seu Nível, XP, Ouro e Status.");
-                    System.out.println("Porém, os ITENS DO INVENTÁRIO (Poções) serão perdidos ao fechar o jogo.");
+                    System.out.println(Cores.RED + "Porém, os ITENS DO INVENTÁRIO (Poções) serão perdidos ao fechar o jogo." + Cores.RESET);
                     System.out.println("Dica: Gaste suas poções ou guarde seu Ouro para comprar mais depois!");
                     System.out.println("------------------------------------------------------------------\n");
                     
@@ -100,7 +101,7 @@ public class Main {
             
         } while (continuar);
 
-        System.out.println("Obrigado por jogar! Até a próxima.");
+        System.out.println(Cores.CYAN + "Obrigado por jogar! Até a próxima." + Cores.RESET);
 
         // Pequena pausa antes de fechar
         try {
