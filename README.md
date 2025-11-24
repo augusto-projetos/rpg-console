@@ -11,15 +11,16 @@
 
 ## 🎮 Sobre o Jogo
 
-O **RPG Console** simula uma campanha completa de RPG textual, indo muito além de batalhas aleatórias. O jogador deve gerenciar recursos, escolher táticas corretas e evoluir seu personagem para sobreviver a desafios crescentes.
+O **RPG Console** simula uma campanha completa de RPG textual, combinando estratégia de combate com gestão de recursos. O jogador deve administrar Ouro e Mana, escolher táticas corretas e evoluir seu personagem para sobreviver a uma jornada de desafios crescentes.
 
 ### Principais Funcionalidades
 
-- **🛡️ Sistema de Classes (A Trindade):** Escolha entre **Guerreiro**, **Mago** ou **Arqueiro**. Cada classe possui status únicos e interage de forma diferente com os inimigos.
-- **🔥 Mecânica de Vantagens:** Sistema estilo "Pedra, Papel e Tesoura". Escolher a classe certa contra o inimigo certo garante dano massivo, punindo escolhas erradas.
+- **🛡️ Classes & Habilidades:** Escolha entre **Guerreiro**, **Mago** ou **Arqueiro**. Cada classe possui status únicos e **Habilidades Especiais** que consomem Mana (MP).
+- **💰 Economia & Loja:** Derrote monstros para ganhar Ouro. Visite o **Mercador** para comprar poções vitais ou investir em **Upgrades Permanentes** de força e defesa.
+- **💾 Sistema de Save/Load:** Seu progresso (Nível, Ouro, Atributos) é salvo localmente em arquivo criptografado, permitindo pausar e continuar sua aventura a qualquer momento.
+- **🔥 Mecânica de Vantagens:** Sistema tático estilo "Pedra, Papel e Tesoura". Escolher a classe certa contra o inimigo certo garante dano massivo.
 - **🗺️ Campanha "Boss Rush":** Enfrente uma progressão de **9 Chefes**, desde o tutorial até desafios lendários e secretos.
-- **📊 Interface Visual:** Barra de XP dinâmica no terminal para acompanhar o progresso do nível.
-- **💾 Persistência:** O herói é salvo na memória entre as batalhas, permitindo acumular poder e atributos.
+- **📊 Interface Visual:** Barra de XP dinâmica e HUD informativo no terminal para acompanhar seu status.
 - **🎲 Fator Aleatoriedade:** Dano variável, chance de Crítico e mecânica de **Fúria** (Inimigos ficam mais perigosos quando estão morrendo).
 
 ---
