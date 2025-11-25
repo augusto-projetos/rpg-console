@@ -22,6 +22,7 @@ O **RPG Console** simula uma campanha completa de RPG textual, combinando estrat
 - **🗺️ Campanha "Boss Rush":** Enfrente uma progressão de **9 Chefes**, desde o tutorial até desafios lendários e secretos.
 - **📊 Interface Visual:** Barra de XP dinâmica e HUD informativo no terminal para acompanhar seu status.
 - **🎲 Fator Aleatoriedade:** Dano variável, chance de Crítico e mecânica de **Fúria** (Inimigos ficam mais perigosos quando estão morrendo).
+- **🧭 Eventos & Exploração:** O mundo é dinâmico. Entre batalhas, você pode encontrar tesouros, cair em armadilhas ou negociar com viajantes misteriosos.
 
 ---
 
