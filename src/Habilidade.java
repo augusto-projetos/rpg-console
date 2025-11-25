@@ -4,12 +4,18 @@ public class Habilidade {
     private int custoMana;
     private int poder;
     private String tipo;
+    private String efeitoStatus; // Ex: "Veneno", "Stun", "Normal"
+    private int turnosStatus; // Quantos turnos dura
+    private int poderStatus; // Dano por turno (DOT)
 
-    public Habilidade(String nome, int custoMana, int poder, String tipo) {
+    public Habilidade(String nome, int custoMana, int poder, String tipo, String efeitoStatus, int turnosStatus, int poderStatus) {
         this.nome = nome;
         this.custoMana = custoMana;
         this.poder = poder;
         this.tipo = tipo;
+        this.efeitoStatus = efeitoStatus;
+        this.turnosStatus = turnosStatus;
+        this.poderStatus = poderStatus;
     }
 
     // Getters
@@ -40,6 +46,10 @@ public class Habilidade {
             
             System.out.println(Cores.PURPLE + "A habilidade causou " + danoTotal + " de impacto!" + Cores.RESET);
             alvo.receberDano(danoTotal);
+        }
+
+        if (!this.efeitoStatus.equals("Normal")) {
+            alvo.receberStatus(this.efeitoStatus, this.turnosStatus, this.poderStatus);
         }
 
         return true;

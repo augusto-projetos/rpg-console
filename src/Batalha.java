@@ -180,105 +180,114 @@ public class Batalha {
         }
 
         System.out.println(Cores.RED + "\nBatalha Iniciada: " + Cores.GREEN + heroi.getNome() + " (Força: " + heroi.getForca() + " | Defesa: " + heroi.getDefesa() + ")" + Cores.RESET + " vs " + 
-                           Cores.RED_BOLD + monstro.getNome() + " (Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa() + ")" + Cores.RESET);
+                           Cores.RED_BOLD + monstro.getNome() + " (Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa() + ")\n" + Cores.RESET);
 
         while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
-            System.out.println("\n-------------------------------------------------");
+            // Processa Status do Herói
+            boolean heroiPodeAgir = heroi.processarStatus();
+
+            System.out.println("-------------------------------------------------");
             System.out.println(Cores.GREEN + heroi.getNome() + ": " + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " +
                                Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
             System.out.println(Cores.RED + monstro.getNome() + ": " + monstro.getVida() + "/" + monstro.getVidaMaxima() + " HP" + Cores.RESET);
             System.out.println("-------------------------------------------------");
 
-            System.out.println("\nEscolha uma ação:" + 
-                               "\n1. Atacar" + 
-                               "\n2. Habilidade: " + Cores.CYAN + heroi.getHabilidade().getNome() + " (" + heroi.getHabilidade().getCustoMana() + " MP)" + Cores.RESET + 
-                               "\n3. Defender (+10 HP)" +
-                               "\n4. Usar Item" +
-                               "\n5. Fugir");
-            int escolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a nova linha
-            System.out.println("\n=============================");
+            // Se o herói não estiver atordoado, ele joga normal
+            if (heroiPodeAgir) {
 
-            switch (escolha) {
-                case 1: // ATACAR
-                    // Pergunta ao monstro: "Você desviou?"
-                    if (monstro.tentarEsquivar(heroi)) {
-                        System.out.println(Cores.WHITE_BOLD + "MISS! O " + monstro.getNome() + " desviou do seu ataque!" + Cores.RESET);
-                    } else {
-                        // Se NÃO desviou, o pau quebra normal
-                        int danoDoHeroi = heroi.atacar(monstro);
-                        System.out.println("Você atacou com força " + danoDoHeroi + "!");
-                        monstro.receberDano(danoDoHeroi);
-                    }
+                System.out.println("\nEscolha uma ação:" + 
+                                "\n1. Atacar" + 
+                                "\n2. Habilidade: " + Cores.CYAN + heroi.getHabilidade().getNome() + " (" + heroi.getHabilidade().getCustoMana() + " MP)" + Cores.RESET + 
+                                "\n3. Defender (+10 HP)" +
+                                "\n4. Usar Item" +
+                                "\n5. Fugir");
+                int escolha = scanner.nextInt();
+                scanner.nextLine(); // Consumir a nova linha
+                System.out.println("\n=============================");
 
-                    break;
-
-                case 2: // HABILIDADE
-                    boolean funcionou = heroi.getHabilidade().usar(heroi, monstro);
-                    
-                    if (!funcionou) {
-                        System.out.println("Você se atrapalhou na conjuração e perdeu a vez!");
-                    }
-                    break;
-            
-                case 3: // DEFENDER
-                    System.out.println("Você assume uma postura defensiva e " + Cores.GREEN + "recupera 10 de vida." + Cores.RESET);
-                    
-                    int vidaAtual = heroi.getVida();
-                    int cura = 10;
-                    int vidaMaxima = heroi.getVidaMaxima();
-
-                    // Se a cura for fazer a vida ultrapassar o máximo...
-                    if (vidaAtual + cura > vidaMaxima) {
-                        // ... a vida vira exatamente o máximo (enche o tanque e para)
-                        heroi.setVida(vidaMaxima);
-                    } else {
-                        // Se não encher tudo, cura normal
-                        heroi.setVida(vidaAtual + cura);
-                    }
-                    
-                    System.out.println("Vida atual: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
-
-                    // Recupera um pouquinho de mana também ao defender
-                    int manaAtual = heroi.getMana();
-                    if (manaAtual + 5 <= heroi.getManaMaxima()) {
-                        heroi.setMana(manaAtual + 5);
-                        System.out.println(Cores.BLUE + "Recuperou 5 MP descansando." + Cores.RESET);
-                    }
-
-                    break;
-
-                case 4: // USAR ITEM
-                    System.out.println("Escolha o item para usar:");
-                    heroi.getInventario().exibir(); // Mostra a lista
-                    
-                    if (heroi.getInventario().getTotalItens() > 0) {
-                        System.out.println("Digite o número do item (ou 0 para voltar):");
-                        int indiceItem = scanner.nextInt();
-                        scanner.nextLine();
-                        
-                        if (indiceItem > 0) {
-                            heroi.usarPocao(indiceItem);
+                switch (escolha) {
+                    case 1: // ATACAR
+                        // Pergunta ao monstro: "Você desviou?"
+                        if (monstro.tentarEsquivar(heroi)) {
+                            System.out.println(Cores.WHITE_BOLD + "MISS! O " + monstro.getNome() + " desviou do seu ataque!" + Cores.RESET);
                         } else {
-                            System.out.println("Cancelado.");
+                            // Se NÃO desviou, o pau quebra normal
+                            int danoDoHeroi = heroi.atacar(monstro);
+                            System.out.println("Você atacou com força " + danoDoHeroi + "!");
+                            monstro.receberDano(danoDoHeroi);
                         }
-                    }
-                    break;
 
-                case 5: // FUGIR
-                    if (random.nextInt(10) < 3) { // 30% de chance de fuga bem-sucedida
-                        System.out.println(Cores.GREEN + "Você fugiu com sucesso!" + Cores.RESET);
-                        System.out.println("Porém não ganhou XP.\n");
-                        return;
-                    } else {
-                        System.out.println(Cores.RED + "Você tropeçou e não conseguiu fugir!" + Cores.RESET);
-                    }
+                        break;
 
-                    break;
+                    case 2: // HABILIDADE
+                        boolean funcionou = heroi.getHabilidade().usar(heroi, monstro);
+                        
+                        if (!funcionou) {
+                            System.out.println("Você se atrapalhou na conjuração e perdeu a vez!");
+                        }
+                        break;
+                
+                    case 3: // DEFENDER
+                        System.out.println("Você assume uma postura defensiva e " + Cores.GREEN + "recupera 10 de vida." + Cores.RESET);
+                        
+                        int vidaAtual = heroi.getVida();
+                        int cura = 10;
+                        int vidaMaxima = heroi.getVidaMaxima();
 
-                default:
-                    System.out.println("Opção inválida! Perdeu a vez.");
+                        // Se a cura for fazer a vida ultrapassar o máximo...
+                        if (vidaAtual + cura > vidaMaxima) {
+                            // ... a vida vira exatamente o máximo (enche o tanque e para)
+                            heroi.setVida(vidaMaxima);
+                        } else {
+                            // Se não encher tudo, cura normal
+                            heroi.setVida(vidaAtual + cura);
+                        }
+                        
+                        System.out.println("Vida atual: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
+
+                        // Recupera um pouquinho de mana também ao defender
+                        int manaAtual = heroi.getMana();
+                        if (manaAtual + 5 <= heroi.getManaMaxima()) {
+                            heroi.setMana(manaAtual + 5);
+                            System.out.println(Cores.BLUE + "Recuperou 5 MP descansando." + Cores.RESET);
+                        }
+
+                        break;
+
+                    case 4: // USAR ITEM
+                        System.out.println("Escolha o item para usar:");
+                        heroi.getInventario().exibir(); // Mostra a lista
+                        
+                        if (heroi.getInventario().getTotalItens() > 0) {
+                            System.out.println("Digite o número do item (ou 0 para voltar):");
+                            int indiceItem = scanner.nextInt();
+                            scanner.nextLine();
+                            
+                            if (indiceItem > 0) {
+                                heroi.usarPocao(indiceItem);
+                            } else {
+                                System.out.println("Cancelado.");
+                            }
+                        }
+                        break;
+
+                    case 5: // FUGIR
+                        if (random.nextInt(10) < 3) { // 30% de chance de fuga bem-sucedida
+                            System.out.println(Cores.GREEN + "Você fugiu com sucesso!" + Cores.RESET);
+                            System.out.println("Porém não ganhou XP.\n");
+                            return;
+                        } else {
+                            System.out.println(Cores.RED + "Você tropeçou e não conseguiu fugir!" + Cores.RESET);
+                        }
+
+                        break;
+
+                    default:
+                        System.out.println("Opção inválida! Perdeu a vez.");
+                }
+            } else {
+                System.out.println(Cores.YELLOW + heroi.getNome() + " está atordoado e não pode agir neste turno!" + Cores.RESET);
             }
 
             if (monstro.getVida() <= 0) {
@@ -288,21 +297,37 @@ public class Batalha {
 
             } else {
 
-                try {
-                    System.out.println("\nO monstro está se preparando...");
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                // Verifica se o monstro pode agir
+                boolean monstroPodeAgir = monstro.processarStatus();
 
-                // Pergunta ao herói: "Você desviou?"
-                if (heroi.tentarEsquivar(monstro)) {
-                    System.out.println(Cores.WHITE_BOLD + "MISS! Você desviou do ataque do " + monstro.getNome() + "!" + Cores.RESET);
+                if (monstroPodeAgir) {
+                    try {
+                        System.out.println("\nO monstro está se preparando...");
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    // 25% de chance de usar habilidade especial (se tiver mana)
+                    boolean usouEspecial = false;
+                    if (random.nextInt(100) < 25) { 
+                        // Tenta usar a skill. Se tiver mana, retorna true.
+                        usouEspecial = monstro.getHabilidade().usar(monstro, heroi);
+                    }
+
+                    // Se não usou especial (por azar ou falta de mana), ataca normal
+                    if (!usouEspecial) {
+                        // Verifica esquiva do herói
+                        if (heroi.tentarEsquivar(monstro)) {
+                            System.out.println(Cores.WHITE_BOLD + "MISS! Você desviou do ataque do " + monstro.getNome() + "!" + Cores.RESET);
+                        } else {
+                            int danoDoMonstro = monstro.atacar(heroi);
+                            System.out.println(Cores.RED + "O " + monstro.getNome() + " te acertou com força " + danoDoMonstro + "!" + Cores.RESET);
+                            heroi.receberDano(danoDoMonstro);
+                        }
+                    }
                 } else {
-                    // Se não desviou, toma dano
-                    int danoDoMonstro = monstro.atacar(heroi);
-                    System.out.println("O " + monstro.getNome() + " te acertou com força " + danoDoMonstro + "!");
-                    heroi.receberDano(danoDoMonstro);
+                    System.out.println(Cores.YELLOW + "\nO " + monstro.getNome() + " está atordoado e não atacou!" + Cores.RESET);
                 }
             }
 

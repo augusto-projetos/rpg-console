@@ -41,6 +41,11 @@ public class JogoSalvo {
             dados.append(heroi.getDefesa()).append("\n");
             dados.append(heroi.getAgilidade()).append("\n");
             dados.append(heroi.getDestreza()).append("\n");
+
+            // Status
+            dados.append(heroi.getEfeitoStatus()).append("\n");
+            dados.append(heroi.getTurnosStatus()).append("\n");
+            dados.append(heroi.getDanoStatus()).append("\n");
             
             // Inventário
             dados.append(heroi.getInventario().toSaveString()).append("\n");
@@ -99,9 +104,12 @@ public class JogoSalvo {
             int defesa = Integer.parseInt(linhas[10]);
             int agilidade = Integer.parseInt(linhas[11]);
             int destreza = Integer.parseInt(linhas[12]);
+            String efeitoStatus = linhas[13];
+            int turnosStatus = Integer.parseInt(linhas[14]);
+            int danoStatus = Integer.parseInt(linhas[15]);
             
-            // Inventário (Linha 13)
-            String dadosInventario = (linhas.length > 13) ? linhas[13] : "VAZIO";
+            // Inventário
+            String dadosInventario = (linhas.length > 16) ? linhas[16] : "VAZIO";
 
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
@@ -115,6 +123,7 @@ public class JogoSalvo {
             heroiCarregado.setAgilidade(agilidade);
             heroiCarregado.setDestreza(destreza);
             heroiCarregado.getInventario().carregarDoSave(dadosInventario);
+            heroiCarregado.receberStatus(efeitoStatus, turnosStatus, danoStatus);
             
             System.out.println(Cores.GREEN + "Jogo carregado com sucesso!" + Cores.RESET);
             return heroiCarregado;

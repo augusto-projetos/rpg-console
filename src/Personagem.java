@@ -17,6 +17,9 @@ public class Personagem {
     private Inventario inventario;
     private int destreza;  // Influencia a chance de acertar
     private int agilidade; // Influencia a chance de esquivar
+    private String efeitoStatus; // Ex: "Veneno", "Stun", "Normal"
+    private int turnosStatus; // Quantos turnos dura
+    private int danoStatus; // Guarda quanto de dano vai tomar por turno
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -35,35 +38,89 @@ public class Personagem {
         switch (classe) {
             case "Mago":
                 this.manaMaxima = 50;
-                this.habilidade = new Habilidade("Bola de Fogo", 20, 30, "Dano");
+                // Bola de Fogo: Dano Alto + Queimadura por 3 turnos
+                this.habilidade = new Habilidade("Bola de Fogo", 20, 30, "Dano", "Queimadura", 3, 10);
                 this.destreza = 10; // Mago não tem mira física muito boa
                 this.agilidade = 12; // Mas é ligeiro (tecido leve)
                 break;
 
             case "Guerreiro":
                 this.manaMaxima = 20;
-                this.habilidade = new Habilidade("Golpe Pesado", 10, 15, "Dano");
+                // Golpe Atordoante: Dano Médio + Stun por 1 turno (Inimigo não ataca)
+                this.habilidade = new Habilidade("Golpe Atordoante", 15, 15, "Dano", "Stun", 1, 0);
                 this.destreza = 12; // Razoável
                 this.agilidade = 5; // Lento (Armadura pesada)
                 break;
 
             case "Arqueiro":
                 this.manaMaxima = 30;
-                this.habilidade = new Habilidade("Flecha Explosiva", 15, 20, "Dano");
+                // Flecha Envenenada: Dano Médio + Veneno por 4 turnos
+                this.habilidade = new Habilidade("Flecha Envenenada", 15, 20, "Dano", "Veneno", 4, 5);
                 this.destreza = 20; // Excelente mira
                 this.agilidade = 18; // Muito rápido
                 break;
+        }
 
-            default: // Camponês
-                this.manaMaxima = 10;
-                this.habilidade = new Habilidade("Ataque Básico", 0, 5, "Dano");
-                this.destreza = 12;
-                this.agilidade = 8;
+        // Aqui damos identidade única para cada inimigo
+        if (nome.contains("Slime")) {
+            // Slime: Skill fraca que envenena levemente
+            this.habilidade = new Habilidade("Cuspir Gosma", 8, 5, "Dano", "Veneno", 2, 2);
+            this.manaMaxima = 20;
+        }
+
+        else if (nome.contains("Esqueleto")) {
+            // Esqueleto: Tiro preciso que causa muito dano (sem efeito extra)
+            this.habilidade = new Habilidade("Tiro na Cabeça", 15, 25, "Dano", "Normal", 0, 0);
+            this.manaMaxima = 30;
+        }
+
+        else if (nome.contains("Goblin")) {
+            // Goblin: Ataque sujo e barato
+            this.habilidade = new Habilidade("Faca Envenenada", 10, 10, "Dano", "Veneno", 3, 3);
+            this.manaMaxima = 20;
+        }
+
+        else if (nome.contains("Necromante")) {
+            // Necromante: Magia sombria poderosa
+            this.habilidade = new Habilidade("Seta Sombria", 25, 35, "Dano", "Queimadura", 4, 8); 
+            this.manaMaxima = 80;
+        }
+
+        else if (nome.contains("Orc")) {
+            // Orc: Pancada que atordoa
+            this.habilidade = new Habilidade("Esmagar Crânio", 15, 20, "Dano", "Stun", 1, 0);
+            this.manaMaxima = 30;
+        }
+
+        else if (nome.contains("Aranha")) {
+            // Aranha: Veneno potente
+            this.habilidade = new Habilidade("Teia Venenosa", 15, 10, "Dano", "Veneno", 5, 8);
+            this.manaMaxima = 40;
+        }
+
+        else if (nome.contains("Golem")) {
+            // Golem: Stun em área (dano alto)
+            this.habilidade = new Habilidade("Terremoto", 25, 30, "Dano", "Stun", 2, 0);
+            this.manaMaxima = 50;
+        }
+
+        else if (nome.contains("Dragão")) {
+            // Dragão: O terror supremo
+            this.habilidade = new Habilidade("Mar de Chamas", 40, 50, "Dano", "Queimadura", 5, 15);
+            this.manaMaxima = 100;
+        }
+
+        else if (nome.contains("Augusto")) {
+            // Easter Egg
+            this.habilidade = new Habilidade("Banir Jogador", 1, 999, "Dano", "Stun", 99, 0);
+            this.manaMaxima = 999;
         }
 
         this.mana = this.manaMaxima; // Começa cheio
         this.ouro = 0; // Começa sem ouro
         this.inventario = new Inventario(); // Cria a mochila vazia
+        this.efeitoStatus = "Normal";
+        this.turnosStatus = 0;
     }
 
     // Getters e Setters
@@ -170,6 +227,27 @@ public class Personagem {
     }
     public void setAgilidade(int agilidade) {
         this.agilidade = agilidade;
+    }
+
+    public String getEfeitoStatus() {
+        return efeitoStatus;
+    }
+    public void setEfeitoStatus(String efeitoStatus) {
+        this.efeitoStatus = efeitoStatus;
+    }
+
+    public int getTurnosStatus() {
+        return turnosStatus;
+    }
+    public void setTurnosStatus(int turnosStatus) {
+        this.turnosStatus = turnosStatus;
+    }
+
+    public int getDanoStatus() {
+        return danoStatus;
+    }
+    public void setDanoStatus(int danoStatus) {
+        this.danoStatus = danoStatus;
     }
 
     // Métodos de combate
@@ -387,5 +465,66 @@ public class Personagem {
             return true; // Esquivou!
         }
         return false; // Foi atingido
+    }
+
+    // Coloca um efeito no personagem
+    public void receberStatus(String efeito, int turnos, int danoPorTurno) {
+        this.efeitoStatus = efeito;
+        this.turnosStatus = turnos;
+        this.danoStatus = danoPorTurno;
+
+        if (efeito.equals("Veneno") || efeito.equals("Queimadura")) {
+
+            System.out.println(Cores.PURPLE + this.nome + " foi afetado por " + efeito + " por " + turnos + " turnos!" + Cores.RESET);
+
+        } else if (efeito.equals("Stun")) {
+
+            System.out.println(Cores.YELLOW_BOLD + this.nome + " ficou atordoado (Stun) por " + turnos + " turnos!" + Cores.RESET);
+        }
+    }
+
+    // Retorna TRUE se o personagem pode agir
+    // Retorna FALSE se ele perdeu a vez (Stun)
+    public boolean processarStatus() {
+        // Se não tiver nada, continua o jogo
+        if (this.efeitoStatus.equals("Normal") || this.turnosStatus <= 0) {
+
+            this.efeitoStatus = "Normal";
+            return true;
+        }
+
+        System.out.println(Cores.CYAN + "--- Efeito Ativo: " + this.efeitoStatus + " (" + (this.turnosStatus-1) + " turnos restantes) ---" + Cores.RESET);
+
+        boolean podeAgir = true;
+
+        // Lógica do Veneno/Queimadura (Dano por turno)
+        if (this.efeitoStatus.equals("Veneno") || this.efeitoStatus.equals("Queimadura")) {
+
+            int danoReal = this.danoStatus;
+            this.vida -= danoReal; // Tira vida direto
+            if (this.vida < 0) {
+                this.vida = 0;
+            }
+
+            System.out.println(Cores.PURPLE + this.nome + " sofreu " + danoReal + " de dano pelo " + this.efeitoStatus + "." + Cores.RESET);
+            System.out.println("Vida restante: " + Cores.GREEN + this.vida + Cores.RESET);
+        }
+
+        // Lógica do Stun (Perde a vez)
+        else if (this.efeitoStatus.equals("Stun")) {
+
+            System.out.println(Cores.YELLOW_BOLD + this.nome + " está atordoado e não pode se mover!" + Cores.RESET);
+            podeAgir = false; // Trava o turno
+        }
+
+        this.turnosStatus--;
+        // Se acabou o tempo, cura
+        if (this.turnosStatus <= 0) {
+
+            System.out.println(Cores.GREEN + "O efeito " + this.efeitoStatus + " passou." + Cores.RESET);
+            this.efeitoStatus = "Normal";
+        }
+
+        return podeAgir;
     }
 }
