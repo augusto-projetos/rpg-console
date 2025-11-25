@@ -190,6 +190,12 @@ public class Batalha {
             // Processa Status do Herói
             boolean heroiPodeAgir = heroi.processarStatus();
 
+            // Se o veneno te matou, o jogo tem que parar AGORA.
+            if (heroi.getVida() <= 0) {
+                System.out.println(Cores.RED_BOLD + "\nVocê sucumbiu aos ferimentos!" + Cores.RESET);
+                break; // Sai do loop imediatamente (vai pro Game Over)
+            }
+
             System.out.println("-------------------------------------------------");
             System.out.println(Cores.GREEN + heroi.getNome() + ": " + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " +
                                Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
