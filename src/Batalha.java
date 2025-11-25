@@ -82,6 +82,9 @@ public class Batalha {
             loja();
         }
 
+        // Evento Aleatório antes da batalha
+        eventoAleatorio();
+
         // Escolhe o monstro
         System.out.println(Cores.RED_BOLD + "\nEscolha seu Oponente:" + Cores.RESET +
                            "\n1. Slime Gosmento (Tutorial)" + 
@@ -434,5 +437,89 @@ public class Batalha {
                     System.out.println(Cores.RED + "Opção inválida." + Cores.RESET);
             }
         }
+    }
+
+    // Eventos que podem acontecer antes de escolher o monstro
+    private void eventoAleatorio() {
+        int dado = random.nextInt(100) + 1; // Roda 1 a 100
+
+        // --- EVENTO 1: BAU (10% Chance - 1 a 10) ---
+        if (dado <= 10) {
+            int ouroAchado = random.nextInt(30) + 20; // 20 a 50 de ouro
+            System.out.println(Cores.YELLOW_BOLD + "\n[$] SORTE! Enquanto explorava, voce encontrou um Baú!" + Cores.RESET);
+            heroi.ganharOuro(ouroAchado);
+        } 
+        
+        // --- EVENTO 2: ARMADILHA (10% Chance - 11 a 20) ---
+        else if (dado <= 20) {
+            int danoArmadilha = random.nextInt(10) + 5; // 5 a 15 de dano
+            System.out.println(Cores.RED_BOLD + "\n[!] CUIDADO! Voce pisou em uma armadilha de urso!" + Cores.RESET);
+            heroi.receberDano(danoArmadilha);
+            System.out.println("Voce comeca a proxima luta machucado...");
+        }
+        
+        // --- EVENTO 3: VIAJANTE (5% Chance - 21 a 25) ---
+        else if (dado <= 25) {
+            System.out.println(Cores.CYAN + "\n[?] Um Viajante Misterioso sai das sombras..." + Cores.RESET);
+            System.out.println("Viajante: 'Tenho uma *Essência de Força*. Aumenta seu dano permanentemente.'");
+            System.out.println("Viajante: 'Na loja custa 150... para voce faco por 80 moedas. Aceita? (s/n)'");
+            
+            String resposta = scanner.nextLine().toLowerCase();
+
+            while (!resposta.equals("s") && !resposta.equals("n")) {
+                System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
+                resposta = scanner.nextLine().toLowerCase();
+            }
+            
+            if (resposta.equals("s")) {
+                if (heroi.getOuro() >= 80) {
+                    heroi.setOuro(heroi.getOuro() - 80);
+                    heroi.setForca(heroi.getForca() + 2); // Update barato
+                    System.out.println(Cores.GREEN + "[+] Voce bebeu a essência! (+2 Forca)" + Cores.RESET);
+                } else {
+                    System.out.println("Viajante: 'Sem dinheiro, sem mercadoria...' (Ele desaparece)");
+                }
+            } else {
+                System.out.println("Viajante: 'Sua perda...' (Ele some na neblina)");
+            }
+        }
+
+        // --- EVENTO 4: ACHADO SORTUDO (5% Chance - 26 a 30) ---
+        else if (dado <= 30) {
+            System.out.println(Cores.BLUE + "\n[+] Voce encontrou uma caixa esquecida no canto!" + Cores.RESET);
+            
+            // Sorteia se acha Vida ou Mana (50/50)
+            if (random.nextBoolean()) {
+                Item itemAchado = new Item("Pocao de Vida Pequena", "Vida", 50, 20);
+                System.out.println("Ao abrir, voce encontrou uma " + Cores.GREEN + itemAchado.getNome() + Cores.RESET + "!");
+                heroi.getInventario().adicionar(itemAchado);
+            } else {
+                Item itemAchado = new Item("Elixir de Mana", "Mana", 30, 25);
+                System.out.println("Ao abrir, voce encontrou um " + Cores.BLUE + itemAchado.getNome() + Cores.RESET + "!");
+                heroi.getInventario().adicionar(itemAchado);
+            }
+        }
+
+        // --- EVENTO 5: LADRAO (5% Chance - 31 a 35) ---
+        else if (dado <= 35) {
+            if (heroi.getOuro() > 10) {
+                int roubo = random.nextInt(20) + 5;
+                if (roubo > heroi.getOuro()) roubo = heroi.getOuro(); // Não rouba mais do que tem
+                
+                System.out.println(Cores.RED + "\n[!] Um ladrao esbarrou em voce e fugiu!" + Cores.RESET);
+                heroi.setOuro(heroi.getOuro() - roubo);
+                System.out.println("Voce percebe que sumiram " + roubo + " moedas da sua bolsa.");
+            }
+        }
+
+        // --- EVENTO 6: PERGAMINHO (5% Chance - 36 a 40) ---
+        else if (dado <= 40) {
+            int xpAchado = random.nextInt(30) + 10; // 10 a 40 XP
+            System.out.println(Cores.CYAN + "\n[i] Voce encontrou um pergaminho antigo no chao." + Cores.RESET);
+            System.out.println("Ao ler, voce aprende novas taticas de combate.");
+            heroi.ganharXp(xpAchado);
+        }
+
+        // Se cair 41 a 100, nada acontece.
     }
 }

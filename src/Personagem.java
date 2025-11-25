@@ -59,6 +59,13 @@ public class Personagem {
                 this.destreza = 20; // Excelente mira
                 this.agilidade = 18; // Muito rápido
                 break;
+
+            default: // Camponês
+                this.manaMaxima = 20;
+                this.habilidade = new Habilidade("Ataque Básico", 10, 0, "Dano", "Normal", 0, 0);
+                this.destreza = 10;
+                this.agilidade = 10;
+                break;
         }
 
         // Aqui damos identidade única para cada inimigo
