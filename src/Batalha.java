@@ -369,7 +369,8 @@ public class Batalha {
             System.out.println(Cores.CYAN + "--- UPGRADES (Permanentes) ---" + Cores.RESET);
             System.out.println("4. Afiar Arma (+2 Força) - " + Cores.YELLOW + "150g" + Cores.RESET);
             System.out.println("5. Reforçar Armadura (+2 Defesa) - " + Cores.YELLOW + "150g" + Cores.RESET);
-            System.out.println("6. Sair da Loja");
+            System.out.println("6. Ouvir Rumores - " + Cores.YELLOW + "5g" + Cores.RESET);
+            System.out.println("7. Sair da Loja");
             System.out.println(Cores.YELLOW_BOLD + "======================================" + Cores.RESET);
             
             int escolha = scanner.nextInt();
@@ -409,8 +410,13 @@ public class Batalha {
                     break;
 
                 case 6:
+                    ouvirFofoca();
+                    break;
+
+                case 7:
                     Capitulos.narrar("Mercador: 'Volte sempre!'");
                     return;
+
                 default:
                     System.out.println(Cores.RED + "Opção inválida." + Cores.RESET);
             }
@@ -516,5 +522,53 @@ public class Batalha {
         }
 
         // Se cair 46 a 100, nada acontece.
+    }
+
+    // Gera uma frase aleatória do Mercador
+    private void ouvirFofoca() {
+        if (heroi.getOuro() >= 5) {
+            heroi.setOuro(heroi.getOuro() - 5);
+            System.out.println(Cores.YELLOW + "Você paga 5 moedas ao Mercador..." + Cores.RESET);
+
+            String[] fofocas = {
+                // --- DICAS DE COMBATE (GERAL) ---
+                "Dizem que os Guerreiros sofrem na mão de Magos... armadura não para fogo.",
+                "Magias nunca erram o alvo. Lembre-se disso quando o inimigo for muito ágil.",
+                "Se sua vida estiver cheia, não use poções! É desperdício de dinheiro.",
+                "Defender não só cura, mas ajuda a recuperar um pouco de Mana.",
+                "Ataques físicos dependem da sua Destreza. Se estiver errando muito, culpe seus olhos.",
+                
+                // --- DICAS DE MONSTROS (FÁCIL/MÉDIO) ---
+                "O Slime parece fraco, mas a gosma dele é venenosa. Não deixe a luta durar muito.",
+                "Esqueletos são rápidos, desviam muito! Guerreiros sofrem para acertá-los.",
+                "Goblins usam facas envenenadas. Tenha sempre uma poção de vida extra.",
+                "O Necromante é um mago poderoso, mas se você acertar um golpe físico, ele quebra fácil.",
+                
+                // --- DICAS DE MONSTROS (DIFÍCIL) ---
+                "O Orc Blindado é um tanque. Magos costumam ter vantagem contra ele.",
+                "Cuidado com o 'Esmagar' do Orc e do Golem. Se te acertar, você fica tonto e perde a vez!",
+                "A Aranha Rainha tem o veneno mais cruel de todos. O dano aumenta a cada turno.",
+                "O Golem de Pedra é quase imune a flechas e espadas. Use magia ou ataques pesados!",
+                
+                // --- DICAS DO DRAGÃO ---
+                "O Dragão Ancião cospe fogo que queima sua carne por vários turnos. É um pesadelo.",
+                "Dizem que a escama do Dragão é impenetrável... exceto para um Arqueiro experiente.",
+                
+                // --- LORE / HISTÓRIA / CURIOSIDADES ---
+                "Não conte pra ninguém, mas eu vendo mais barato pra quem sobrevive à Cripta.",
+                "Ouvi dizer que o 'Criador' deste mundo deixou um desafio secreto para quem zerar...",
+                "Estou juntando ouro para me aposentar em uma ilha sem Slimes.",
+                "Minha avó dizia que as Fontes Sagradas curam qualquer ferida instantaneamente.",
+                "Se encontrar um baú, reze para não ser uma armadilha. Eu já perdi um dedo assim."
+            };
+    
+            int indice = random.nextInt(fofocas.length);
+            
+            System.out.println(Cores.CYAN + "\nO Mercador se inclina e sussurra:" + Cores.RESET);
+            Capitulos.narrar(Cores.YELLOW + "'" + fofocas[indice] + "'" + Cores.RESET);
+            
+        } else {
+            System.out.println(Cores.RED + "Mercador: 'Informação custa dinheiro, amigo. Volte com 5 moedas.'" + Cores.RESET);
+        }
     }
 }
