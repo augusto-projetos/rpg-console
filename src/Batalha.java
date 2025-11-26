@@ -24,9 +24,6 @@ public class Batalha {
 
     public void iniciar() {
 
-        int xpRecompensa = 0; int xpPenalidade = 0;
-        int ouroRecompensa = 0; int ouroPenalidade = 0;
-
         System.out.println(Cores.YELLOW_BOLD + "\n=== BEM-VINDO À BATALHA ===" + Cores.RESET);
         if (heroi == null) {
         
@@ -69,6 +66,10 @@ public class Batalha {
             heroi.setMana(heroi.getManaMaxima());
             
             System.out.println(Cores.CYAN + "Vida e Mana recuperadas totalmente!" + Cores.RESET);
+
+            // Remove Status Negativos ao entrar na batalha
+            heroi.setEfeitoStatus("Normal");
+            heroi.setTurnosStatus(0);
         }
 
         // Loop da história
@@ -141,19 +142,28 @@ public class Batalha {
                         heroi.ganharXp(monstro.getXpReward());
                         heroi.ganharOuro(monstro.getOuroReward());
                         // Salva automático
-                        JogoSalvo.salvar(heroi); 
+                        JogoSalvo.salvar(heroi);
+                        jogoRodando = false; // Volta pro menu principal
                     } else {
 
                         System.out.println(Cores.YELLOW + "Farm concluído! XP e Ouro garantidos." + Cores.RESET);
                         JogoSalvo.salvar(heroi);
+                        jogoRodando = false; // Volta pro menu principal
                     }
 
                 } else {
-                    // Mostra o Game Over
-                    System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
-                    heroi.perderXp(monstro.getXpLose());
-                    heroi.perderOuro(monstro.getOuroLose());
-                    jogoRodando = false; // Game Over
+
+                    if (heroi.getVida() <= 0) {
+                        // Se a vida for 0, é GAME OVER de verdade
+                        System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
+                        heroi.perderXp(monstro.getXpLose());
+                        heroi.perderOuro(monstro.getOuroLose());
+                        jogoRodando = false; // Game Over
+                    } else {
+                        // Se a vida > 0, significa que FUGIU.
+                        System.out.println(Cores.YELLOW + "Você retornou ao acampamento para se recuperar." + Cores.RESET);
+                        jogoRodando = false; // Volta pro menu principal
+                    }
                 }
             } else {
                 // Se voltou null, é porque o jogo acabou
@@ -269,7 +279,7 @@ public class Batalha {
                         if (random.nextInt(10) < 3) { // 30% de chance de fuga bem-sucedida
                             System.out.println(Cores.GREEN + "Você fugiu com sucesso!" + Cores.RESET);
                             System.out.println("Porém não ganhou XP.\n");
-                            return;
+                            return false; // Sai da luta sem ganhar nada
                         } else {
                             System.out.println(Cores.RED + "Você tropeçou e não conseguiu fugir!" + Cores.RESET);
                         }
@@ -283,15 +293,15 @@ public class Batalha {
                 System.out.println(Cores.YELLOW + heroi.getNome() + " está atordoado e não pode agir neste turno!" + Cores.RESET);
             }
 
+            // Verifica se o monstro pode agir
+            boolean monstroPodeAgir = monstro.processarStatus();
+
             if (monstro.getVida() <= 0) {
 
-                System.out.println(Cores.GREEN_BOLD + "\nO monstro foi derrotado!" + Cores.RESET);
+                System.out.println(Cores.GREEN_BOLD + "\nO monstro foi derrotado!\n" + Cores.RESET);
                 return true;
 
             } else {
-
-                // Verifica se o monstro pode agir
-                boolean monstroPodeAgir = monstro.processarStatus();
 
                 if (monstroPodeAgir) {
                     try {

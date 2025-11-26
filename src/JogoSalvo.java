@@ -132,6 +132,7 @@ public class JogoSalvo {
             heroiCarregado.setNivel(nivel);
             heroiCarregado.setXp(xp);
             heroiCarregado.setOuro(ouro);
+            heroiCarregado.setCapitulo(capitulo);
             heroiCarregado.setVida(vida);
             heroiCarregado.setVidaMaxima(vidaMax);
             heroiCarregado.setMana(mana);

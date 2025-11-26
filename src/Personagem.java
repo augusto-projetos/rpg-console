@@ -137,159 +137,74 @@ public class Personagem {
     }
 
     // Getters e Setters
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public int getVida() {
-        return vida;
-    }
-    public void setVida(int vida) {
-        this.vida = vida;
-    }
+    public int getVida() { return vida; }
+    public void setVida(int vida) { this.vida = vida; }
 
-    public int getVidaMaxima() {
-        return vidaMaxima;
-    }
-    public void setVidaMaxima(int vidaMaxima) {
-        this.vidaMaxima = vidaMaxima;
-    }
+    public int getVidaMaxima() { return vidaMaxima; }
+    public void setVidaMaxima(int vidaMaxima) { this.vidaMaxima = vidaMaxima; }
 
-    public int getForca() {
-        return forca;
-    }
-    public void setForca(int forca) {
-        this.forca = forca;
-    }
+    public int getForca() { return forca; }
+    public void setForca(int forca) { this.forca = forca; }
 
-    public int getDefesa() {
-        return defesa;
-    }
-    public void setDefesa(int defesa) {
-        this.defesa = defesa;
-    }
+    public int getDefesa() { return defesa; }
+    public void setDefesa(int defesa) { this.defesa = defesa; }
 
-    public int getNivel() {
-        return nivel;
-    }
-    public void setNivel(int nivel) {
-        this.nivel = nivel;
-    }
+    public int getNivel() { return nivel; }
+    public void setNivel(int nivel) { this.nivel = nivel; }
 
-    public int getXp() {
-        return xp;
-    }
-    public void setXp(int xp) {
-        this.xp = xp;
-    }
+    public int getXp() { return xp; }
+    public void setXp(int xp) { this.xp = xp; }
 
-    public boolean getEMonstro() {
-        return eMonstro;
-    }
-    public void setEMonstro(boolean eMonstro) {
-        this.eMonstro = eMonstro;
-    }
+    public boolean getEMonstro() { return eMonstro; }
+    public void setEMonstro(boolean eMonstro) { this.eMonstro = eMonstro; }
 
-    public String getClasse() {
-        return classe;
-    }
-    public void setClasse(String classe) {
-        this.classe = classe;
-    }
+    public String getClasse() { return classe; }
+    public void setClasse(String classe) { this.classe = classe; }
 
-    public int getMana() {
-        return mana; 
-    }
-    public void setMana(int mana) {
-        this.mana = mana;
-    }
+    public int getMana() { return mana; }
+    public void setMana(int mana) { this.mana = mana; }
 
-    public int getManaMaxima() {
-        return manaMaxima;
-    }
-    public void setManaMaxima(int manaMaxima) {
-        this.manaMaxima = manaMaxima;
-    }
+    public int getManaMaxima() { return manaMaxima; }
+    public void setManaMaxima(int manaMaxima) { this.manaMaxima = manaMaxima; }
 
-    public Habilidade getHabilidade() {
-        return habilidade;
-    }
-    public void setHabilidade(Habilidade habilidade) {
-        this.habilidade = habilidade;
-    }
+    public Habilidade getHabilidade() { return habilidade; }
+    public void setHabilidade(Habilidade habilidade) { this.habilidade = habilidade; }
 
-    public int getOuro() {
-        return ouro;
-    }
-    public void setOuro(int ouro) {
-        this.ouro = ouro;
-    }
+    public int getOuro() { return ouro; }
+    public void setOuro(int ouro) { this.ouro = ouro; }
 
-    public int getDestreza() {
-        return destreza;
-    }
-    public void setDestreza(int destreza) {
-        this.destreza = destreza;
-    }
+    public int getDestreza() { return destreza; }
+    public void setDestreza(int destreza) { this.destreza = destreza; }
 
-    public int getAgilidade() {
-        return agilidade;
-    }
-    public void setAgilidade(int agilidade) {
-        this.agilidade = agilidade;
-    }
+    public int getAgilidade() { return agilidade; }
+    public void setAgilidade(int agilidade) { this.agilidade = agilidade; }
 
-    public String getEfeitoStatus() {
-        return efeitoStatus;
-    }
-    public void setEfeitoStatus(String efeitoStatus) {
-        this.efeitoStatus = efeitoStatus;
-    }
+    public String getEfeitoStatus() { return efeitoStatus; }
+    public void setEfeitoStatus(String efeitoStatus) { this.efeitoStatus = efeitoStatus; }
 
-    public int getTurnosStatus() {
-        return turnosStatus;
-    }
-    public void setTurnosStatus(int turnosStatus) {
-        this.turnosStatus = turnosStatus;
-    }
+    public int getTurnosStatus() { return turnosStatus; }
+    public void setTurnosStatus(int turnosStatus) { this.turnosStatus = turnosStatus; }
 
-    public int getDanoStatus() {
-        return danoStatus;
-    }
-    public void setDanoStatus(int danoStatus) {
-        this.danoStatus = danoStatus;
-    }
+    public int getDanoStatus() { return danoStatus; }
+    public void setDanoStatus(int danoStatus) { this.danoStatus = danoStatus; }
 
-    public int getCapitulo() {
-        return capitulo;
-    }
-    public void setCapitulo(int capitulo) {
-        this.capitulo = capitulo;
-    }
+    public int getCapitulo() { return capitulo; }
+    public void setCapitulo(int capitulo) { this.capitulo = capitulo; }
 
-    public int getXpReward() {
-        return xpReward;
-    }
-    public void setXpReward(int xpReward) {
-        this.xpReward = xpReward;
-    }
+    public int getXpReward() { return xpReward; }
+    public void setXpReward(int xpReward) { this.xpReward = xpReward; }
 
-    public int getXpLose() {
-        return xpLose;
-    }
-    public void setXpLose(int xpLose) {
-        this.xpLose = xpLose;
-    }
+    public int getXpLose() { return xpLose; }
+    public void setXpLose(int xpLose) { this.xpLose = xpLose; }
 
-    public int getOuroLose() {
-        return ouroLose;
-    }
-    public void setOuroLose(int ouroLose) {
-        this.ouroLose = ouroLose;
-    }
+    public int getOuroReward() { return ouroReward; }
+    public void setOuroReward(int ouroReward) { this.ouroReward = ouroReward; }
+
+    public int getOuroLose() { return ouroLose; }
+    public void setOuroLose(int ouroLose) { this.ouroLose = ouroLose; }
 
     // Métodos de combate
     public int atacar(Personagem alvo) {
