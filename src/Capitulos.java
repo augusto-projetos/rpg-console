@@ -4,12 +4,12 @@ import java.util.Scanner;
 public class Capitulos {
 
     public static void narrar(String mensagem) {
-        System.out.print(Cores.CYAN); 
+        System.out.print(Cores.CYAN);
         for (char c : mensagem.toCharArray()) {
             System.out.print(c);
             try { Thread.sleep(30); } catch (InterruptedException e) { e.printStackTrace(); }
         }
-        System.out.println(Cores.RESET); 
+        System.out.println(Cores.RESET);
     }
 
     public static Personagem executarCapitulo(int capituloEscolhido, Scanner scanner) {

@@ -72,104 +72,93 @@ public class Batalha {
             heroi.setTurnosStatus(0);
         }
 
-        // Loop da história
-        boolean jogoRodando = true;
+        // Pergunta se quer ir na loja antes da batalha
+        System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
+        String irLoja = scanner.nextLine().toLowerCase();
 
-        while (jogoRodando && heroi.getVida() > 0) {
+        while (!irLoja.equals("s") && !irLoja.equals("n")) {
+            System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
+            irLoja = scanner.nextLine().toLowerCase();
+        }
 
-            // Pergunta se quer ir na loja antes da batalha
-            System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
-            String irLoja = scanner.nextLine().toLowerCase();
+        if (irLoja.equals("s")) {
+            loja();
+        }
 
-            while (!irLoja.equals("s") && !irLoja.equals("n")) {
-                System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
-                irLoja = scanner.nextLine().toLowerCase();
-            }
+        // Evento Aleatório antes da batalha
+        eventoAleatorio();
 
-            if (irLoja.equals("s")) {
-                loja();
-            }
+        // --- MENU DE DECISÃO INTELIGENTE ---
+        System.out.println("\nO que você deseja fazer?");
+        System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
+        System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+        
+        int escolhaJornada = 0;
+        try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
 
-            // Evento Aleatório antes da batalha
-            eventoAleatorio();
+        // Variável para saber qual capítulo vamos carregar
+        int capituloParaJogar = heroi.getCapitulo(); 
+        boolean ehFarm = false; // Para saber se avança a história ou não
 
-            // --- MENU DE DECISÃO INTELIGENTE ---
-            System.out.println("\nO que você deseja fazer?");
-            System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
-            System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+        if (escolhaJornada == 2) {
+            ehFarm = true;
+            System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO PARA FARMAR ===" + Cores.RESET);
             
-            int escolhaJornada = 0;
-            try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
-
-            // Variável para saber qual capítulo vamos carregar
-            int capituloParaJogar = heroi.getCapitulo(); 
-            boolean ehFarm = false; // Para saber se avança a história ou não
-
-            if (escolhaJornada == 2) {
-                ehFarm = true;
-                System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO PARA FARMAR ===" + Cores.RESET);
-                
-                // Lista do 0 até o capítulo atual
-                for (int i = 0; i <= heroi.getCapitulo(); i++) {
-                    System.out.println(i + ". Capítulo " + i);
-                }
-                
-                System.out.print("Digite o número do capítulo: ");
-                try { 
-                    capituloParaJogar = scanner.nextInt(); 
-                    scanner.nextLine();
-                } catch(Exception e) { scanner.nextLine(); }
-                
-                // Segurança: Se o cara tentar pular fase digitando 99
-                if (capituloParaJogar > heroi.getCapitulo()) {
-                    System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
-                    capituloParaJogar = heroi.getCapitulo();
-                }
+            // Lista do 0 até o capítulo atual
+            for (int i = 0; i <= heroi.getCapitulo(); i++) {
+                System.out.println(i + ". Capítulo " + i);
             }
+            
+            System.out.print("Digite o número do capítulo: ");
+            try { 
+                capituloParaJogar = scanner.nextInt(); 
+                scanner.nextLine();
+            } catch(Exception e) { scanner.nextLine(); }
+            
+            // Segurança: Se o cara tentar pular fase digitando 99
+            if (capituloParaJogar > heroi.getCapitulo()) {
+                System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
+                capituloParaJogar = heroi.getCapitulo();
+            }
+        }
 
-            // O Capítulo define quem é o monstro da vez
-            this.monstro = Capitulos.executarCapitulo(capituloParaJogar, scanner);
+        // O Capítulo define quem é o monstro da vez
+        this.monstro = Capitulos.executarCapitulo(capituloParaJogar, scanner);
 
-            // Se voltou um monstro, a gente luta
-            if (this.monstro != null) {
-                boolean venceu = lutar(); // Chama o método de pancadaria
-                
-                if (venceu) {
-                    if (!ehFarm && capituloParaJogar == heroi.getCapitulo()) {
-                        // Se ganhou, passa de fase!
-                        heroi.setCapitulo(heroi.getCapitulo() + 1);
-                        System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
-                        heroi.ganharXp(monstro.getXpReward());
-                        heroi.ganharOuro(monstro.getOuroReward());
-                        // Salva automático
-                        JogoSalvo.salvar(heroi);
-                        jogoRodando = false; // Volta pro menu principal
-                    } else {
-
-                        System.out.println(Cores.YELLOW + "Farm concluído! XP e Ouro garantidos." + Cores.RESET);
-                        JogoSalvo.salvar(heroi);
-                        jogoRodando = false; // Volta pro menu principal
-                    }
-
+        // Se voltou um monstro, a gente luta
+        if (this.monstro != null) {
+            boolean venceu = lutar(); // Chama o método de pancadaria
+            
+            if (venceu) {
+                if (!ehFarm && capituloParaJogar == heroi.getCapitulo()) {
+                    // Se ganhou, passa de fase!
+                    heroi.setCapitulo(heroi.getCapitulo() + 1);
+                    System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
+                    heroi.ganharXp(monstro.getXpReward());
+                    heroi.ganharOuro(monstro.getOuroReward());
+                    // Salva automático
+                    JogoSalvo.salvar(heroi);
                 } else {
 
-                    if (heroi.getVida() <= 0) {
-                        // Se a vida for 0, é GAME OVER de verdade
-                        System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
-                        heroi.perderXp(monstro.getXpLose());
-                        heroi.perderOuro(monstro.getOuroLose());
-                        jogoRodando = false; // Game Over
-                    } else {
-                        // Se a vida > 0, significa que FUGIU.
-                        System.out.println(Cores.YELLOW + "Você retornou ao acampamento para se recuperar." + Cores.RESET);
-                        jogoRodando = false; // Volta pro menu principal
-                    }
+                    System.out.println(Cores.YELLOW + "Farm concluído! XP e Ouro garantidos." + Cores.RESET);
+                    JogoSalvo.salvar(heroi);
                 }
+
             } else {
-                // Se voltou null, é porque o jogo acabou
-                System.out.println(Cores.YELLOW_BOLD + "\nParabéns! Você completou a Jornada (por enquanto)." + Cores.RESET);
-                jogoRodando = false;
+
+                if (heroi.getVida() <= 0) {
+                    // Se a vida for 0, é GAME OVER de verdade
+                    System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
+                    heroi.perderXp(monstro.getXpLose());
+                    heroi.perderOuro(monstro.getOuroLose());
+                } else {
+                    // Se a vida > 0, significa que FUGIU.
+                    System.out.println(Cores.YELLOW + "Você retornou ao acampamento para se recuperar." + Cores.RESET);
+                }
             }
+        } else {
+            // Se voltou null, é porque o jogo acabou
+            System.out.println(Cores.YELLOW_BOLD + "\nParabéns! Você completou a Jornada (por enquanto)." + Cores.RESET);
         }
     }
 
@@ -336,11 +325,8 @@ public class Batalha {
 
             System.out.println("=============================\n");
 
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // Pequena pausa antes do próximo turno
+            try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 
         }
 
@@ -348,11 +334,7 @@ public class Batalha {
             System.out.println("=============================\n");
         }
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 
         // Fim da Batalha
         return heroi.getVida() > 0; // Retorna true se vivo, false se morto
@@ -361,7 +343,7 @@ public class Batalha {
     // Método exclusivo para gerenciar a compra de itens
     private void loja() {
         System.out.println(Cores.PURPLE + "\nO Mercador acena para você!" + Cores.RESET);
-        System.out.println("Mercador: 'Tenho ótimas poções para sua jornada.'");
+        Capitulos.narrar("Mercador: 'Tenho ótimas poções para sua jornada.'");
         
         // Itens à venda
         Item pocaoVida = new Item("Poção de Vida Pequena", "Vida", 50, 20);
@@ -420,7 +402,7 @@ public class Batalha {
                     break;
 
                 case 6:
-                    System.out.println("Mercador: 'Volte sempre!'");
+                    Capitulos.narrar("Mercador: 'Volte sempre!'");
                     return;
                 default:
                     System.out.println(Cores.RED + "Opção inválida." + Cores.RESET);
@@ -437,6 +419,7 @@ public class Batalha {
             int ouroAchado = random.nextInt(30) + 20; // 20 a 50 de ouro
             System.out.println(Cores.YELLOW_BOLD + "\n[$] SORTE! Enquanto explorava, voce encontrou um Baú!" + Cores.RESET);
             heroi.ganharOuro(ouroAchado);
+            try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
         } 
         
         // --- EVENTO 2: ARMADILHA (10% Chance - 11 a 20) ---
@@ -445,13 +428,14 @@ public class Batalha {
             System.out.println(Cores.RED_BOLD + "\n[!] CUIDADO! Voce pisou em uma armadilha de urso!" + Cores.RESET);
             heroi.receberDano(danoArmadilha);
             System.out.println("Voce comeca a proxima luta machucado...");
+            try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
         }
         
         // --- EVENTO 3: VIAJANTE (5% Chance - 21 a 25) ---
         else if (dado <= 25) {
             System.out.println(Cores.CYAN + "\n[?] Um Viajante Misterioso sai das sombras..." + Cores.RESET);
-            System.out.println("Viajante: 'Tenho uma *Essência de Força*. Aumenta seu dano permanentemente.'");
-            System.out.println("Viajante: 'Na loja custa 150... para voce faco por 80 moedas. Aceita? (s/n)'");
+            Capitulos.narrar("Viajante: 'Tenho uma *Essência de Força*. Aumenta seu dano permanentemente.'");
+            Capitulos.narrar("Viajante: 'Na loja custa 150... para voce faco por 80 moedas. Aceita? (s/n)'");
             
             String resposta = scanner.nextLine().toLowerCase();
 
@@ -465,11 +449,14 @@ public class Batalha {
                     heroi.setOuro(heroi.getOuro() - 80);
                     heroi.setForca(heroi.getForca() + 2); // Update barato
                     System.out.println(Cores.GREEN + "[+] Voce bebeu a essência! (+2 Forca)" + Cores.RESET);
+                    try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
                 } else {
-                    System.out.println("Viajante: 'Sem dinheiro, sem mercadoria...' (Ele desaparece)");
+                    Capitulos.narrar("Viajante: 'Sem dinheiro, sem mercadoria...' (Ele desaparece)");
+                    try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
                 }
             } else {
-                System.out.println("Viajante: 'Sua perda...' (Ele some na neblina)");
+                Capitulos.narrar("Viajante: 'Sua perda...' (Ele some na neblina)");
+                try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
             }
         }
 
