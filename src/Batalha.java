@@ -147,7 +147,8 @@ public class Batalha {
                     JogoSalvo.salvar(heroi);
                 } else {
 
-                    System.out.println(Cores.YELLOW + "Farm concluído! XP e Ouro garantidos." + Cores.RESET);
+                    System.out.println(Cores.YELLOW + "Farm concluído!" + Cores.RESET);
+                    heroi.ganharOuro(monstro.getOuroReward());
                     JogoSalvo.salvar(heroi);
                 }
 
@@ -158,14 +159,17 @@ public class Batalha {
                     System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
                     heroi.perderXp(monstro.getXpLose());
                     heroi.perderOuro(monstro.getOuroLose());
+                    JogoSalvo.salvar(heroi);
                 } else {
                     // Se a vida > 0, significa que FUGIU.
                     System.out.println(Cores.YELLOW + "Você retornou ao acampamento para se recuperar." + Cores.RESET);
+                    JogoSalvo.salvar(heroi);
                 }
             }
         } else {
             // Se voltou null, é porque o jogo acabou
             System.out.println(Cores.YELLOW_BOLD + "\nParabéns! Você completou a Jornada (por enquanto)." + Cores.RESET);
+            JogoSalvo.salvar(heroi);
         }
     }
 
