@@ -9,6 +9,7 @@ public class Batalha {
 
     public Batalha() {
         this.scanner = new Scanner(System.in);
+        this.random = new java.util.Random();
     }
 
     // Permite que o Main defina quem é o herói (usado no Load Game)
@@ -23,7 +24,6 @@ public class Batalha {
 
     public void iniciar() {
 
-        this.random = new java.util.Random();
         int xpRecompensa = 0; int xpPenalidade = 0;
         int ouroRecompensa = 0; int ouroPenalidade = 0;
 
@@ -58,6 +58,8 @@ public class Batalha {
                     heroi = new Personagem(nomeHeroi, 80, 10, 5, "Camponês");
             }
 
+            heroi.setCapitulo(0); // Começa do zero
+
         } else {
 
             System.out.println("O herói " + Cores.GREEN + heroi.getNome() + Cores.RESET + " (Nível " + heroi.getNivel() + ") da classe " + heroi.getClasse() + " retorna para a arena!\n");
@@ -69,121 +71,103 @@ public class Batalha {
             System.out.println(Cores.CYAN + "Vida e Mana recuperadas totalmente!" + Cores.RESET);
         }
 
-        // Pergunta se quer ir na loja antes da batalha
-        System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
-        String irLoja = scanner.nextLine().toLowerCase();
+        // Loop da história
+        boolean jogoRodando = true;
 
-        while (!irLoja.equals("s") && !irLoja.equals("n")) {
-            System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
-            irLoja = scanner.nextLine().toLowerCase();
+        while (jogoRodando && heroi.getVida() > 0) {
+
+            // Pergunta se quer ir na loja antes da batalha
+            System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
+            String irLoja = scanner.nextLine().toLowerCase();
+
+            while (!irLoja.equals("s") && !irLoja.equals("n")) {
+                System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
+                irLoja = scanner.nextLine().toLowerCase();
+            }
+
+            if (irLoja.equals("s")) {
+                loja();
+            }
+
+            // Evento Aleatório antes da batalha
+            eventoAleatorio();
+
+            // --- MENU DE DECISÃO INTELIGENTE ---
+            System.out.println("\nO que você deseja fazer?");
+            System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
+            System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+            
+            int escolhaJornada = 0;
+            try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
+
+            // Variável para saber qual capítulo vamos carregar
+            int capituloParaJogar = heroi.getCapitulo(); 
+            boolean ehFarm = false; // Para saber se avança a história ou não
+
+            if (escolhaJornada == 2) {
+                ehFarm = true;
+                System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO PARA FARMAR ===" + Cores.RESET);
+                
+                // Lista do 0 até o capítulo atual
+                for (int i = 0; i <= heroi.getCapitulo(); i++) {
+                    System.out.println(i + ". Capítulo " + i);
+                }
+                
+                System.out.print("Digite o número do capítulo: ");
+                try { 
+                    capituloParaJogar = scanner.nextInt(); 
+                    scanner.nextLine();
+                } catch(Exception e) { scanner.nextLine(); }
+                
+                // Segurança: Se o cara tentar pular fase digitando 99
+                if (capituloParaJogar > heroi.getCapitulo()) {
+                    System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
+                    capituloParaJogar = heroi.getCapitulo();
+                }
+            }
+
+            // O Capítulo define quem é o monstro da vez
+            this.monstro = Capitulos.executarCapitulo(capituloParaJogar, scanner);
+
+            // Se voltou um monstro, a gente luta
+            if (this.monstro != null) {
+                boolean venceu = lutar(); // Chama o método de pancadaria
+                
+                if (venceu) {
+                    if (!ehFarm && capituloParaJogar == heroi.getCapitulo()) {
+                        // Se ganhou, passa de fase!
+                        heroi.setCapitulo(heroi.getCapitulo() + 1);
+                        System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
+                        heroi.ganharXp(monstro.getXpReward());
+                        heroi.ganharOuro(monstro.getOuroReward());
+                        // Salva automático
+                        JogoSalvo.salvar(heroi); 
+                    } else {
+
+                        System.out.println(Cores.YELLOW + "Farm concluído! XP e Ouro garantidos." + Cores.RESET);
+                        JogoSalvo.salvar(heroi);
+                    }
+                    
+                } else {
+                    // Mostra o Game Over
+                    System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
+                    heroi.perderXp(xpPenalidade);
+                    heroi.perderOuro(ouroPenalidade);
+                    jogoRodando = false; // Game Over
+                }
+            } else {
+                // Se voltou null, é porque o jogo acabou
+                System.out.println(Cores.YELLOW_BOLD + "\nParabéns! Você completou a Jornada (por enquanto)." + Cores.RESET);
+                jogoRodando = false;
+            }
         }
+    }
 
-        if (irLoja.equals("s")) {
-            loja();
-        }
-
-        // Evento Aleatório antes da batalha
-        eventoAleatorio();
-
-        // Escolhe o monstro
-        System.out.println(Cores.RED_BOLD + "\nEscolha seu Oponente:" + Cores.RESET +
-                           "\n1. Slime Gosmento (Tutorial)" + 
-                           "\n2. Esqueleto Arqueiro (Frágil mas Dano Alto)" +
-                           "\n3. Goblin Furioso (Equilibrado)" +
-                           "\n4. Necromante Sombrio (Dano Explosivo)" +
-                           "\n5. Orc Blindado (Muita Defesa)" +
-                           "\n6. Aranha Rainha (Muita Vida)" +
-                           "\n7. Golem de Pedra (O Tanque)" +
-                           "\n8. Dragão Ancião (Chefe Final)" +
-                           "\n9. ??? (Secreto)"); // O Easter Egg
-        int modo = scanner.nextInt();
-        scanner.nextLine(); // Consumir a nova linha
-
-        switch (modo) {
-            case 1: // Tutorial
-                monstro = new Personagem("Slime Gosmento", 30, 8, 0, "Fera");
-                monstro.setEMonstro(true);
-                xpRecompensa = 20;
-                ouroRecompensa = 10;
-                monstro.setAgilidade(2); monstro.setDestreza(5);
-                break; // Não tem penalidade no tutorial
-
-            case 2: // Glass Cannon (Canhão de Vidro)
-                // Pouca vida, mas bate forte. Bom para testar quem tem reflexo.
-                monstro = new Personagem("Esqueleto Arqueiro", 50, 18, 2, "Arqueiro");
-                monstro.setEMonstro(true);
-                xpRecompensa = 40; xpPenalidade = 5;
-                ouroRecompensa = 25; ouroPenalidade = 5;
-                monstro.setAgilidade(18); monstro.setDestreza(18);
-                break;
-        
-            case 3: // O Padrão
-                monstro = new Personagem("Goblin Furioso", 70, 15, 5, "Guerreiro");
-                monstro.setEMonstro(true);
-                xpRecompensa = 60; xpPenalidade = 10; 
-                ouroRecompensa = 35; ouroPenalidade = 10;
-                monstro.setAgilidade(10); monstro.setDestreza(12);
-                break;
-
-            case 4: // O Mago Inimigo
-                monstro = new Personagem("Necromante Sombrio", 80, 25, 3, "Mago");
-                monstro.setEMonstro(true);
-                xpRecompensa = 90; xpPenalidade = 15;
-                ouroRecompensa = 50; ouroPenalidade = 15;
-                monstro.setAgilidade(12); monstro.setDestreza(15);
-                break;
-
-            case 5: // O Teste de Dano
-                // Defesa 12 é alta! Quem bater fraco vai tirar 0 ou 1 de dano.
-                monstro = new Personagem("Orc Blindado", 100, 22, 12, "Guerreiro");
-                monstro.setEMonstro(true);
-                xpRecompensa = 120; xpPenalidade = 20;
-                ouroRecompensa = 60; ouroPenalidade = 20;
-                monstro.setAgilidade(4); monstro.setDestreza(12);
-                break;
-
-            case 6: // O Teste de Resistência
-                // Muita vida, a luta vai ser longa.
-                monstro = new Personagem("Aranha Rainha", 150, 20, 8, "Fera");
-                monstro.setEMonstro(true);
-                xpRecompensa = 180; xpPenalidade = 25;
-                ouroRecompensa = 80; ouroPenalidade = 25;
-                monstro.setAgilidade(22); monstro.setDestreza(18);
-                break;
-
-            case 7: // O Porteiro do Chefe
-                // Golem é quase imune a ataques fracos (Defesa 18).
-                monstro = new Personagem("Golem de Pedra", 180, 25, 18, "Guerreiro");
-                monstro.setEMonstro(true);
-                xpRecompensa = 300; xpPenalidade = 40;
-                ouroRecompensa = 150; ouroPenalidade = 30;
-                monstro.setAgilidade(0); monstro.setDestreza(8);
-                break;
-
-            case 8: // O Chefe Final
-                monstro = new Personagem("Dragão Ancião", 250, 35, 15, "Fera");
-                monstro.setEMonstro(true);
-                xpRecompensa = 1000; xpPenalidade = 100; // Tudo ou nada
-                ouroRecompensa = 500; ouroPenalidade = 50;
-                monstro.setAgilidade(15); monstro.setDestreza(25);
-                break;
-
-            case 9: // O Easter Egg (Impossível)
-                // Vida 999 e Defesa absurda. Só ganha com nível muito alto.
-                monstro = new Personagem("Augusto, o Criador", 999, 50, 50, "Dev");
-                monstro.setEMonstro(true);
-                xpRecompensa = 9999; xpPenalidade = 100;
-                ouroRecompensa = 999; ouroPenalidade = 100;
-                monstro.setAgilidade(50); monstro.setDestreza(50);
-                break;
-
-            default:
-                System.out.println("Modo inválido! Escolha novamente.");
-                return;
-        }
+    private boolean lutar() {
 
         System.out.println(Cores.RED + "\nBatalha Iniciada: " + Cores.GREEN + heroi.getNome() + " (Força: " + heroi.getForca() + " | Defesa: " + heroi.getDefesa() + ")" + Cores.RESET + " vs " + 
                            Cores.RED_BOLD + monstro.getNome() + " (Força: " + monstro.getForca() + " | Defesa: " + monstro.getDefesa() + ")\n" + Cores.RESET);
+
 
         while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
@@ -302,7 +286,7 @@ public class Batalha {
             if (monstro.getVida() <= 0) {
 
                 System.out.println(Cores.GREEN_BOLD + "\nO monstro foi derrotado!" + Cores.RESET);
-                break;
+                return true;
 
             } else {
 
@@ -360,19 +344,8 @@ public class Batalha {
             e.printStackTrace();
         }
 
-        // Fim da Batalha: Verifica quem ganhou
-        if (heroi.getVida() > 0) {
-
-            System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
-            heroi.ganharXp(xpRecompensa);
-            heroi.ganharOuro(ouroRecompensa);
-
-        } else {
-
-            System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
-            heroi.perderXp(xpPenalidade);
-            heroi.perderOuro(ouroPenalidade);
-        }
+        // Fim da Batalha
+        return heroi.getVida() > 0; // Retorna true se vivo, false se morto
     }
 
     // Método exclusivo para gerenciar a compra de itens

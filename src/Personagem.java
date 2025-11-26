@@ -20,6 +20,9 @@ public class Personagem {
     private String efeitoStatus; // Ex: "Veneno", "Stun", "Normal"
     private int turnosStatus; // Quantos turnos dura
     private int danoStatus; // Guarda quanto de dano vai tomar por turno
+    private int capitulo; // Mostra qual capitulo o jogador está
+    private int xpReward;   // Quanto XP ele dá ao morrer
+    private int ouroReward; // Quanto Ouro ele dá ao morrer
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -32,6 +35,7 @@ public class Personagem {
         this.nivel = 1;
         this.xp = 0;
         this.eMonstro = false;
+        this.capitulo = 0; // Começa no Prólogo
         this.classe = classe;
         
         // Configura Mana e Skill baseado na classe
@@ -255,6 +259,27 @@ public class Personagem {
     }
     public void setDanoStatus(int danoStatus) {
         this.danoStatus = danoStatus;
+    }
+
+    public int getCapitulo() {
+        return capitulo;
+    }
+    public void setCapitulo(int capitulo) {
+        this.capitulo = capitulo;
+    }
+
+    public int getXpReward() {
+        return xpReward;
+    }
+    public void setXpReward(int xpReward) {
+        this.xpReward = xpReward;
+    }
+
+    public int getOuroReward() {
+        return ouroReward;
+    }
+    public void setOuroReward(int ouroReward) {
+        this.ouroReward = ouroReward;
     }
 
     // Métodos de combate
