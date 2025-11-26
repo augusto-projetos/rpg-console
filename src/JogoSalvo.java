@@ -29,6 +29,7 @@ public class JogoSalvo {
             dados.append(heroi.getNivel()).append("\n");
             dados.append(heroi.getXp()).append("\n");
             dados.append(heroi.getOuro()).append("\n");
+            dados.append(heroi.getCapitulo()).append("\n"); 
             
             // Vida e Mana
             dados.append(heroi.getVida()).append("\n");
@@ -96,26 +97,42 @@ public class JogoSalvo {
             int nivel = Integer.parseInt(linhas[2]);
             int xp = Integer.parseInt(linhas[3]);
             int ouro = Integer.parseInt(linhas[4]);
-            int vida = Integer.parseInt(linhas[5]);
-            int vidaMax = Integer.parseInt(linhas[6]);
-            int mana = Integer.parseInt(linhas[7]);
-            int manaMax = Integer.parseInt(linhas[8]);
-            int forca = Integer.parseInt(linhas[9]);
-            int defesa = Integer.parseInt(linhas[10]);
-            int agilidade = Integer.parseInt(linhas[11]);
-            int destreza = Integer.parseInt(linhas[12]);
-            String efeitoStatus = linhas[13];
-            int turnosStatus = Integer.parseInt(linhas[14]);
-            int danoStatus = Integer.parseInt(linhas[15]);
             
-            // Inventário
-            String dadosInventario = (linhas.length > 16) ? linhas[16] : "VAZIO";
+            // --- LER CAPITULO ---
+            // Se for um save antigo (sem capitulo), assume 0 para não dar erro
+            int capitulo = 0;
+            // Truque: Se tiver mais linhas que o save v2.3 tinha, é porque tem capitulo
+            if (linhas.length > 17) { 
+                capitulo = Integer.parseInt(linhas[5]);
+            }
+            // --------------------------
+
+            // A partir daqui, os índices aumentam em 1 por causa da nova linha
+            // Se o save for novo (tem capitulo), lemos do índice novo. 
+            // Se for velho, mantemos o índice antigo (lógica de compatibilidade)
+            int offset = (linhas.length > 17) ? 1 : 0; 
+
+            int vida = Integer.parseInt(linhas[5 + offset]);
+            int vidaMax = Integer.parseInt(linhas[6 + offset]);
+            int mana = Integer.parseInt(linhas[7 + offset]);
+            int manaMax = Integer.parseInt(linhas[8 + offset]);
+            int forca = Integer.parseInt(linhas[9 + offset]);
+            int defesa = Integer.parseInt(linhas[10 + offset]);
+            int agilidade = Integer.parseInt(linhas[11 + offset]);
+            int destreza = Integer.parseInt(linhas[12 + offset]);
+            
+            String efeitoStatus = linhas[13 + offset];
+            int turnosStatus = Integer.parseInt(linhas[14 + offset]);
+            int danoStatus = Integer.parseInt(linhas[15 + offset]);
+            
+            String dadosInventario = (linhas.length > 16 + offset) ? linhas[16 + offset] : "VAZIO";
 
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
             heroiCarregado.setNivel(nivel);
             heroiCarregado.setXp(xp);
             heroiCarregado.setOuro(ouro);
+            heroiCarregado.setCapitulo(capitulo);
             heroiCarregado.setVida(vida);
             heroiCarregado.setVidaMaxima(vidaMax);
             heroiCarregado.setMana(mana);
