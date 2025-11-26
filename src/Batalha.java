@@ -61,16 +61,26 @@ public class Batalha {
 
             System.out.println("O herói " + Cores.GREEN + heroi.getNome() + Cores.RESET + " (Nível " + heroi.getNivel() + ") da classe " + heroi.getClasse() + " retorna para a arena!\n");
             
-            // Recupera Vida e Mana
-            heroi.setVida(heroi.getVidaMaxima());
-            heroi.setMana(heroi.getManaMaxima());
-            
-            System.out.println(Cores.CYAN + "Vida e Mana recuperadas totalmente!" + Cores.RESET);
+            // Só cura se estiver morto (Ressurreição)
+            if (heroi.getVida() <= 0) {
+
+                heroi.setVida(heroi.getVidaMaxima());
+                heroi.setMana(heroi.getManaMaxima());
+                System.out.println(Cores.CYAN + "Você foi revivido pelos deuses! (Vida e Mana cheias)" + Cores.RESET);
+            } else {
+                // Se estiver vivo, mostra como ele está
+                System.out.println("Status Atual: " + 
+                    Cores.GREEN + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " + 
+                    Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
+            }
 
             // Remove Status Negativos ao entrar na batalha
             heroi.setEfeitoStatus("Normal");
             heroi.setTurnosStatus(0);
         }
+
+        // Evento Aleatório antes da batalha
+        eventoAleatorio();
 
         // Pergunta se quer ir na loja antes da batalha
         System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
@@ -84,9 +94,6 @@ public class Batalha {
         if (irLoja.equals("s")) {
             loja();
         }
-
-        // Evento Aleatório antes da batalha
-        eventoAleatorio();
 
         // --- MENU DE DECISÃO INTELIGENTE ---
         System.out.println("\nO que você deseja fazer?");
@@ -496,6 +503,18 @@ public class Batalha {
             heroi.ganharXp(xpAchado);
         }
 
-        // Se cair 41 a 100, nada acontece.
+        // --- EVENTO 7: FONTE SAGRADA (5% Chance - 41 a 45) ---
+        else if (dado <= 45) {
+            System.out.println(Cores.BLUE_BOLD + "\n[+] Você encontrou uma Fonte Sagrada escondida!" + Cores.RESET);
+            System.out.println(Cores.CYAN + "A água brilhante restaura suas forças." + Cores.RESET);
+            
+            // Recupera TUDO (Vida e Mana cheias)
+            heroi.setVida(heroi.getVidaMaxima());
+            heroi.setMana(heroi.getManaMaxima());
+
+            System.out.println(Cores.GREEN + "Vida e Mana totalmente recuperadas!" + Cores.RESET);
+        }
+
+        // Se cair 46 a 100, nada acontece.
     }
 }
