@@ -147,12 +147,12 @@ public class Batalha {
                         System.out.println(Cores.YELLOW + "Farm concluído! XP e Ouro garantidos." + Cores.RESET);
                         JogoSalvo.salvar(heroi);
                     }
-                    
+
                 } else {
                     // Mostra o Game Over
                     System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
-                    heroi.perderXp(xpPenalidade);
-                    heroi.perderOuro(ouroPenalidade);
+                    heroi.perderXp(monstro.getXpLose());
+                    heroi.perderOuro(monstro.getOuroLose());
                     jogoRodando = false; // Game Over
                 }
             } else {

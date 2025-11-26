@@ -36,6 +36,7 @@ public class Capitulos {
                     monstro = new Personagem("Esqueleto Arqueiro", 50, 18, 2, "Arqueiro");
                     monstro.setAgilidade(18); monstro.setDestreza(18);
                     monstro.setXpReward(40); monstro.setOuroReward(25);
+                    monstro.setXpLose(); monstro.setOuroLose();
                 } else {
                     monstro = new Personagem("Goblin Furioso", 70, 15, 5, "Guerreiro");
                     monstro.setAgilidade(10); monstro.setDestreza(12);
@@ -86,30 +87,5 @@ public class Capitulos {
 
         if (monstro != null) monstro.setEMonstro(true);
         return monstro;
-    }
-    
-    // Método novo para TREINAR (Farmar)
-    public static Personagem treinar(int nivelHeroi) {
-        System.out.println(Cores.CYAN + "\nVocê decide treinar na floresta próxima..." + Cores.RESET);
-        
-        // Gera um monstro baseado no nível do herói para não ficar fácil nem impossível
-        Personagem monstroTreino;
-        
-        if (nivelHeroi <= 2) {
-            monstroTreino = new Personagem("Slime de Treino", 30, 8, 0, "Fera");
-            monstroTreino.setXpReward(10); monstroTreino.setOuroReward(5);
-        } else if (nivelHeroi <= 4) {
-            monstroTreino = new Personagem("Goblin Saqueador", 60, 12, 2, "Guerreiro");
-            monstroTreino.setXpReward(30); monstroTreino.setOuroReward(15);
-        } else {
-            monstroTreino = new Personagem("Orc Exilado", 90, 18, 5, "Guerreiro");
-            monstroTreino.setXpReward(70); monstroTreino.setOuroReward(40);
-        }
-        
-        monstroTreino.setEMonstro(true);
-        // Define atributos padrão para treino
-        monstroTreino.setAgilidade(5); monstroTreino.setDestreza(10);
-        
-        return monstroTreino;
     }
 }

@@ -21,8 +21,10 @@ public class Personagem {
     private int turnosStatus; // Quantos turnos dura
     private int danoStatus; // Guarda quanto de dano vai tomar por turno
     private int capitulo; // Mostra qual capitulo o jogador está
-    private int xpReward;   // Quanto XP ele dá ao morrer
+    private int xpReward; // Quanto XP ele dá ao morrer
+    private int xpLose; // Quanto XP ele tira
     private int ouroReward; // Quanto Ouro ele dá ao morrer
+    private int ouroLose; // Quanto Ouro ele tira
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -275,11 +277,18 @@ public class Personagem {
         this.xpReward = xpReward;
     }
 
-    public int getOuroReward() {
-        return ouroReward;
+    public int getXpLose() {
+        return xpLose;
     }
-    public void setOuroReward(int ouroReward) {
-        this.ouroReward = ouroReward;
+    public void setXpLose(int xpLose) {
+        this.xpLose = xpLose;
+    }
+
+    public int getOuroLose() {
+        return ouroLose;
+    }
+    public void setOuroLose(int ouroLose) {
+        this.ouroLose = ouroLose;
     }
 
     // Métodos de combate
