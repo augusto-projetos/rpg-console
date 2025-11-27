@@ -6,11 +6,20 @@ on:
     branches: [ "main" ] # Roda toda vez que der push na main
   workflow_dispatch: # Permite clicar num botão "Run" pra rodar manualmente se quiser
 
+# --- SEGURANÇA ---
+permissions:
+  contents: read
+# ----------------------------------------------
+
 jobs:
   construir-e-empacotar:
     runs-on: windows-latest # O robô liga um Windows novinho
 
     steps:
+    # 0. Habilita caminhos longos no Windows (Correção do Erro 32000 chars)
+    - name: Habilitar Long Paths
+      run: git config --system core.longpaths true
+
     # 1. Baixa seu código do GitHub
     - name: Baixar Código (Checkout)
       uses: actions/checkout@v4
@@ -23,17 +32,23 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-    # 3. Compila o código (Substitui o "Export .jar" do VS Code)
-    # Ele cria uma pasta 'bin', joga os .class lá e empacota num .jar temporário
+    # 3. Compilar e Criar JAR
     - name: Compilar e Criar JAR
       run: |
         mkdir bin
         javac -d bin src/*.java
+        
         jar cfe app.jar Main -C bin .
 
-    # 4. Cria o EXE com JRE Embutido (Substitui o Launch4j e a cópia da pasta 'jre')
-    - name: Criar Executável (JPackage)
+    # 4. Criar EXE
+    - name: Criar Executável (JPackage em Caminho Curto)
       run: |
+        New-Item -ItemType Directory -Force -Path "C:\t"
+        
+        Copy-Item -Path "app.jar" -Destination "C:\t\"
+        
+        cd C:\t
+        
         jpackage --name "RPG-Console" `
                  --input . `
                  --main-jar app.jar `
@@ -41,8 +56,14 @@ jobs:
                  --type app-image `
                  --win-console `
                  --app-version "1.0.0" `
-                 --dest saida
+                 --dest output
+        
+        $Destino = "${{ github.workspace }}\saida"
+        New-Item -ItemType Directory -Force -Path $Destino
+        Copy-Item -Path "output\RPG-Console" -Destination $Destino -Recurse
+
       # Explicação dos comandos:
+      # --input app-lib: Agora ele lê SÓ essa pasta limpa (não trava mais)
       # --win-console: Garante que abre a tela preta (Console)
       # --type app-image: Cria uma pasta com o .exe e o JRE dentro
 
