@@ -61,115 +61,116 @@ public class Batalha {
 
             System.out.println("O herói " + Cores.GREEN + heroi.getNome() + Cores.RESET + " (Nível " + heroi.getNivel() + ") da classe " + heroi.getClasse() + " retorna para a arena!\n");
             
-            // Recupera Vida e Mana
-            heroi.setVida(heroi.getVidaMaxima());
-            heroi.setMana(heroi.getManaMaxima());
-            
-            System.out.println(Cores.CYAN + "Vida e Mana recuperadas totalmente!" + Cores.RESET);
+            // Só cura se estiver morto (Ressurreição)
+            if (heroi.getVida() <= 0) {
+
+                heroi.setVida(heroi.getVidaMaxima());
+                heroi.setMana(heroi.getManaMaxima());
+                System.out.println(Cores.CYAN + "Você foi revivido pelos deuses! (Vida e Mana cheias)" + Cores.RESET);
+            } else {
+                // Se estiver vivo, mostra como ele está
+                System.out.println("Status Atual: " + 
+                    Cores.GREEN + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " + 
+                    Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
+            }
 
             // Remove Status Negativos ao entrar na batalha
             heroi.setEfeitoStatus("Normal");
             heroi.setTurnosStatus(0);
         }
 
-        // Loop da história
-        boolean jogoRodando = true;
+        // Evento Aleatório antes da batalha
+        eventoAleatorio();
 
-        while (jogoRodando && heroi.getVida() > 0) {
+        // Pergunta se quer ir na loja antes da batalha
+        System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
+        String irLoja = scanner.nextLine().toLowerCase();
 
-            // Pergunta se quer ir na loja antes da batalha
-            System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
-            String irLoja = scanner.nextLine().toLowerCase();
+        while (!irLoja.equals("s") && !irLoja.equals("n")) {
+            System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
+            irLoja = scanner.nextLine().toLowerCase();
+        }
 
-            while (!irLoja.equals("s") && !irLoja.equals("n")) {
-                System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
-                irLoja = scanner.nextLine().toLowerCase();
-            }
+        if (irLoja.equals("s")) {
+            loja();
+        }
 
-            if (irLoja.equals("s")) {
-                loja();
-            }
+        // --- MENU DE DECISÃO INTELIGENTE ---
+        System.out.println("\nO que você deseja fazer?");
+        System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
+        System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+        
+        int escolhaJornada = 0;
+        try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
 
-            // Evento Aleatório antes da batalha
-            eventoAleatorio();
+        // Variável para saber qual capítulo vamos carregar
+        int capituloParaJogar = heroi.getCapitulo(); 
+        boolean ehFarm = false; // Para saber se avança a história ou não
 
-            // --- MENU DE DECISÃO INTELIGENTE ---
-            System.out.println("\nO que você deseja fazer?");
-            System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
-            System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+        if (escolhaJornada == 2) {
+            ehFarm = true;
+            System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO PARA FARMAR ===" + Cores.RESET);
             
-            int escolhaJornada = 0;
-            try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
-
-            // Variável para saber qual capítulo vamos carregar
-            int capituloParaJogar = heroi.getCapitulo(); 
-            boolean ehFarm = false; // Para saber se avança a história ou não
-
-            if (escolhaJornada == 2) {
-                ehFarm = true;
-                System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO PARA FARMAR ===" + Cores.RESET);
-                
-                // Lista do 0 até o capítulo atual
-                for (int i = 0; i <= heroi.getCapitulo(); i++) {
-                    System.out.println(i + ". Capítulo " + i);
-                }
-                
-                System.out.print("Digite o número do capítulo: ");
-                try { 
-                    capituloParaJogar = scanner.nextInt(); 
-                    scanner.nextLine();
-                } catch(Exception e) { scanner.nextLine(); }
-                
-                // Segurança: Se o cara tentar pular fase digitando 99
-                if (capituloParaJogar > heroi.getCapitulo()) {
-                    System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
-                    capituloParaJogar = heroi.getCapitulo();
-                }
+            // Lista do 0 até o capítulo atual
+            for (int i = 0; i <= heroi.getCapitulo(); i++) {
+                System.out.println(i + ". Capítulo " + i);
             }
+            
+            System.out.print("Digite o número do capítulo: ");
+            try { 
+                capituloParaJogar = scanner.nextInt(); 
+                scanner.nextLine();
+            } catch(Exception e) { scanner.nextLine(); }
+            
+            // Segurança: Se o cara tentar pular fase digitando 99
+            if (capituloParaJogar > heroi.getCapitulo()) {
+                System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
+                capituloParaJogar = heroi.getCapitulo();
+            }
+        }
 
-            // O Capítulo define quem é o monstro da vez
-            this.monstro = Capitulos.executarCapitulo(capituloParaJogar, scanner);
+        // O Capítulo define quem é o monstro da vez
+        this.monstro = Capitulos.executarCapitulo(capituloParaJogar, scanner);
 
-            // Se voltou um monstro, a gente luta
-            if (this.monstro != null) {
-                boolean venceu = lutar(); // Chama o método de pancadaria
-                
-                if (venceu) {
-                    if (!ehFarm && capituloParaJogar == heroi.getCapitulo()) {
-                        // Se ganhou, passa de fase!
-                        heroi.setCapitulo(heroi.getCapitulo() + 1);
-                        System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
-                        heroi.ganharXp(monstro.getXpReward());
-                        heroi.ganharOuro(monstro.getOuroReward());
-                        // Salva automático
-                        JogoSalvo.salvar(heroi);
-                        jogoRodando = false; // Volta pro menu principal
-                    } else {
-
-                        System.out.println(Cores.YELLOW + "Farm concluído! XP e Ouro garantidos." + Cores.RESET);
-                        JogoSalvo.salvar(heroi);
-                        jogoRodando = false; // Volta pro menu principal
-                    }
-
+        // Se voltou um monstro, a gente luta
+        if (this.monstro != null) {
+            boolean venceu = lutar(); // Chama o método de pancadaria
+            
+            if (venceu) {
+                if (!ehFarm && capituloParaJogar == heroi.getCapitulo()) {
+                    // Se ganhou, passa de fase!
+                    heroi.setCapitulo(heroi.getCapitulo() + 1);
+                    System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
+                    heroi.ganharXp(monstro.getXpReward());
+                    heroi.ganharOuro(monstro.getOuroReward());
+                    // Salva automático
+                    JogoSalvo.salvar(heroi);
                 } else {
 
-                    if (heroi.getVida() <= 0) {
-                        // Se a vida for 0, é GAME OVER de verdade
-                        System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
-                        heroi.perderXp(monstro.getXpLose());
-                        heroi.perderOuro(monstro.getOuroLose());
-                        jogoRodando = false; // Game Over
-                    } else {
-                        // Se a vida > 0, significa que FUGIU.
-                        System.out.println(Cores.YELLOW + "Você retornou ao acampamento para se recuperar." + Cores.RESET);
-                        jogoRodando = false; // Volta pro menu principal
-                    }
+                    System.out.println(Cores.YELLOW + "Farm concluído!" + Cores.RESET);
+                    heroi.ganharXp(monstro.getXpReward());
+                    heroi.ganharOuro(monstro.getOuroReward());
+                    JogoSalvo.salvar(heroi);
                 }
+
             } else {
-                // Se voltou null, é porque o jogo acabou
-                System.out.println(Cores.YELLOW_BOLD + "\nParabéns! Você completou a Jornada (por enquanto)." + Cores.RESET);
-                jogoRodando = false;
+
+                if (heroi.getVida() <= 0) {
+                    // Se a vida for 0, é GAME OVER de verdade
+                    System.out.println(Cores.RED_BOLD + "GAME OVER... " + heroi.getNome() + " caiu em combate." + Cores.RESET);
+                    heroi.perderXp(monstro.getXpLose());
+                    heroi.perderOuro(monstro.getOuroLose());
+                    JogoSalvo.salvar(heroi);
+                } else {
+                    // Se a vida > 0, significa que FUGIU.
+                    System.out.println(Cores.YELLOW + "Você retornou ao acampamento para se recuperar." + Cores.RESET);
+                    JogoSalvo.salvar(heroi);
+                }
             }
+        } else {
+            // Se voltou null, é porque o jogo acabou
+            System.out.println(Cores.YELLOW_BOLD + "\nParabéns! Você completou a Jornada (por enquanto)." + Cores.RESET);
+            JogoSalvo.salvar(heroi);
         }
     }
 
@@ -336,11 +337,8 @@ public class Batalha {
 
             System.out.println("=============================\n");
 
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // Pequena pausa antes do próximo turno
+            try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 
         }
 
@@ -348,11 +346,7 @@ public class Batalha {
             System.out.println("=============================\n");
         }
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 
         // Fim da Batalha
         return heroi.getVida() > 0; // Retorna true se vivo, false se morto
@@ -361,7 +355,7 @@ public class Batalha {
     // Método exclusivo para gerenciar a compra de itens
     private void loja() {
         System.out.println(Cores.PURPLE + "\nO Mercador acena para você!" + Cores.RESET);
-        System.out.println("Mercador: 'Tenho ótimas poções para sua jornada.'");
+        Capitulos.narrar("Mercador: 'Tenho ótimas poções para sua jornada.'");
         
         // Itens à venda
         Item pocaoVida = new Item("Poção de Vida Pequena", "Vida", 50, 20);
@@ -380,7 +374,8 @@ public class Batalha {
             System.out.println(Cores.CYAN + "--- UPGRADES (Permanentes) ---" + Cores.RESET);
             System.out.println("4. Afiar Arma (+2 Força) - " + Cores.YELLOW + "150g" + Cores.RESET);
             System.out.println("5. Reforçar Armadura (+2 Defesa) - " + Cores.YELLOW + "150g" + Cores.RESET);
-            System.out.println("6. Sair da Loja");
+            System.out.println("6. Ouvir Rumores - " + Cores.YELLOW + "5g" + Cores.RESET);
+            System.out.println("7. Sair da Loja");
             System.out.println(Cores.YELLOW_BOLD + "======================================" + Cores.RESET);
             
             int escolha = scanner.nextInt();
@@ -420,8 +415,13 @@ public class Batalha {
                     break;
 
                 case 6:
-                    System.out.println("Mercador: 'Volte sempre!'");
+                    ouvirFofoca();
+                    break;
+
+                case 7:
+                    Capitulos.narrar("Mercador: 'Volte sempre!'");
                     return;
+
                 default:
                     System.out.println(Cores.RED + "Opção inválida." + Cores.RESET);
             }
@@ -437,6 +437,7 @@ public class Batalha {
             int ouroAchado = random.nextInt(30) + 20; // 20 a 50 de ouro
             System.out.println(Cores.YELLOW_BOLD + "\n[$] SORTE! Enquanto explorava, voce encontrou um Baú!" + Cores.RESET);
             heroi.ganharOuro(ouroAchado);
+            try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
         } 
         
         // --- EVENTO 2: ARMADILHA (10% Chance - 11 a 20) ---
@@ -445,13 +446,14 @@ public class Batalha {
             System.out.println(Cores.RED_BOLD + "\n[!] CUIDADO! Voce pisou em uma armadilha de urso!" + Cores.RESET);
             heroi.receberDano(danoArmadilha);
             System.out.println("Voce comeca a proxima luta machucado...");
+            try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
         }
         
         // --- EVENTO 3: VIAJANTE (5% Chance - 21 a 25) ---
         else if (dado <= 25) {
             System.out.println(Cores.CYAN + "\n[?] Um Viajante Misterioso sai das sombras..." + Cores.RESET);
-            System.out.println("Viajante: 'Tenho uma *Essência de Força*. Aumenta seu dano permanentemente.'");
-            System.out.println("Viajante: 'Na loja custa 150... para voce faco por 80 moedas. Aceita? (s/n)'");
+            Capitulos.narrar("Viajante: 'Tenho uma *Essência de Força*. Aumenta seu dano permanentemente.'");
+            Capitulos.narrar("Viajante: 'Na loja custa 150... para voce faco por 80 moedas. Aceita? (s/n)'");
             
             String resposta = scanner.nextLine().toLowerCase();
 
@@ -465,11 +467,14 @@ public class Batalha {
                     heroi.setOuro(heroi.getOuro() - 80);
                     heroi.setForca(heroi.getForca() + 2); // Update barato
                     System.out.println(Cores.GREEN + "[+] Voce bebeu a essência! (+2 Forca)" + Cores.RESET);
+                    try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
                 } else {
-                    System.out.println("Viajante: 'Sem dinheiro, sem mercadoria...' (Ele desaparece)");
+                    Capitulos.narrar("Viajante: 'Sem dinheiro, sem mercadoria...' (Ele desaparece)");
+                    try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
                 }
             } else {
-                System.out.println("Viajante: 'Sua perda...' (Ele some na neblina)");
+                Capitulos.narrar("Viajante: 'Sua perda...' (Ele some na neblina)");
+                try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
             }
         }
 
@@ -509,6 +514,66 @@ public class Batalha {
             heroi.ganharXp(xpAchado);
         }
 
-        // Se cair 41 a 100, nada acontece.
+        // --- EVENTO 7: FONTE SAGRADA (5% Chance - 41 a 45) ---
+        else if (dado <= 45) {
+            System.out.println(Cores.BLUE_BOLD + "\n[+] Você encontrou uma Fonte Sagrada escondida!" + Cores.RESET);
+            System.out.println(Cores.CYAN + "A água brilhante restaura suas forças." + Cores.RESET);
+            
+            // Recupera TUDO (Vida e Mana cheias)
+            heroi.setVida(heroi.getVidaMaxima());
+            heroi.setMana(heroi.getManaMaxima());
+
+            System.out.println(Cores.GREEN + "Vida e Mana totalmente recuperadas!" + Cores.RESET);
+        }
+
+        // Se cair 46 a 100, nada acontece.
+    }
+
+    // Gera uma frase aleatória do Mercador
+    private void ouvirFofoca() {
+        if (heroi.getOuro() >= 5) {
+            heroi.setOuro(heroi.getOuro() - 5);
+            System.out.println(Cores.YELLOW + "Você paga 5 moedas ao Mercador..." + Cores.RESET);
+
+            String[] fofocas = {
+                // --- DICAS DE COMBATE (GERAL) ---
+                "Dizem que os Guerreiros sofrem na mão de Magos... armadura não para fogo.",
+                "Magias nunca erram o alvo. Lembre-se disso quando o inimigo for muito ágil.",
+                "Se sua vida estiver cheia, não use poções! É desperdício de dinheiro.",
+                "Defender não só cura, mas ajuda a recuperar um pouco de Mana.",
+                "Ataques físicos dependem da sua Destreza. Se estiver errando muito, culpe seus olhos.",
+                
+                // --- DICAS DE MONSTROS (FÁCIL/MÉDIO) ---
+                "O Slime parece fraco, mas a gosma dele é venenosa. Não deixe a luta durar muito.",
+                "Esqueletos são rápidos, desviam muito! Guerreiros sofrem para acertá-los.",
+                "Goblins usam facas envenenadas. Tenha sempre uma poção de vida extra.",
+                "O Necromante é um mago poderoso, mas se você acertar um golpe físico, ele quebra fácil.",
+                
+                // --- DICAS DE MONSTROS (DIFÍCIL) ---
+                "O Orc Blindado é um tanque. Magos costumam ter vantagem contra ele.",
+                "Cuidado com o 'Esmagar' do Orc e do Golem. Se te acertar, você fica tonto e perde a vez!",
+                "A Aranha Rainha tem o veneno mais cruel de todos. O dano aumenta a cada turno.",
+                "O Golem de Pedra é quase imune a flechas e espadas. Use magia ou ataques pesados!",
+                
+                // --- DICAS DO DRAGÃO ---
+                "O Dragão Ancião cospe fogo que queima sua carne por vários turnos. É um pesadelo.",
+                "Dizem que a escama do Dragão é impenetrável... exceto para um Arqueiro experiente.",
+                
+                // --- LORE / HISTÓRIA / CURIOSIDADES ---
+                "Não conte pra ninguém, mas eu vendo mais barato pra quem sobrevive à Cripta.",
+                "Ouvi dizer que o 'Criador' deste mundo deixou um desafio secreto para quem zerar...",
+                "Estou juntando ouro para me aposentar em uma ilha sem Slimes.",
+                "Minha avó dizia que as Fontes Sagradas curam qualquer ferida instantaneamente.",
+                "Se encontrar um baú, reze para não ser uma armadilha. Eu já perdi um dedo assim."
+            };
+    
+            int indice = random.nextInt(fofocas.length);
+            
+            System.out.println(Cores.CYAN + "\nO Mercador se inclina e sussurra:" + Cores.RESET);
+            Capitulos.narrar(Cores.YELLOW + "'" + fofocas[indice] + "'" + Cores.RESET);
+            
+        } else {
+            System.out.println(Cores.RED + "Mercador: 'Informação custa dinheiro, amigo. Volte com 5 moedas.'" + Cores.RESET);
+        }
     }
 }

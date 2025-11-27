@@ -4,12 +4,12 @@ import java.util.Scanner;
 public class Capitulos {
 
     public static void narrar(String mensagem) {
-        System.out.print(Cores.CYAN); 
+        System.out.print(Cores.CYAN);
         for (char c : mensagem.toCharArray()) {
             System.out.print(c);
             try { Thread.sleep(30); } catch (InterruptedException e) { e.printStackTrace(); }
         }
-        System.out.println(Cores.RESET); 
+        System.out.println(Cores.RESET);
     }
 
     public static Personagem executarCapitulo(int capituloEscolhido, Scanner scanner) {
@@ -106,7 +106,7 @@ public class Capitulos {
                 System.out.println(Cores.YELLOW_BOLD + "\n--- CAPÍTULO 5: AS RUÍNAS ANTIGAS ---" + Cores.RESET);
                 narrar("Você chega às ruínas de uma civilização esquecida.");
                 narrar("O chão treme violentamente a cada passo que você dá.");
-                System.out.println(Cores.YELLOW + "Uma pilha de rochas antigas se levanta. O Guardião acordou!" + Cores.RESET);
+                narrar(Cores.YELLOW + "Uma pilha de rochas antigas se levanta. O Guardião acordou!" + Cores.RESET);
                 
                 monstro = new Personagem("Golem de Pedra", 180, 25, 18, "Guerreiro");
                 monstro.setEMonstro(true);
@@ -120,7 +120,7 @@ public class Capitulos {
                 narrar("Você escalou até o ponto mais alto do mundo.");
                 narrar(Cores.RED + "O céu fica vermelho sangue. O calor é insuportável." + Cores.RESET);
                 narrar("Com um rugido que abala os céus, a Lenda pousa na sua frente.");
-                System.out.println(Cores.RED_BOLD + "DRAGÃO ANCIÃO: 'VOCÊ OUSA DESAFIAR O REI?'" + Cores.RESET);
+                narrar(Cores.RED_BOLD + "DRAGÃO ANCIÃO: 'VOCÊ OUSA DESAFIAR O REI?'" + Cores.RESET);
                 
                 monstro = new Personagem("Dragão Ancião", 250, 35, 15, "Fera");
                 monstro.setEMonstro(true);
@@ -133,7 +133,7 @@ public class Capitulos {
                 System.out.println(Cores.PURPLE + "\n--- ??? : A ANOMALIA ---" + Cores.RESET);
                 narrar("Você venceu o Dragão, mas o jogo não acabou...");
                 narrar(Cores.GREEN + "O mundo ao seu redor começa a falhar e bugar." + Cores.RESET);
-                System.out.println(Cores.CYAN + "Criador: 'Você achou que podia zerar o meu sistema?'" + Cores.RESET);
+                narrar(Cores.CYAN + "Criador: 'Você achou que podia zerar o meu sistema?'" + Cores.RESET);
                 
                 monstro = new Personagem("Augusto, o Criador", 999, 50, 50, "Dev");
                 monstro.setEMonstro(true);
