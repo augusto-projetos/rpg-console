@@ -2,74 +2,67 @@ name: Gerar EXE Automático
 
 # Quando isso vai rodar?
 on:
-  push:
-    branches: [ "main" ] # Roda toda vez que der push na main
-  workflow_dispatch: # Permite clicar num botão "Run" pra rodar manualmente se quiser
+    push:
+        branches: ["main"] # Roda toda vez que der push na main
+    workflow_dispatch: # Permite clicar num botão "Run" pra rodar manualmente se quiser
 
 # --- SEGURANÇA ---
 permissions:
-  contents: read
+    contents: read
 # ----------------------------------------------
 
 jobs:
-  construir-e-empacotar:
-    runs-on: windows-latest # O robô liga um Windows novinho
+    construir-e-empacotar:
+        runs-on: windows-latest # O robô liga um Windows novinho
 
-    steps:
-    # 0. Habilita caminhos longos no Windows (Correção do Erro 32000 chars)
-    - name: Habilitar Long Paths
-      run: git config --system core.longpaths true
+        steps:
+            # 0. Habilita caminhos longos no Windows (Correção do Erro 32000 chars)
+            - name: Habilitar Long Paths
+              run: git config --system core.longpaths true
 
-    # 1. Baixa seu código do GitHub
-    - name: Baixar Código (Checkout)
-      uses: actions/checkout@v4
+            # 1. Baixa seu código do GitHub
+            - name: Baixar Código (Checkout)
+              uses: actions/checkout@v4
 
-    # 2. Instala o Java (Substitui o JDK 24 local)
-    # Vou usar o 21 (LTS) que é super estável e compatível
-    - name: Instalar Java (JDK)
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '21'
+            # 2. Instala o Java (Substitui o JDK 24 local)
+            # Vou usar o 21 (LTS) que é super estável e compatível
+            - name: Instalar Java (JDK)
+              uses: actions/setup-java@v4
+              with:
+                  distribution: "temurin"
+                  java-version: "21"
 
-    # 3. Compilar e Criar JAR
-    - name: Compilar e Criar JAR
-      run: |
-        mkdir bin
-        javac -d bin src/*.java
-        
-        jar cfe app.jar Main -C bin .
+            # 3. Compilar e Criar JAR
+            - name: Compilar e Criar JAR
+              run: |
+                  mkdir bin
+                  javac -d bin src/*.java
+                  jar cfe app.jar Main -C bin .
 
-    # 4. Criar EXE
-    - name: Criar Executável (JPackage em Caminho Curto)
-      run: |
-        New-Item -ItemType Directory -Force -Path "C:\t"
-        
-        Copy-Item -Path "app.jar" -Destination "C:\t\"
-        
-        cd C:\t
-        
-        jpackage --name "RPG-Console" `
-                 --input . `
-                 --main-jar app.jar `
-                 --main-class Main `
-                 --type app-image `
-                 --win-console `
-                 --app-version "1.0.0" `
-                 --dest output
-        
-        $Destino = "${{ github.workspace }}\saida"
-        New-Item -ItemType Directory -Force -Path $Destino
-        Copy-Item -Path "output\RPG-Console" -Destination $Destino -Recurse
+            # 4. Cria o EXE com JRE Embutido (usa pasta limpa para --input)
+            - name: Criar Executável (JPackage)
+              shell: powershell
+              run: |
+                  New-Item -ItemType Directory -Force -Path app-lib
+                  Move-Item -Path app.jar -Destination app-lib
 
-      # Explicação dos comandos:
-      # --input app-lib: Agora ele lê SÓ essa pasta limpa (não trava mais)
-      # --win-console: Garante que abre a tela preta (Console)
-      # --type app-image: Cria uma pasta com o .exe e o JRE dentro
+                  jpackage --name "RPG-Console" `
+                           --input app-lib `
+                           --main-jar app.jar `
+                           --main-class Main `
+                           --type app-image `
+                           --win-console `
+                           --app-version "1.0.0" `
+                           --dest saida
 
-    # 5. Entrega o resultado (Artifact)
-    - name: Fazer Upload do Arquivo
-      uses: actions/upload-artifact@v4
-      with:
-        name: RPG-Console-Windows
-        path: saida/RPG-Console # Pega a pasta que o jpackage criou
+              # Explicação dos comandos:
+              # --input app-lib: evita que o jpackage leia todo o workspace
+              # --win-console: Garante que abre a tela preta (Console)
+              # --type app-image: Cria uma pasta com o .exe e o JRE dentro
+
+            # 5. Entrega o resultado (Artifact)
+            - name: Fazer Upload do Arquivo
+              uses: actions/upload-artifact@v4
+              with:
+                  name: RPG-Console-Windows
+                  path: saida/RPG-Console # Pega a pasta que o jpackage criou
