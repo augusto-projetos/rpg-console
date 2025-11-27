@@ -148,6 +148,7 @@ public class Batalha {
                 } else {
 
                     System.out.println(Cores.YELLOW + "Farm concluído!" + Cores.RESET);
+                    heroi.ganharXp(monstro.getXpReward());
                     heroi.ganharOuro(monstro.getOuroReward());
                     JogoSalvo.salvar(heroi);
                 }
