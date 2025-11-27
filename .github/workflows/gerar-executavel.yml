@@ -55,6 +55,7 @@ jobs:
                  --main-class src.Main `
                  --type app-image `
                  --win-console `
+                 --icon "game.ico" `
                  --app-version "1.0.0" `
                  --dest output
         
