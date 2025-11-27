@@ -35,10 +35,9 @@ jobs:
       run: |
         mkdir bin
         javac -d bin src/*.java
-        
         jar cfe app.jar src.Main -C bin .
 
-    # 4. Criar EXE (AGORA LIMPO E SEGURO)
+    # 4. Criar EXE (SEGURO)
     - name: Criar Executável (JPackage)
       run: |
         mkdir app-lib
@@ -47,6 +46,7 @@ jobs:
         
         New-Item -ItemType Directory -Force -Path "C:\t"
         Copy-Item -Path "app-lib" -Destination "C:\t" -Recurse
+        Copy-Item -Path "game.ico" -Destination "C:\t"
         cd C:\t
         
         jpackage --name "RPG-Console" `
@@ -67,5 +67,5 @@ jobs:
     - name: Fazer Upload do Arquivo
       uses: actions/upload-artifact@v4
       with:
-        name: RPG-Console-Windows
+        name: RPG-Console
         path: saida/RPG-Console
