@@ -6,11 +6,20 @@ on:
     branches: [ "main" ] # Roda toda vez que der push na main
   workflow_dispatch: # Permite clicar num botão "Run" pra rodar manualmente se quiser
 
+# --- SEGURANÇA ---
+permissions:
+  contents: read
+# ----------------------------------------------
+
 jobs:
   construir-e-empacotar:
     runs-on: windows-latest # O robô liga um Windows novinho
 
     steps:
+    # 0. Habilita caminhos longos no Windows (Correção do Erro 32000 chars)
+    - name: Habilitar Long Paths
+      run: git config --system core.longpaths true
+
     # 1. Baixa seu código do GitHub
     - name: Baixar Código (Checkout)
       uses: actions/checkout@v4
@@ -31,18 +40,24 @@ jobs:
         javac -d bin src/*.java
         jar cfe app.jar Main -C bin .
 
-    # 4. Cria o EXE com JRE Embutido (Substitui o Launch4j e a cópia da pasta 'jre')
+    # 4. Cria o EXE com JRE Embutido
+    # Movemos o jar para uma pasta limpa para evitar loop infinito
     - name: Criar Executável (JPackage)
       run: |
+        mkdir app-lib
+        move app.jar app-lib/
+        
         jpackage --name "RPG-Console" `
-                 --input . `
+                 --input app-lib `
                  --main-jar app.jar `
                  --main-class Main `
                  --type app-image `
                  --win-console `
                  --app-version "1.0.0" `
                  --dest saida
+
       # Explicação dos comandos:
+      # --input app-lib: Agora ele lê SÓ essa pasta limpa (não trava mais)
       # --win-console: Garante que abre a tela preta (Console)
       # --type app-image: Cria uma pasta com o .exe e o JRE dentro
 
