@@ -1,10 +1,12 @@
 # ⚔️ RPG Console - Java Adventure
 
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Concluído-green?style=for-the-badge)
+![Status](https://img.shields.io/badge/STATUS-CONCLUÍDO-brightgreen?style=for-the-badge)
+![Versão](https://img.shields.io/github/v/release/augusto-projetos/rpg-console?style=for-the-badge&label=VERSÃO&color=blue)
+![Linguagem](https://img.shields.io/badge/JAVA-100%25-orange?style=for-the-badge&logo=java)
+![Licença](https://img.shields.io/github/license/augusto-projetos/rpg-console?style=for-the-badge)
 
 > **Um RPG de texto estratégico onde suas escolhas de classe definem seu destino.**
+> 
 > Desenvolvido inteiramente em Java para rodar no console, este projeto foca na aplicação prática de Lógica de Programação, Orientação a Objetos (POO) e Game Design.
 
 ---
@@ -19,7 +21,10 @@ O **RPG Console** simula uma campanha completa de RPG textual, combinando estrat
 - **💰 Economia & Loja:** Derrote monstros para ganhar Ouro. Visite o **Mercador** para comprar poções vitais ou investir em **Upgrades Permanentes** de força e defesa.
 - **💾 Sistema de Save/Load:** Seu progresso (Nível, Ouro, Atributos) é salvo localmente em arquivo criptografado, permitindo pausar e continuar sua aventura a qualquer momento.
 - **🔥 Mecânica de Vantagens:** Sistema tático estilo "Pedra, Papel e Tesoura". Escolher a classe certa contra o inimigo certo garante dano massivo.
-- **🗺️ Campanha "Boss Rush":** Enfrente uma progressão de **9 Chefes**, desde o tutorial até desafios lendários e secretos.
+- **📖 Modo História:** O jogo segue uma narrativa linear com descrições imersivas e **escolhas de caminho** (ex: *Cemitério* ou *Acampamento*?).
+- **🎒 Sobrevivência Hardcore:** A Vida e Mana **não enchem automaticamente** entre os capítulos. Você deve gerenciar poções e encontrar Fontes Sagradas para continuar vivo.
+- **🔄 Sistema de Farm:** Travou em um chefe difícil? Volte para capítulos anteriores para treinar, ganhar XP e Ouro sem avançar a história.
+- **🗣️ NPCs & Lore:** O Mercador não apenas vende itens, ele vende **Informação**. Pague para ouvir rumores sobre fraquezas de chefes e segredos do mundo.
 - **📊 Interface Visual:** Barra de XP dinâmica e HUD informativo no terminal para acompanhar seu status.
 - **🎲 Fator Aleatoriedade:** Dano variável, chance de Crítico e mecânica de **Fúria** (Inimigos ficam mais perigosos quando estão morrendo).
 - **🧭 Eventos & Exploração:** O mundo é dinâmico. Entre batalhas, você pode encontrar tesouros, cair em armadilhas ou negociar com viajantes misteriosos.
@@ -38,17 +43,16 @@ O sistema de batalha exige estratégia. Conheça as vantagens de cada classe:
 
 ---
 
-## 🏆 Lista de Chefes (Campanha)
+## 🏆 A Campanha (Capítulos)
 
-1.  **Slime Gosmento** (Tutorial)
-2.  **Esqueleto Arqueiro** (Dano Alto / Vida Baixa)
-3.  **Goblin Furioso** (Equilibrado)
-4.  **Necromante Sombrio** (Mago Explosivo)
-5.  **Orc Blindado** (Tanque - Defesa Alta)
-6.  **Aranha Rainha** (Resistência - Vida Alta)
-7.  **Golem de Pedra** (Tanque Supremo)
-8.  **Dragão Ancião** (Lenda - Boss Final)
-9.  **???** (Desafio Secreto Impossível)
+1.  **Prólogo:** O Despertar (Tutorial)
+2.  **Capítulo 1:** A Encruzilhada (Escolha seu Destino)
+3.  **Capítulo 2:** A Torre de Obsidiana (Necromante)
+4.  **Capítulo 3:** A Ponte do Guardião (Orc Blindado)
+5.  **Capítulo 4:** O Ninho da Escuridão (Aranha Rainha)
+6.  **Capítulo 5:** As Ruínas Antigas (Golem)
+7.  **Capítulo Final:** O Pico da Montanha (Dragão Ancião)
+8.  **Pós-Game:** O Desafio Secreto
 
 ---
 
@@ -59,7 +63,7 @@ Quer apenas jogar? Baixe a versão portátil que já vem com tudo configurado (n
 
 1.  Vá até a aba **[Releases](../../releases)** deste repositório.
 2.  Baixe o arquivo `.zip` da versão mais recente.
-3.  Extraia a pasta e execute o arquivo `RPG.exe`.
+3.  Extraia a pasta e execute o arquivo `RPG-Console.exe`.
 
 > **⚠️ Aviso sobre Antivírus:**
 > O executável **não possui uma Assinatura Digital** (certificado pago). O Windows pode exibir um alerta de "Arquivo Desconhecido".
@@ -79,16 +83,17 @@ Quer apenas jogar? Baixe a versão portátil que já vem com tudo configurado (n
 
 Este projeto foi desenvolvido para consolidar conhecimentos avançados de Java:
 
+* **Arquitetura Modular:** Separação clara de responsabilidades (`Capitulos.java` para narrativa, `Batalha.java` para sistema, `Personagem.java` para dados).
 * **POO (Programação Orientada a Objetos):**
-    * **Polimorfismo:** O método `atacar(alvo)` muda de comportamento dependendo das classes envolvidas.
+    * **Polimorfismo:** Comportamento de ataque e defesa variável por classe.
     * **Encapsulamento:** Proteção de atributos vitais (`vidaMaxima`, `xp`) via Getters/Setters.
 * **Lógica de Programação:**
-    * Estruturas condicionais complexas e aninhadas (`switch`, `if/else`).
-    * Laços de repetição (`while`, `do while`) para o game loop e level up.
+    * Estruturas condicionais complexas (`switch`, `if/else`) para gerenciamento de fluxo de história.
+    * Laços de repetição (`while`, `do while`) para o game loop.
 * **Java Core:**
-    * `java.util.Scanner` (Inputs blindados contra erros de digitação).
-    * `Math` e `Random` (Cálculos de porcentagem e probabilidade).
-    * `Thread.sleep()` (Manipulação de tempo para criar suspense).
+    * `java.util.Scanner` com tratamento de exceções (`try-catch`).
+    * `Thread.sleep()` para efeito de digitação (narrativa).
+    * `File I/O` para sistema de Save/Load.
 
 ---
 
