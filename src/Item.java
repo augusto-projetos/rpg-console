@@ -36,14 +36,23 @@ public class Item {
 
     // 2. Cria um Item a partir de uma linha de texto (Método Estático "Fábrica")
     public static Item fromSaveString(String linha) {
-        // Corta o texto onde tem vírgula
         String[] partes = linha.split(",");
         
-        // partes[0] = Nome
-        // partes[1] = Tipo
-        // partes[2] = Valor (precisa converter pra int)
-        // partes[3] = Preço (precisa converter pra int)
+        // Se tiver 6 partes, é um EQUIPAMENTO (Arma/Armadura)
+        if (partes.length == 6) {
+            String nome = partes[0];
+            String tipo = partes[1];
+            // partes[2] é o valorEfeito (0 para equips), pulamos ou usamos
+            int preco = Integer.parseInt(partes[3]);
+            int aumentoStatus = Integer.parseInt(partes[4]);
+            String slot = partes[5];
+            
+            return new Equipamento(nome, tipo, aumentoStatus, preco, slot);
+        } 
         
-        return new Item(partes[0], partes[1], Integer.parseInt(partes[2]), Integer.parseInt(partes[3]));
+        // Se tiver 4 partes, é um ITEM COMUM (Poção)
+        else {
+            return new Item(partes[0], partes[1], Integer.parseInt(partes[2]), Integer.parseInt(partes[3]));
+        }
     }
 }
