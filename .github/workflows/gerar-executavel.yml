@@ -3,8 +3,45 @@ name: Gerar EXE Automático
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      # Documentação e Configuração do Git
+      - '**.md'       # Ignora qualquer arquivo Markdown (README, etc)
+      - 'LICENSE'     # Ignora a licença
+      - '.gitignore'  # Ignora o gitignore
+      - '.gitattributes' # Ignora o gitattributes
+      - '*.yml'       # Ignora arquivos YML (workflows, configs, etc)
+
+      # Configurações do VS Code / IDEs (se subiu sem querer)
+      - '.vscode/**'
+      - '.idea/**'
+      - '*.iml'
+      
+      # Imagens e Assets que não afetam a compilação
+      - 'docs/**'
+      - 'images/**'
+      - 'screenshots/**'
+      
+      # O próprio arquivo do Workflow (evita loop se você editar só o comentário do YML)
+      - '.github/workflows/**'
+
   pull_request: # <--- Roda também nos Pull Requests
     branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.gitattributes' 
+      - '*.yml'
+
+      - '.vscode/**'
+      - '.idea/**'
+      - '*.iml'
+      
+      - 'docs/**'
+      - 'images/**'
+      - 'screenshots/**'
+      
+      - '.github/workflows/**'
   workflow_dispatch:
 
 permissions:
