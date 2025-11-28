@@ -452,7 +452,7 @@ public class Batalha {
         else if (dado <= 20) {
             int danoArmadilha = random.nextInt(10) + 5; // 5 a 15 de dano
             System.out.println(Cores.RED_BOLD + "\n[!] CUIDADO! Voce pisou em uma armadilha de urso!" + Cores.RESET);
-            heroi.receberDano(danoArmadilha);
+            heroi.setVida(heroi.getVida() - danoArmadilha); // Aplica dano direto
             System.out.println("Voce comeca a proxima luta machucado...");
             try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
         }
