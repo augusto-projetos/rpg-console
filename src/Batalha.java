@@ -182,6 +182,9 @@ public class Batalha {
 
         while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
+            // Variável para saber se o escudo está levantado neste turno
+            boolean defendendo = false;
+
             // Processa Status do Herói
             boolean heroiPodeAgir = heroi.processarStatus();
 
@@ -233,28 +236,22 @@ public class Batalha {
                         break;
                 
                     case 3: // DEFENDER
-                        System.out.println("Você assume uma postura defensiva e " + Cores.GREEN + "recupera 10 de vida." + Cores.RESET);
-                        
-                        int vidaAtual = heroi.getVida();
-                        int cura = 10;
-                        int vidaMaxima = heroi.getVidaMaxima();
+                        System.out.println(Cores.PURPLE + "Você levanta sua proteção e se concentra." + Cores.RESET);
+                        defendendo = true;
 
-                        // Se a cura for fazer a vida ultrapassar o máximo...
-                        if (vidaAtual + cura > vidaMaxima) {
-                            // ... a vida vira exatamente o máximo (enche o tanque e para)
-                            heroi.setVida(vidaMaxima);
-                        } else {
-                            // Se não encher tudo, cura normal
-                            heroi.setVida(vidaAtual + cura);
-                        }
-                        
-                        System.out.println("Vida atual: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
+                        // Recupera 10% da Mana Máxima OU 5 pontos (o que for maior)
+                        int recuperacaoMana = heroi.getManaMaxima() / 10;
+                        if (recuperacaoMana < 5) recuperacaoMana = 5;
 
-                        // Recupera um pouquinho de mana também ao defender
                         int manaAtual = heroi.getMana();
-                        if (manaAtual + 5 <= heroi.getManaMaxima()) {
-                            heroi.setMana(manaAtual + 5);
-                            System.out.println(Cores.BLUE + "Recuperou 5 MP descansando." + Cores.RESET);
+                        
+                        // Verifica se não estoura o máximo
+                        if (manaAtual + recuperacaoMana <= heroi.getManaMaxima()) {
+                            heroi.setMana(manaAtual + recuperacaoMana);
+                            System.out.println(Cores.BLUE + "Concentrou energia e recuperou " + recuperacaoMana + " MP." + Cores.RESET);
+                        } else {
+                            heroi.setMana(heroi.getManaMaxima());
+                            System.out.println(Cores.BLUE + "Mana totalmente recarregada." + Cores.RESET);
                         }
 
                         break;
@@ -326,6 +323,14 @@ public class Batalha {
                             System.out.println(Cores.WHITE_BOLD + "MISS! Você desviou do ataque do " + monstro.getNome() + "!" + Cores.RESET);
                         } else {
                             int danoDoMonstro = monstro.atacar(heroi);
+
+                            if (defendendo) {
+                                // Se estava defendendo, reduz o dano pela metade
+                                danoDoMonstro /= 2;
+                                if (danoDoMonstro < 0) danoDoMonstro = 0; // Não pode ser negativo
+                                System.out.println(Cores.PURPLE + "Defesa Eficiente! O dano foi reduzido pela metade.\n" + Cores.RESET);
+                            }
+
                             System.out.println(Cores.RED + "O " + monstro.getNome() + " te acertou com força " + danoDoMonstro + "!" + Cores.RESET);
                             heroi.receberDano(danoDoMonstro);
                         }

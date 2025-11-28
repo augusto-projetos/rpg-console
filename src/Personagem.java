@@ -341,12 +341,18 @@ public class Personagem {
             // Atualiza a meta para o novo nível
             xpNecessario = this.nivel * 100; 
             
-            this.vidaMaxima += 20; 
-            this.vida = this.vidaMaxima; 
+            // Aumenta vida máxima em 20 a cada nível
+            this.vidaMaxima += 20;
+            this.vida = this.vidaMaxima;
+
+            // Aumenta mana máxima em 5 a cada nível
+            this.manaMaxima += 5;
+            this.mana = this.manaMaxima;
 
             System.out.println(Cores.YELLOW_BOLD + "\n---------------- LEVEL UP! ----------------");
             System.out.println("PARABÉNS! Você subiu para o nível " + this.nivel + "!");
             System.out.println("Vida aumentada para: " + this.vidaMaxima);
+            System.out.println("Mana aumentada para: " + this.manaMaxima);
             System.out.println("Força +3 | Defesa +2 | Des/Agi +1");
             System.out.println("------------------------------------------\n" + Cores.RESET);
         }
