@@ -83,17 +83,10 @@ public class Batalha {
         eventoAleatorio();
 
         // Pergunta se quer ir na loja antes da batalha
-        System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
-        String irLoja = scanner.nextLine().toLowerCase();
+        loja();
 
-        while (!irLoja.equals("s") && !irLoja.equals("n")) {
-            System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
-            irLoja = scanner.nextLine().toLowerCase();
-        }
-
-        if (irLoja.equals("s")) {
-            loja();
-        }
+        // Abre o inventário antes da batalha
+        gerenciarInventario();
 
         // --- MENU DE DECISÃO INTELIGENTE ---
         System.out.println("\nO que você deseja fazer?");
@@ -182,6 +175,9 @@ public class Batalha {
 
         while (heroi.getVida() > 0 && monstro.getVida() > 0) {
 
+            // Variável para saber se o escudo está levantado neste turno
+            boolean defendendo = false;
+
             // Processa Status do Herói
             boolean heroiPodeAgir = heroi.processarStatus();
 
@@ -203,7 +199,7 @@ public class Batalha {
                 System.out.println("\nEscolha uma ação:" + 
                                 "\n1. Atacar" + 
                                 "\n2. Habilidade: " + Cores.CYAN + heroi.getHabilidade().getNome() + " (" + heroi.getHabilidade().getCustoMana() + " MP)" + Cores.RESET + 
-                                "\n3. Defender (+10 HP)" +
+                                "\n3. Defender" +
                                 "\n4. Usar Item" +
                                 "\n5. Fugir");
                 int escolha = scanner.nextInt();
@@ -233,28 +229,22 @@ public class Batalha {
                         break;
                 
                     case 3: // DEFENDER
-                        System.out.println("Você assume uma postura defensiva e " + Cores.GREEN + "recupera 10 de vida." + Cores.RESET);
-                        
-                        int vidaAtual = heroi.getVida();
-                        int cura = 10;
-                        int vidaMaxima = heroi.getVidaMaxima();
+                        System.out.println(Cores.PURPLE + "Você levanta sua proteção e se concentra." + Cores.RESET);
+                        defendendo = true;
 
-                        // Se a cura for fazer a vida ultrapassar o máximo...
-                        if (vidaAtual + cura > vidaMaxima) {
-                            // ... a vida vira exatamente o máximo (enche o tanque e para)
-                            heroi.setVida(vidaMaxima);
-                        } else {
-                            // Se não encher tudo, cura normal
-                            heroi.setVida(vidaAtual + cura);
-                        }
-                        
-                        System.out.println("Vida atual: " + heroi.getVida() + "/" + heroi.getVidaMaxima());
+                        // Recupera 10% da Mana Máxima OU 5 pontos (o que for maior)
+                        int recuperacaoMana = heroi.getManaMaxima() / 10;
+                        if (recuperacaoMana < 5) recuperacaoMana = 5;
 
-                        // Recupera um pouquinho de mana também ao defender
                         int manaAtual = heroi.getMana();
-                        if (manaAtual + 5 <= heroi.getManaMaxima()) {
-                            heroi.setMana(manaAtual + 5);
-                            System.out.println(Cores.BLUE + "Recuperou 5 MP descansando." + Cores.RESET);
+                        
+                        // Verifica se não estoura o máximo
+                        if (manaAtual + recuperacaoMana <= heroi.getManaMaxima()) {
+                            heroi.setMana(manaAtual + recuperacaoMana);
+                            System.out.println(Cores.BLUE + "Concentrou energia e recuperou " + recuperacaoMana + " MP." + Cores.RESET);
+                        } else {
+                            heroi.setMana(heroi.getManaMaxima());
+                            System.out.println(Cores.BLUE + "Mana totalmente recarregada." + Cores.RESET);
                         }
 
                         break;
@@ -326,6 +316,14 @@ public class Batalha {
                             System.out.println(Cores.WHITE_BOLD + "MISS! Você desviou do ataque do " + monstro.getNome() + "!" + Cores.RESET);
                         } else {
                             int danoDoMonstro = monstro.atacar(heroi);
+
+                            if (defendendo) {
+                                // Se estava defendendo, reduz o dano pela metade
+                                danoDoMonstro /= 2;
+                                if (danoDoMonstro < 0) danoDoMonstro = 0; // Não pode ser negativo
+                                System.out.println(Cores.PURPLE + "Defesa Eficiente! O dano foi reduzido pela metade.\n" + Cores.RESET);
+                            }
+
                             System.out.println(Cores.RED + "O " + monstro.getNome() + " te acertou com força " + danoDoMonstro + "!" + Cores.RESET);
                             heroi.receberDano(danoDoMonstro);
                         }
@@ -354,6 +352,16 @@ public class Batalha {
 
     // Método exclusivo para gerenciar a compra de itens
     private void loja() {
+        System.out.println(Cores.YELLOW + "\nDeseja visitar o Mercador antes da batalha? (s/n)" + Cores.RESET);
+        String irLoja = scanner.nextLine().toLowerCase();
+
+        while (!irLoja.equals("s") && !irLoja.equals("n")) {
+            System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
+            irLoja = scanner.nextLine().toLowerCase();
+        }
+
+        if (!irLoja.equals("s")) return;
+
         System.out.println(Cores.PURPLE + "\nO Mercador acena para você!" + Cores.RESET);
         Capitulos.narrar("Mercador: 'Tenho ótimas poções para sua jornada.'");
         
@@ -574,6 +582,54 @@ public class Batalha {
             
         } else {
             System.out.println(Cores.RED + "Mercador: 'Informação custa dinheiro, amigo. Volte com 5 moedas.'" + Cores.RESET);
+        }
+    }
+
+    // Menu para usar itens fora de batalha
+    private void gerenciarInventario() {
+        System.out.println(Cores.YELLOW + "\nDeseja abrir seu inventário? (s/n)" + Cores.RESET);
+        String abrir = scanner.nextLine().toLowerCase();
+
+        while (!abrir.equals("s") && !abrir.equals("n")) {
+            System.out.println("Opção inválida! Digite 's' para sim ou 'n' para não: ");
+            abrir = scanner.nextLine().toLowerCase();
+        }
+        
+        if (!abrir.equals("s")) return;
+
+        boolean mexendoNaMochila = true;
+
+        while (mexendoNaMochila) {
+            System.out.println(Cores.CYAN + "\n=== SEU INVENTÁRIO ===" + Cores.RESET);
+            heroi.getInventario().exibir();
+            
+            if (heroi.getInventario().getTotalItens() == 0) {
+                // Se estiver vazio, nem pergunta, só sai
+                mexendoNaMochila = false;
+            } else {
+                System.out.println("Digite o número do item para usar (ou " + Cores.RED + "0 para fechar a mochila" + Cores.RESET + "):");
+                
+                int escolha = 0;
+                try {
+                    escolha = scanner.nextInt();
+                    scanner.nextLine(); // Limpar buffer
+                } catch (Exception e) {
+                    scanner.nextLine();
+                }
+
+                if (escolha == 0) {
+                    mexendoNaMochila = false;
+                    System.out.println("Você fechou a mochila.");
+                } else {
+                    // Tenta usar o item
+                    heroi.usarPocao(escolha);
+                    
+                    // Mostra status atualizados para o jogador ver se precisa usar mais
+                    System.out.println("Status Atual: " + 
+                        Cores.GREEN + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " + 
+                        Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
+                }
+            }
         }
     }
 }
