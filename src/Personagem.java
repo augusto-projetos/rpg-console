@@ -47,7 +47,9 @@ public class Personagem {
         "Lenda Viva",      // Chegar no Nível 10
         "Matador de Reis",  // Matar o Dragão
         "Colecionador", // Ter 5 itens na mochila
-        "Acumulador" // Ter 10 itens na mochila
+        "Acumulador", // Ter 10 itens na mochila
+        "Caçador de Monstros", // Derrotar todos os tipos de monstros
+        "Desafiante Supremo" // Desafiar e vencer Augusto, o Criador
     };
 
     // Construtor
@@ -243,6 +245,15 @@ public class Personagem {
 
     // Métodos de combate
     public int atacar(Personagem alvo) {
+
+        if (armaEquipada != null && armaEquipada.getNome().equals("Quebradora de Códigos")) {
+            if (alvo.getClasse().equals("Dev")) {
+                Capitulos.narrar(Cores.PURPLE_BOLD + "\n>>> CRITICAL ERROR: DELETING ENTITY... [██████████] 100% <<<" + Cores.RESET);
+                Capitulos.narrar(Cores.CYAN + "\nA espada reescreve a realidade e apaga o inimigo da existência!" + Cores.RESET);
+                return 99999; // Hit kill
+            }
+        }
+
         int dado = random.nextInt(10);
         int danoTotal = this.forca + dado;
 

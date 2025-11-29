@@ -97,7 +97,7 @@ public class Batalha {
             
             System.out.println("\nO que você deseja fazer?");
             System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
-            System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+            System.out.println("2. Voltar Capítulo (Rejogar Capítulo Anterior)");
             System.out.println("3. Ver Diário (Bestiário/Conquistas)");
             
             int escolhaJornada = 0;
@@ -163,6 +163,9 @@ public class Batalha {
                     // Desbloqueia conquistas
                     verificarConquistas();
 
+                    // Evento especial de loot secreto
+                    lootSecreto();
+
                     // Salva automático
                     JogoSalvo.salvar(heroi);
                 } else {
@@ -173,6 +176,7 @@ public class Batalha {
 
                     gerarLootEquipamento();
                     verificarConquistas();
+                    lootSecreto();
                     JogoSalvo.salvar(heroi);
                 }
 
@@ -780,6 +784,32 @@ public class Batalha {
         double dezPorcentoVida = heroi.getVidaMaxima() * 0.1;
         if (heroi.getVida() <= dezPorcentoVida) {
             heroi.desbloquearConquista("Sobrevivente");
+        }
+
+        // GATILHO DE CONQUISTA: Caçador de Monstros
+        if (monstro.getNome().equals("Dragão Ancião")) {
+            heroi.desbloquearConquista("Caçador de Monstros");
+        }
+
+        // GATILHO DE CONQUISTA: Desafiante Supremo
+        if (monstro.getNome().equals("Augusto, o Criador")) {
+            heroi.desbloquearConquista("Desafiante Supremo");
+        }
+    }
+
+    private void lootSecreto() {
+
+        if (monstro.getNome().equals("Dragão Ancião")) {
+            Capitulos.narrar(Cores.RED_BOLD + "Você me matou... mas não conseguirá enfrentar o próximo");
+            Capitulos.narrar("Ele é conhecido como o Criador, eu tenho a ferramenta para matar ele...");
+            Capitulos.narrar("Mas será que você tem sorte? Será que você consegue meu loot? Boa sorte." + Cores.RESET);
+            if (random.nextInt(100) < 30) { // 30% de chance de dropar o loot secreto
+                Capitulos.narrar(Cores.PURPLE + "O Dragão se desfaz em glitches e números..." + Cores.RESET);
+                Capitulos.narrar(Cores.CYAN + "Você obteve um item que desaia as leis da programação!" + Cores.RESET);
+
+                Equipamento espadaGlitch = new Equipamento("Quebradora de Códigos", "Arma", 0, 0, "Mao", "Todas");
+                heroi.guardarItem(espadaGlitch);
+            }
         }
     }
 }
