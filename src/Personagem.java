@@ -1,4 +1,6 @@
 package src;
+import java.util.ArrayList;
+
 public class Personagem {
     private java.util.Random random;
     private String nome;
@@ -27,6 +29,24 @@ public class Personagem {
     private int ouroLose; // Quanto Ouro ele tira
     private Equipamento armaEquipada;
     private Equipamento armaduraEquipada;
+    private ArrayList<String> monstrosDerrotados;
+    private ArrayList<String> conquistas;
+
+    // LISTASMESTRAS (O Gabarito do jogo)
+    public static final String[] TODOS_MONSTROS = {
+        "Slime Gosmento", "Esqueleto Arqueiro", "Goblin Furioso", 
+        "Necromante Sombrio", "Orc Blindado", "Aranha Rainha", 
+        "Golem de Pedra", "Dragão Ancião", "Augusto, o Criador"
+    };
+
+    public static final String[] TODAS_CONQUISTAS = {
+        "Primeiro Sangue", // Vencer 1 batalha
+        "Rico",            // Ter 500 de ouro
+        "Milionário",      // Ter 1000 de ouro
+        "Sobrevivente",    // Vencer com menos de 10% de vida
+        "Lenda Viva",      // Chegar no Nível 10
+        "Matador de Reis"  // Matar o Dragão
+    };
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -136,6 +156,8 @@ public class Personagem {
         this.inventario = new Inventario(); // Cria a mochila vazia
         this.efeitoStatus = "Normal";
         this.turnosStatus = 0;
+        this.monstrosDerrotados = new ArrayList<>();
+        this.conquistas = new ArrayList<>();
     }
 
     // Getters e Setters
@@ -210,6 +232,12 @@ public class Personagem {
 
     public Equipamento getArma() { return armaEquipada; }
     public Equipamento getArmadura() { return armaduraEquipada; }
+
+    public ArrayList<String> getMonstrosDerrotados() { return monstrosDerrotados; }
+    public ArrayList<String> setMonstrosDerrotados(ArrayList<String> monstrosDerrotados) { return this.monstrosDerrotados = monstrosDerrotados; }
+
+    public ArrayList<String> getConquistas() { return conquistas; }
+    public ArrayList<String> setConquistas(ArrayList<String> conquistas) { return this.conquistas = conquistas; }
 
     // Métodos de combate
     public int atacar(Personagem alvo) {
@@ -572,5 +600,65 @@ public class Personagem {
         
         System.out.println("Status Totais: Ataque " + ataqueTotal + " | Defesa " + defesaTotal);
         System.out.println("--------------------");
+    }
+
+    // --- MÉTODOS DO LEGADO ---
+
+    // Registra que matou um monstro (para o Bestiário)
+    public void registrarVitoria(String nomeMonstro) {
+        // Só adiciona se ainda não estiver na lista
+        if (!monstrosDerrotados.contains(nomeMonstro)) {
+            monstrosDerrotados.add(nomeMonstro);
+            System.out.println(Cores.CYAN + "Novo registro no Bestiário: " + nomeMonstro + "!" + Cores.RESET);
+        }
+    }
+
+    // Desbloqueia uma conquista
+    public void desbloquearConquista(String nomeConquista) {
+        if (!conquistas.contains(nomeConquista)) {
+            conquistas.add(nomeConquista);
+            System.out.println(Cores.YELLOW_BOLD + "\nCONQUISTA DESBLOQUEADA: " + nomeConquista + "!" + Cores.RESET);
+        }
+    }
+
+    // Exibe o Bestiário
+    public void exibirBestiario() {
+        System.out.println(Cores.CYAN + "\n=== BESTIÁRIO (Monstros Derrotados) ===" + Cores.RESET);
+        int descobertos = 0;
+
+        // Percorre a lista MESTRA (todos que existem)
+        for (String monstro : TODOS_MONSTROS) {
+            if (monstrosDerrotados.contains(monstro)) {
+                // Se já matou: Nome em Verde
+                System.out.println(Cores.GREEN + "☑ " + monstro + Cores.RESET);
+                descobertos++;
+            } else {
+                // Se não matou: ??? em Vermelho
+                System.out.println(Cores.RED + "☐ ???" + Cores.RESET);
+            }
+        }
+        
+        System.out.println("---------------------------------------");
+        System.out.println("Progresso: " + descobertos + "/" + TODOS_MONSTROS.length);
+    }
+
+    // Exibe as Conquistas
+    public void exibirConquistas() {
+        System.out.println(Cores.YELLOW_BOLD + "\n=== SALA DE TROFÉUS (Conquistas) ===" + Cores.RESET);
+        int desbloqueadas = 0;
+
+        for (String conquista : TODAS_CONQUISTAS) {
+            if (conquistas.contains(conquista)) {
+                // Desbloqueada: Amarelo Brilhante
+                System.out.println(Cores.YELLOW + "🏆 " + conquista + Cores.RESET);
+                desbloqueadas++;
+            } else {
+                // Bloqueada: Cinza ou Branco fraco (usando texto normal)
+                System.out.println("(Bloqueado)");
+            }
+        }
+        
+        System.out.println("---------------------------------------");
+        System.out.println("Progresso: " + desbloqueadas + "/" + TODAS_CONQUISTAS.length);
     }
 }

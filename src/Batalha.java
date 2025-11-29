@@ -88,38 +88,58 @@ public class Batalha {
         // Abre o inventário antes da batalha
         gerenciarInventario();
 
-        // --- MENU DE DECISÃO INTELIGENTE ---
-        System.out.println("\nO que você deseja fazer?");
-        System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
-        System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
-        
-        int escolhaJornada = 0;
-        try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
-
         // Variável para saber qual capítulo vamos carregar
         int capituloParaJogar = heroi.getCapitulo(); 
         boolean ehFarm = false; // Para saber se avança a história ou não
+        boolean decidiu = false;
 
-        if (escolhaJornada == 2) {
-            ehFarm = true;
-            System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO PARA FARMAR ===" + Cores.RESET);
+        while (!decidiu) {
             
-            // Lista do 0 até o capítulo atual
-            for (int i = 0; i <= heroi.getCapitulo(); i++) {
-                System.out.println(i + ". Capítulo " + i);
+            System.out.println("\nO que você deseja fazer?");
+            System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
+            System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+            System.out.println("3. Ver Diário (Bestiário/Conquistas)");
+            
+            int escolhaJornada = 0;
+            try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
+
+            if (escolhaJornada == 1) {
+                decidiu = true; // Sai do loop e vai lutar
             }
-            
-            System.out.print("Digite o número do capítulo: ");
-            try { 
-                capituloParaJogar = scanner.nextInt(); 
+            else if (escolhaJornada == 2) {
+                ehFarm = true;
+                System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO ===" + Cores.RESET);
+                
+                // Lista do 0 até o capítulo atual
+                for (int i = 0; i <= heroi.getCapitulo(); i++) {
+                    System.out.println(i + ". Capítulo " + i);
+                }
+                
+                System.out.print("Digite o número do capítulo: ");
+                try { 
+                    capituloParaJogar = scanner.nextInt(); 
+                    scanner.nextLine();
+                } catch(Exception e) { scanner.nextLine(); }
+                
+                // Segurança: Se o cara tentar pular fase digitando 99
+                if (capituloParaJogar > heroi.getCapitulo()) {
+                    System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
+                    capituloParaJogar = heroi.getCapitulo();
+                }
+
+                decidiu = true; // Sai do loop e vai lutar
+            }
+            else if (escolhaJornada == 3) {
+                // Mostra e CONTINUA no loop (decidiu = false)
+                heroi.exibirBestiario();
+                heroi.exibirConquistas();
+                System.out.println("\n[Pressione ENTER para voltar]");
                 scanner.nextLine();
-            } catch(Exception e) { scanner.nextLine(); }
-            
-            // Segurança: Se o cara tentar pular fase digitando 99
-            if (capituloParaJogar > heroi.getCapitulo()) {
-                System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
-                capituloParaJogar = heroi.getCapitulo();
             }
+            else {
+                System.out.println("Opção inválida.");
+            }
+
         }
 
         // O Capítulo define quem é o monstro da vez
