@@ -768,7 +768,7 @@ public class Batalha {
                 // Item novo!
                 System.out.println(Cores.PURPLE + "\nDROP! O monstro deixou cair: " + loot.getNome() + "!" + Cores.RESET);
                 System.out.println(Cores.CYAN + "Tipo: " + loot.getSlot() + " | Bônus: +" + loot.getAumentoStatus() + Cores.RESET);
-                heroi.getInventario().adicionar(loot);
+                heroi.guardarItem(loot);
             }
         }
     }

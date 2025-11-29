@@ -45,7 +45,9 @@ public class Personagem {
         "Milionário",      // Ter 1000 de ouro
         "Sobrevivente",    // Vencer com menos de 10% de vida
         "Lenda Viva",      // Chegar no Nível 10
-        "Matador de Reis"  // Matar o Dragão
+        "Matador de Reis",  // Matar o Dragão
+        "Colecionador", // Ter 5 itens na mochila
+        "Acumulador" // Ter 10 itens na mochila
     };
 
     // Construtor
@@ -472,7 +474,7 @@ public class Personagem {
     public void comprarItem(Item item) {
         if (this.ouro >= item.getPreco()) {
             this.ouro -= item.getPreco();
-            this.inventario.adicionar(item); // Guarda na mochila
+            this.guardarItem(item);
             System.out.println(Cores.GREEN + "Compra realizada! Saldo atual: " + this.ouro + Cores.RESET);
         } else {
             System.out.println(Cores.RED + "Ouro insuficiente! (" + this.ouro + "/" + item.getPreco() + ")" + Cores.RESET);
@@ -482,6 +484,22 @@ public class Personagem {
     // Usa uma poção do inventário
     public void usarPocao(int indice) {
         this.inventario.usarItem(indice, this);
+    }
+
+    // Método inteligente para receber itens (Loot ou Ganho)
+    public void guardarItem(Item item) {
+        // 1. Adiciona na mochila
+        this.inventario.adicionar(item);
+        
+        // 2. Checa a Conquista "Colecionador"
+        if (this.inventario.getTotalItens() >= 5) {
+            desbloquearConquista("Colecionador");
+        }
+        
+        // 3. Checa a Conquista "Acumulador"
+        if (this.inventario.getTotalItens() >= 10) {
+            desbloquearConquista("Acumulador");
+        }
     }
     
     // Expoe o inventário para o menu saber o que tem dentro
@@ -651,11 +669,11 @@ public class Personagem {
         for (String monstro : TODOS_MONSTROS) {
             if (monstrosDerrotados.contains(monstro)) {
                 // Se já matou: Nome em Verde
-                System.out.println(Cores.GREEN + "☑ " + monstro + Cores.RESET);
+                System.out.println(Cores.GREEN + "[X] " + monstro + Cores.RESET);
                 descobertos++;
             } else {
                 // Se não matou: ??? em Vermelho
-                System.out.println(Cores.RED + "☐ ???" + Cores.RESET);
+                System.out.println(Cores.RED + "[ ] ???" + Cores.RESET);
             }
         }
         
@@ -671,11 +689,11 @@ public class Personagem {
         for (String conquista : TODAS_CONQUISTAS) {
             if (conquistas.contains(conquista)) {
                 // Desbloqueada: Amarelo Brilhante
-                System.out.println(Cores.YELLOW + "🏆 " + conquista + Cores.RESET);
+                System.out.println(Cores.YELLOW + "(*) " + conquista + Cores.RESET);
                 desbloqueadas++;
             } else {
                 // Bloqueada: Cinza ou Branco fraco (usando texto normal)
-                System.out.println("(Bloqueado)");
+                System.out.println("( ) (Bloqueado)");
             }
         }
         
