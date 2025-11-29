@@ -25,6 +25,8 @@ public class Personagem {
     private int xpLose; // Quanto XP ele tira
     private int ouroReward; // Quanto Ouro ele dá ao morrer
     private int ouroLose; // Quanto Ouro ele tira
+    private Equipamento armaEquipada;
+    private Equipamento armaduraEquipada;
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -206,6 +208,9 @@ public class Personagem {
     public int getOuroLose() { return ouroLose; }
     public void setOuroLose(int ouroLose) { this.ouroLose = ouroLose; }
 
+    public Equipamento getArma() { return armaEquipada; }
+    public Equipamento getArmadura() { return armaduraEquipada; }
+
     // Métodos de combate
     public int atacar(Personagem alvo) {
         int dado = random.nextInt(10);
@@ -235,14 +240,21 @@ public class Personagem {
             
             // GUERREIRO bate em Arqueiro/Fera
             if (this.classe.equalsIgnoreCase("Guerreiro")) {
+
                 if (alvo.getClasse().equalsIgnoreCase("Arqueiro") || alvo.getClasse().equalsIgnoreCase("Fera")) {
                     System.out.println("VANTAGEM: Sua lâmina corta fundo em " + alvo.getNome() + "!");
                     danoTotal += 5;
+                }
+
+                if (armaduraEquipada != null) {
+                    danoTotal += this.armaEquipada.getAumentoStatus();
+                    System.out.println(Cores.YELLOW + "Atacando com " + this.armaEquipada.getNome() + " (+" + this.armaEquipada.getAumentoStatus() + " Dano)!" + Cores.RESET);
                 }
             }
 
             // MAGO bate em Guerreiro
             else if (this.classe.equalsIgnoreCase("Mago")) {
+
                 if (alvo.getClasse().equalsIgnoreCase("Guerreiro")) {
                     System.out.println("VANTAGEM: Sua magia derrete a armadura de " + alvo.getNome() + "!");
                     danoTotal += 8;
@@ -279,7 +291,12 @@ public class Personagem {
 
     // Recebe dano considerando a defesa
     public void receberDano(int danoRecebido) {
-        int danoReal = danoRecebido - this.defesa;
+        
+        if (this.armaduraEquipada != null) {
+            int danoReal = danoRecebido - (this.defesa + this.armaduraEquipada.getAumentoStatus());
+        } else {
+            int danoReal = danoRecebido - this.defesa;
+        }
 
         if (danoReal < 0) {
             danoReal = 0;

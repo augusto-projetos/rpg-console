@@ -18,7 +18,7 @@ public class Equipamento extends Item {
 
     public String getSlot() { return slot; }
 
-    // --- SOBRESCRITA (Polimorfismo) ---
+    // Sobrescrita (Polimorfismo)
     @Override
     public String toSaveString() {
         // Formato: Nome,Tipo,ValorEfeito,Preco,AumentoStatus,Slot
