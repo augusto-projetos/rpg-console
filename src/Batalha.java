@@ -156,7 +156,27 @@ public class Batalha {
                     System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
                     heroi.ganharXp(monstro.getXpReward());
                     heroi.ganharOuro(monstro.getOuroReward());
+
+                    // Gera loot de equipamento
                     gerarLootEquipamento();
+
+                    // Registra monstro derrotado
+                    heroi.registrarVitoria(monstro.getNome());
+
+                    // GATILHO DE CONQUISTA: Primeiro Sangue
+                    heroi.desbloquearConquista("Primeiro Sangue");
+
+                    // GATILHO DE CONQUISTA: Matador de Reis
+                    if (monstro.getNome().contains("Dragão Ancião")) {
+                        heroi.desbloquearConquista("Matador de Reis");
+                    }
+
+                    // GATILHO DE CONQUISTA: Sobrevivente
+                    double dezPorcentoVida = heroi.getVidaMaxima() * 0.1;
+                    if (heroi.getVida() <= dezPorcentoVida) {
+                        heroi.desbloquearConquista("Sobrevivente");
+                    }
+
                     // Salva automático
                     JogoSalvo.salvar(heroi);
                 } else {

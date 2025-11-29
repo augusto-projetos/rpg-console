@@ -410,6 +410,11 @@ public class Personagem {
             System.out.println("Força +3 | Defesa +2 | Des/Agi +1");
             System.out.println("------------------------------------------\n" + Cores.RESET);
         }
+
+        // GATILHO DE CONQUISTA: Lenda Viva
+        if (this.nivel >= 10) {
+            desbloquearConquista("Lenda Viva");
+        }
     }
 
     // Perde uma porcentagem do XP atual
@@ -429,11 +434,27 @@ public class Personagem {
     public void ganharOuro(int quantidade) {
         this.ouro += quantidade;
         System.out.println(Cores.YELLOW + this.nome + " encontrou " + quantidade + " moedas de ouro!" + Cores.RESET);
+
+        // GATILHO DE CONQUISTA: Rico e Milionário
+        if (this.ouro >= 500) {
+            desbloquearConquista("Rico");
+        }
+        if (this.ouro >= 1000) {
+            desbloquearConquista("Milionário");
+        }
     }
 
     // Adiciona Ouro (usado na venda de itens)
     public void adicionarOuro(int quantidade) {
         this.ouro += quantidade;
+
+        // GATILHO DE CONQUISTA: Rico e Milionário
+        if (this.ouro >= 500) {
+            desbloquearConquista("Rico");
+        }
+        if (this.ouro >= 1000) {
+            desbloquearConquista("Milionário");
+        }
     }
 
     // Perde uma porcentagem de Ouro (cai do bolso na derrota)
