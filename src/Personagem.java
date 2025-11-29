@@ -515,4 +515,57 @@ public class Personagem {
 
         return podeAgir;
     }
+
+    public void equiparItem(Equipamento novoEquipamento) {
+        
+        // 1. Verifica Slot Mão (Arma)
+        if (novoEquipamento.getSlot().equals("Mao")) {
+            // Se já tem algo equipado, devolve pra mochila para não perder
+            if (this.armaEquipada != null) {
+                System.out.println(Cores.YELLOW + "Guardando " + this.armaEquipada.getNome() + " na mochila..." + Cores.RESET);
+                this.inventario.adicionar(this.armaEquipada);
+            }
+            
+            // Equipa o novo
+            this.armaEquipada = novoEquipamento;
+            System.out.println(Cores.GREEN + "Você empunhou: " + novoEquipamento.getNome() + " (+" + novoEquipamento.getAumentoStatus() + " Dano)" + Cores.RESET);
+        } 
+        
+        // 2. Verifica Slot Corpo (Armadura)
+        else if (novoEquipamento.getSlot().equals("Corpo")) {
+            if (this.armaduraEquipada != null) {
+                System.out.println(Cores.YELLOW + "Guardando " + this.armaduraEquipada.getNome() + " na mochila..." + Cores.RESET);
+                this.inventario.adicionar(this.armaduraEquipada);
+            }
+            
+            this.armaduraEquipada = novoEquipamento;
+            System.out.println(Cores.GREEN + "Você vestiu: " + novoEquipamento.getNome() + " (+" + novoEquipamento.getAumentoStatus() + " Defesa)" + Cores.RESET);
+        }
+    }
+
+    // Método para mostrar na tela o que o herói está vestindo
+    public void exibirEquipamentos() {
+        System.out.println(Cores.CYAN + "--- EQUIPAMENTOS ---" + Cores.RESET);
+        
+        if (armaEquipada != null) {
+            System.out.println("Mão Direita: " + Cores.YELLOW + armaEquipada.getNome() + 
+                               " (+" + armaEquipada.getAumentoStatus() + " Dano)" + Cores.RESET);
+        } else {
+            System.out.println("Mão Direita: (Vazio)");
+        }
+
+        if (armaduraEquipada != null) {
+            System.out.println("Corpo: " + Cores.YELLOW + armaduraEquipada.getNome() + 
+                               " (+" + armaduraEquipada.getAumentoStatus() + " Defesa)" + Cores.RESET);
+        } else {
+            System.out.println("Corpo: (Vazio)");
+        }
+        
+        // Mostra o total calculado
+        int ataqueTotal = this.forca + (armaEquipada != null ? armaEquipada.getAumentoStatus() : 0);
+        int defesaTotal = this.defesa + (armaduraEquipada != null ? armaduraEquipada.getAumentoStatus() : 0);
+        
+        System.out.println("Status Totais: Ataque " + ataqueTotal + " | Defesa " + defesaTotal);
+        System.out.println("--------------------");
+    }
 }

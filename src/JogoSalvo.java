@@ -43,6 +43,19 @@ public class JogoSalvo {
             dados.append(heroi.getAgilidade()).append("\n");
             dados.append(heroi.getDestreza()).append("\n");
 
+            // Equipamentos
+            if (heroi.getArma() != null) {
+                dados.append(heroi.getArma().toSaveString()).append("\n");
+            } else {
+                dados.append("VAZIO").append("\n");
+            }
+
+            if (heroi.getArmadura() != null) {
+                dados.append(heroi.getArmadura().toSaveString()).append("\n");
+            } else {
+                dados.append("VAZIO").append("\n");
+            }
+
             // Status
             dados.append(heroi.getEfeitoStatus()).append("\n");
             dados.append(heroi.getTurnosStatus()).append("\n");
@@ -120,11 +133,13 @@ public class JogoSalvo {
             int agilidade = Integer.parseInt(linhas[12]);
             int destreza = Integer.parseInt(linhas[13]);
             
-            String efeitoStatus = linhas[14];
-            int turnosStatus = Integer.parseInt(linhas[15]);
-            int danoStatus = Integer.parseInt(linhas[16]);
+            String linhaArma = linhas[14];
+            String linhaArmadura = linhas[15];
+            String efeitoStatus = linhas[16];
+            int turnosStatus = Integer.parseInt(linhas[17]);
+            int danoStatus = Integer.parseInt(linhas[18]);
             
-            String dadosInventario = (linhas.length > 17) ? linhas[17] : "VAZIO";
+            String dadosInventario = (linhas.length > 19) ? linhas[19] : "VAZIO";
 
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
@@ -140,6 +155,17 @@ public class JogoSalvo {
             heroiCarregado.setDestreza(destreza);
             heroiCarregado.getInventario().carregarDoSave(dadosInventario);
             heroiCarregado.receberStatus(efeitoStatus, turnosStatus, danoStatus);
+
+            if (!linhaArma.equals("VAZIO")) {
+                // Usa nossa fábrica de itens para recriar a espada e equipar direto
+                Equipamento arma = (Equipamento) Item.fromSaveString(linhaArma);
+                heroiCarregado.equiparItem(arma);
+            }
+            
+            if (!linhaArmadura.equals("VAZIO")) {
+                Equipamento armadura = (Equipamento) Item.fromSaveString(linhaArmadura);
+                heroiCarregado.equiparItem(armadura);
+            }
             
             System.out.println(Cores.GREEN + "Jogo carregado com sucesso!" + Cores.RESET);
             return heroiCarregado;

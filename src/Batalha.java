@@ -136,6 +136,7 @@ public class Batalha {
                     System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
                     heroi.ganharXp(monstro.getXpReward());
                     heroi.ganharOuro(monstro.getOuroReward());
+                    gerarLootEquipamento();
                     // Salva automático
                     JogoSalvo.salvar(heroi);
                 } else {
@@ -187,9 +188,21 @@ public class Batalha {
                 break; // Sai do loop imediatamente (vai pro Game Over)
             }
 
+            // Calcula poder total só para mostrar no HUD
+            int ataqueTotal = heroi.getForca();
+            if (heroi.getArma() != null) ataqueTotal += heroi.getArma().getAumentoStatus();
+            
+            int defesaTotal = heroi.getDefesa();
+            if (heroi.getArmadura() != null) defesaTotal += heroi.getArmadura().getAumentoStatus();
+
             System.out.println("-------------------------------------------------");
+            // Mostra: Luiz: 100/100 HP | 50/50 MP | ATK: 25 (15+10)
             System.out.println(Cores.GREEN + heroi.getNome() + ": " + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " +
                                Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
+            
+            System.out.println("Atributos: " + Cores.YELLOW + "ATK " + ataqueTotal + Cores.RESET + " / " + 
+                               Cores.YELLOW + "DEF " + defesaTotal + Cores.RESET);
+            
             System.out.println(Cores.RED + monstro.getNome() + ": " + monstro.getVida() + "/" + monstro.getVidaMaxima() + " HP" + Cores.RESET);
             System.out.println("-------------------------------------------------");
 
@@ -629,6 +642,93 @@ public class Batalha {
                         Cores.GREEN + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP" + Cores.RESET + " | " + 
                         Cores.BLUE + heroi.getMana() + "/" + heroi.getManaMaxima() + " MP" + Cores.RESET);
                 }
+            }
+        }
+    }
+
+    // Gera um equipamento baseado na classe e progresso
+    private void gerarLootEquipamento() {
+        // 30% de chance de dropar um equipamento (para não encher a mochila de lixo)
+        if (random.nextInt(100) > 30) {
+            return; // Azar, não caiu nada (só ouro/xp)
+        }
+
+        int tier = 1;
+        // Define o Tier baseado no capítulo atual
+        if (heroi.getCapitulo() > 3) tier = 2;
+        if (heroi.getCapitulo() > 5) tier = 3;
+
+        Equipamento loot = null;
+        String classeHeroi = heroi.getClasse();
+        
+        // Sorteia se vai cair Arma (0) ou Armadura (1)
+        boolean dropArma = random.nextBoolean(); 
+
+        // --- GUERREIRO ---
+        if (classeHeroi.equals("Guerreiro")) {
+            if (dropArma) {
+                if (tier == 1) loot = new Equipamento("Espada Enferrujada", "Arma", 5, 50, "Mao", "Guerreiro");
+                if (tier == 2) loot = new Equipamento("Espada de Aço", "Arma", 12, 200, "Mao", "Guerreiro");
+                if (tier == 3) loot = new Equipamento("Excalibur", "Arma", 25, 1000, "Mao", "Guerreiro");
+            } else {
+                if (tier == 1) loot = new Equipamento("Peitoral de Couro", "Armadura", 3, 50, "Corpo", "Guerreiro");
+                if (tier == 2) loot = new Equipamento("Cota de Malha", "Armadura", 8, 200, "Corpo", "Guerreiro");
+                if (tier == 3) loot = new Equipamento("Armadura de Dragão", "Armadura", 18, 1000, "Corpo", "Guerreiro");
+            }
+        }
+        
+        // --- MAGO ---
+        else if (classeHeroi.equals("Mago")) {
+            if (dropArma) {
+                if (tier == 1) loot = new Equipamento("Varinha de Madeira", "Arma", 8, 50, "Mao", "Mago");
+                if (tier == 2) loot = new Equipamento("Cajado de Cristal", "Arma", 18, 200, "Mao", "Mago");
+                if (tier == 3) loot = new Equipamento("Cetro do Vazio", "Arma", 35, 1000, "Mao", "Mago"); // Mago tem dano alto
+            } else {
+                if (tier == 1) loot = new Equipamento("Manto Velho", "Armadura", 1, 50, "Corpo", "Mago");
+                if (tier == 2) loot = new Equipamento("Túnica Mágica", "Armadura", 4, 200, "Corpo", "Mago");
+                if (tier == 3) loot = new Equipamento("Manto das Sombras", "Armadura", 10, 1000, "Corpo", "Mago"); // Defesa baixa proposital
+            }
+        }
+
+        // --- ARQUEIRO ---
+        else if (classeHeroi.equals("Arqueiro")) {
+            if (dropArma) {
+                if (tier == 1) loot = new Equipamento("Arco Curto", "Arma", 6, 50, "Mao", "Arqueiro");
+                if (tier == 2) loot = new Equipamento("Besta Pesada", "Arma", 14, 200, "Mao", "Arqueiro");
+                if (tier == 3) loot = new Equipamento("Arco Élfico", "Arma", 28, 1000, "Mao", "Arqueiro");
+            } else {
+                if (tier == 1) loot = new Equipamento("Colete de Pano", "Armadura", 2, 50, "Corpo", "Arqueiro");
+                if (tier == 2) loot = new Equipamento("Colete de Couro", "Armadura", 6, 200, "Corpo", "Arqueiro");
+                if (tier == 3) loot = new Equipamento("Traje de Caçador", "Armadura", 14, 1000, "Corpo", "Arqueiro");
+            }
+        }
+
+        if (loot != null) {
+            // VERIFICAÇÃO DE DUPLICIDADE
+            
+            boolean jaTemNaMochila = heroi.getInventario().possuiItem(loot.getNome());
+            
+            boolean jaTemEquipado = false;
+            // Verifica se está na mão (protegendo contra null)
+            if (heroi.getArma() != null && heroi.getArma().getNome().equals(loot.getNome())) {
+                jaTemEquipado = true;
+            }
+            // Verifica se está no corpo (protegendo contra null)
+            if (heroi.getArmadura() != null && heroi.getArmadura().getNome().equals(loot.getNome())) {
+                jaTemEquipado = true;
+            }
+
+            // DECISÃO: DAR O ITEM OU VENDER?
+            if (jaTemNaMochila || jaTemEquipado) {
+                int valorVenda = loot.getPreco() / 2;
+                heroi.ganharOuro(valorVenda);
+                System.out.println(Cores.YELLOW + "DROP REPETIDO: Você já tem " + loot.getNome() + "." + Cores.RESET);
+                System.out.println(Cores.YELLOW + "O item foi convertido em " + valorVenda + " moedas de ouro." + Cores.RESET);
+            } else {
+                // Item novo!
+                System.out.println(Cores.PURPLE + "\nDROP! O monstro deixou cair: " + loot.getNome() + "!" + Cores.RESET);
+                System.out.println(Cores.CYAN + "Tipo: " + loot.getSlot() + " | Bônus: +" + loot.getAumentoStatus() + Cores.RESET);
+                heroi.getInventario().adicionar(loot);
             }
         }
     }
