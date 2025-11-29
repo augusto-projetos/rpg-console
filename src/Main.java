@@ -8,7 +8,7 @@ public class Main {
         Batalha batalha = new Batalha();
         Personagem heroi = null;
         
-        System.out.println(Cores.YELLOW_BOLD + "=== RPG CONSOLE v2.4 ===" + Cores.RESET);
+        System.out.println(Cores.YELLOW_BOLD + "=== RPG CONSOLE v2.5 ===" + Cores.RESET);
         System.out.println("1. Novo Jogo");
         System.out.println("2. Carregar Jogo");
         System.out.println("3. Sair");

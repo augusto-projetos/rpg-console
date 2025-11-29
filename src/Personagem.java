@@ -25,6 +25,8 @@ public class Personagem {
     private int xpLose; // Quanto XP ele tira
     private int ouroReward; // Quanto Ouro ele dá ao morrer
     private int ouroLose; // Quanto Ouro ele tira
+    private Equipamento armaEquipada;
+    private Equipamento armaduraEquipada;
 
     // Construtor
     public Personagem(String nome, int vida, int forca, int defesa, String classe) {
@@ -206,6 +208,9 @@ public class Personagem {
     public int getOuroLose() { return ouroLose; }
     public void setOuroLose(int ouroLose) { this.ouroLose = ouroLose; }
 
+    public Equipamento getArma() { return armaEquipada; }
+    public Equipamento getArmadura() { return armaduraEquipada; }
+
     // Métodos de combate
     public int atacar(Personagem alvo) {
         int dado = random.nextInt(10);
@@ -235,6 +240,7 @@ public class Personagem {
             
             // GUERREIRO bate em Arqueiro/Fera
             if (this.classe.equalsIgnoreCase("Guerreiro")) {
+
                 if (alvo.getClasse().equalsIgnoreCase("Arqueiro") || alvo.getClasse().equalsIgnoreCase("Fera")) {
                     System.out.println("VANTAGEM: Sua lâmina corta fundo em " + alvo.getNome() + "!");
                     danoTotal += 5;
@@ -243,6 +249,7 @@ public class Personagem {
 
             // MAGO bate em Guerreiro
             else if (this.classe.equalsIgnoreCase("Mago")) {
+
                 if (alvo.getClasse().equalsIgnoreCase("Guerreiro")) {
                     System.out.println("VANTAGEM: Sua magia derrete a armadura de " + alvo.getNome() + "!");
                     danoTotal += 8;
@@ -273,6 +280,16 @@ public class Personagem {
                 danoTotal += 6;
             }
         }
+
+        // --- 4. BÔNUS DO EQUIPAMENTO ---
+        if (armaEquipada != null) {
+            String classeDaArma = this.armaEquipada.getClasseIdeal();
+
+            if (classeDaArma.equalsIgnoreCase(this.classe)) {
+                danoTotal += this.armaEquipada.getAumentoStatus();
+                System.out.println(Cores.YELLOW + "Atacando com " + this.armaEquipada.getNome() + " (+" + this.armaEquipada.getAumentoStatus() + " Dano)!\n" + Cores.RESET);
+            }
+        }
         
         return danoTotal;
     }
@@ -280,6 +297,15 @@ public class Personagem {
     // Recebe dano considerando a defesa
     public void receberDano(int danoRecebido) {
         int danoReal = danoRecebido - this.defesa;
+        
+        if (this.armaduraEquipada != null) {
+            String classeDaArmadura = this.armaduraEquipada.getClasseIdeal();
+
+            if (classeDaArmadura.equalsIgnoreCase(this.classe)) {
+                danoReal = danoRecebido - (this.defesa + this.armaduraEquipada.getAumentoStatus());
+                System.out.println(Cores.YELLOW + "Defendendo com " + this.armaduraEquipada.getNome() + " (+" + this.armaduraEquipada.getAumentoStatus() + " Defesa)!\n" + Cores.RESET);
+            }
+        }
 
         if (danoReal < 0) {
             danoReal = 0;
@@ -375,6 +401,11 @@ public class Personagem {
     public void ganharOuro(int quantidade) {
         this.ouro += quantidade;
         System.out.println(Cores.YELLOW + this.nome + " encontrou " + quantidade + " moedas de ouro!" + Cores.RESET);
+    }
+
+    // Adiciona Ouro (usado na venda de itens)
+    public void adicionarOuro(int quantidade) {
+        this.ouro += quantidade;
     }
 
     // Perde uma porcentagem de Ouro (cai do bolso na derrota)
@@ -488,5 +519,58 @@ public class Personagem {
         }
 
         return podeAgir;
+    }
+
+    public void equiparItem(Equipamento novoEquipamento) {
+        
+        // 1. Verifica Slot Mão (Arma)
+        if (novoEquipamento.getSlot().equals("Mao")) {
+            // Se já tem algo equipado, devolve pra mochila para não perder
+            if (this.armaEquipada != null) {
+                System.out.println(Cores.YELLOW + "Guardando " + this.armaEquipada.getNome() + " na mochila..." + Cores.RESET);
+                this.inventario.adicionar(this.armaEquipada);
+            }
+            
+            // Equipa o novo
+            this.armaEquipada = novoEquipamento;
+            System.out.println(Cores.GREEN + "Você empunhou: " + novoEquipamento.getNome() + " (+" + novoEquipamento.getAumentoStatus() + " Dano)" + Cores.RESET);
+        } 
+        
+        // 2. Verifica Slot Corpo (Armadura)
+        else if (novoEquipamento.getSlot().equals("Corpo")) {
+            if (this.armaduraEquipada != null) {
+                System.out.println(Cores.YELLOW + "Guardando " + this.armaduraEquipada.getNome() + " na mochila..." + Cores.RESET);
+                this.inventario.adicionar(this.armaduraEquipada);
+            }
+            
+            this.armaduraEquipada = novoEquipamento;
+            System.out.println(Cores.GREEN + "Você vestiu: " + novoEquipamento.getNome() + " (+" + novoEquipamento.getAumentoStatus() + " Defesa)" + Cores.RESET);
+        }
+    }
+
+    // Método para mostrar na tela o que o herói está vestindo
+    public void exibirEquipamentos() {
+        System.out.println(Cores.CYAN + "--- EQUIPAMENTOS ---" + Cores.RESET);
+        
+        if (armaEquipada != null) {
+            System.out.println("Mão Direita: " + Cores.YELLOW + armaEquipada.getNome() + 
+                               " (+" + armaEquipada.getAumentoStatus() + " Dano)" + Cores.RESET);
+        } else {
+            System.out.println("Mão Direita: (Vazio)");
+        }
+
+        if (armaduraEquipada != null) {
+            System.out.println("Corpo: " + Cores.YELLOW + armaduraEquipada.getNome() + 
+                               " (+" + armaduraEquipada.getAumentoStatus() + " Defesa)" + Cores.RESET);
+        } else {
+            System.out.println("Corpo: (Vazio)");
+        }
+        
+        // Mostra o total calculado
+        int ataqueTotal = this.forca + (armaEquipada != null ? armaEquipada.getAumentoStatus() : 0);
+        int defesaTotal = this.defesa + (armaduraEquipada != null ? armaduraEquipada.getAumentoStatus() : 0);
+        
+        System.out.println("Status Totais: Ataque " + ataqueTotal + " | Defesa " + defesaTotal);
+        System.out.println("--------------------");
     }
 }
