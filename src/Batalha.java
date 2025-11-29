@@ -160,22 +160,8 @@ public class Batalha {
                     // Gera loot de equipamento
                     gerarLootEquipamento();
 
-                    // Registra monstro derrotado
-                    heroi.registrarVitoria(monstro.getNome());
-
-                    // GATILHO DE CONQUISTA: Primeiro Sangue
-                    heroi.desbloquearConquista("Primeiro Sangue");
-
-                    // GATILHO DE CONQUISTA: Matador de Reis
-                    if (monstro.getNome().contains("Dragão Ancião")) {
-                        heroi.desbloquearConquista("Matador de Reis");
-                    }
-
-                    // GATILHO DE CONQUISTA: Sobrevivente
-                    double dezPorcentoVida = heroi.getVidaMaxima() * 0.1;
-                    if (heroi.getVida() <= dezPorcentoVida) {
-                        heroi.desbloquearConquista("Sobrevivente");
-                    }
+                    // Desbloqueia conquistas
+                    verificarConquistas();
 
                     // Salva automático
                     JogoSalvo.salvar(heroi);
@@ -184,6 +170,9 @@ public class Batalha {
                     System.out.println(Cores.YELLOW + "Farm concluído!" + Cores.RESET);
                     heroi.ganharXp(monstro.getXpReward());
                     heroi.ganharOuro(monstro.getOuroReward());
+
+                    gerarLootEquipamento();
+                    verificarConquistas();
                     JogoSalvo.salvar(heroi);
                 }
 
@@ -770,6 +759,27 @@ public class Batalha {
                 System.out.println(Cores.CYAN + "Tipo: " + loot.getSlot() + " | Bônus: +" + loot.getAumentoStatus() + Cores.RESET);
                 heroi.guardarItem(loot);
             }
+        }
+    }
+
+    // Gatilho de Conquistas
+    private void verificarConquistas() {
+
+        // Registra monstro derrotado
+        heroi.registrarVitoria(monstro.getNome());
+
+        // GATILHO DE CONQUISTA: Primeiro Sangue
+        heroi.desbloquearConquista("Primeiro Sangue");
+
+        // GATILHO DE CONQUISTA: Matador de Reis
+        if (monstro.getNome().contains("Dragão Ancião")) {
+            heroi.desbloquearConquista("Matador de Reis");
+        }
+
+        // GATILHO DE CONQUISTA: Sobrevivente
+        double dezPorcentoVida = heroi.getVidaMaxima() * 0.1;
+        if (heroi.getVida() <= dezPorcentoVida) {
+            heroi.desbloquearConquista("Sobrevivente");
         }
     }
 }
