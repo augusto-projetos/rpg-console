@@ -88,38 +88,58 @@ public class Batalha {
         // Abre o inventário antes da batalha
         gerenciarInventario();
 
-        // --- MENU DE DECISÃO INTELIGENTE ---
-        System.out.println("\nO que você deseja fazer?");
-        System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
-        System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
-        
-        int escolhaJornada = 0;
-        try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
-
         // Variável para saber qual capítulo vamos carregar
         int capituloParaJogar = heroi.getCapitulo(); 
         boolean ehFarm = false; // Para saber se avança a história ou não
+        boolean decidiu = false;
 
-        if (escolhaJornada == 2) {
-            ehFarm = true;
-            System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO PARA FARMAR ===" + Cores.RESET);
+        while (!decidiu) {
             
-            // Lista do 0 até o capítulo atual
-            for (int i = 0; i <= heroi.getCapitulo(); i++) {
-                System.out.println(i + ". Capítulo " + i);
+            System.out.println("\nO que você deseja fazer?");
+            System.out.println("1. Continuar História (Jogar Capítulo " + heroi.getCapitulo() + ")");
+            System.out.println("2. Voltar para Farmar (Rejogar Capítulo Anterior)");
+            System.out.println("3. Ver Diário (Bestiário/Conquistas)");
+            
+            int escolhaJornada = 0;
+            try { escolhaJornada = scanner.nextInt(); scanner.nextLine(); } catch(Exception e) { scanner.nextLine(); }
+
+            if (escolhaJornada == 1) {
+                decidiu = true; // Sai do loop e vai lutar
             }
-            
-            System.out.print("Digite o número do capítulo: ");
-            try { 
-                capituloParaJogar = scanner.nextInt(); 
+            else if (escolhaJornada == 2) {
+                ehFarm = true;
+                System.out.println(Cores.CYAN + "\n=== ESCOLHA O CAPÍTULO ===" + Cores.RESET);
+                
+                // Lista do 0 até o capítulo atual
+                for (int i = 0; i <= heroi.getCapitulo(); i++) {
+                    System.out.println(i + ". Capítulo " + i);
+                }
+                
+                System.out.print("Digite o número do capítulo: ");
+                try { 
+                    capituloParaJogar = scanner.nextInt(); 
+                    scanner.nextLine();
+                } catch(Exception e) { scanner.nextLine(); }
+                
+                // Segurança: Se o cara tentar pular fase digitando 99
+                if (capituloParaJogar > heroi.getCapitulo()) {
+                    System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
+                    capituloParaJogar = heroi.getCapitulo();
+                }
+
+                decidiu = true; // Sai do loop e vai lutar
+            }
+            else if (escolhaJornada == 3) {
+                // Mostra e CONTINUA no loop (decidiu = false)
+                heroi.exibirBestiario();
+                heroi.exibirConquistas();
+                System.out.println("\n[Pressione ENTER para voltar]");
                 scanner.nextLine();
-            } catch(Exception e) { scanner.nextLine(); }
-            
-            // Segurança: Se o cara tentar pular fase digitando 99
-            if (capituloParaJogar > heroi.getCapitulo()) {
-                System.out.println("Você não pode ir para o futuro! Jogando capítulo atual.");
-                capituloParaJogar = heroi.getCapitulo();
             }
+            else {
+                System.out.println("Opção inválida.");
+            }
+
         }
 
         // O Capítulo define quem é o monstro da vez
@@ -136,7 +156,27 @@ public class Batalha {
                     System.out.println(Cores.GREEN_BOLD + "VITÓRIA! O " + monstro.getNome() + " caiu!" + Cores.RESET);
                     heroi.ganharXp(monstro.getXpReward());
                     heroi.ganharOuro(monstro.getOuroReward());
+
+                    // Gera loot de equipamento
                     gerarLootEquipamento();
+
+                    // Registra monstro derrotado
+                    heroi.registrarVitoria(monstro.getNome());
+
+                    // GATILHO DE CONQUISTA: Primeiro Sangue
+                    heroi.desbloquearConquista("Primeiro Sangue");
+
+                    // GATILHO DE CONQUISTA: Matador de Reis
+                    if (monstro.getNome().contains("Dragão Ancião")) {
+                        heroi.desbloquearConquista("Matador de Reis");
+                    }
+
+                    // GATILHO DE CONQUISTA: Sobrevivente
+                    double dezPorcentoVida = heroi.getVidaMaxima() * 0.1;
+                    if (heroi.getVida() <= dezPorcentoVida) {
+                        heroi.desbloquearConquista("Sobrevivente");
+                    }
+
                     // Salva automático
                     JogoSalvo.salvar(heroi);
                 } else {
@@ -728,7 +768,7 @@ public class Batalha {
                 // Item novo!
                 System.out.println(Cores.PURPLE + "\nDROP! O monstro deixou cair: " + loot.getNome() + "!" + Cores.RESET);
                 System.out.println(Cores.CYAN + "Tipo: " + loot.getSlot() + " | Bônus: +" + loot.getAumentoStatus() + Cores.RESET);
-                heroi.getInventario().adicionar(loot);
+                heroi.guardarItem(loot);
             }
         }
     }

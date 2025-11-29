@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.ArrayList;
 
 public class JogoSalvo {
     
@@ -44,17 +45,11 @@ public class JogoSalvo {
             dados.append(heroi.getDestreza()).append("\n");
 
             // Equipamentos
-            if (heroi.getArma() != null) {
-                dados.append(heroi.getArma().toSaveString()).append("\n");
-            } else {
-                dados.append("VAZIO").append("\n");
-            }
+            if (heroi.getArma() != null) dados.append(heroi.getArma().toSaveString()).append("\n");
+            else dados.append("VAZIO").append("\n");
 
-            if (heroi.getArmadura() != null) {
-                dados.append(heroi.getArmadura().toSaveString()).append("\n");
-            } else {
-                dados.append("VAZIO").append("\n");
-            }
+            if (heroi.getArmadura() != null) dados.append(heroi.getArmadura().toSaveString()).append("\n");
+            else dados.append("VAZIO").append("\n");
 
             // Status
             dados.append(heroi.getEfeitoStatus()).append("\n");
@@ -63,6 +58,10 @@ public class JogoSalvo {
             
             // Inventário
             dados.append(heroi.getInventario().toSaveString()).append("\n");
+
+            // Monstros Derrotados e Conquistas
+            dados.append(serializarLista(heroi.getMonstrosDerrotados())).append("\n");
+            dados.append(serializarLista(heroi.getConquistas())).append("\n");
 
             // 3. CRIPTOGRAFIA (Codifica para Base64)
             String dadosCriptografados = Base64.getEncoder().encodeToString(dados.toString().getBytes());
@@ -104,10 +103,9 @@ public class JogoSalvo {
             String[] linhas = dadosReais.split("\n");
 
             // --- VERIFICAÇÃO DE VERSÃO ---
-            // Na v2.4, temos 18 linhas de dados (incluindo inventário e capítulo).
-            // Se tiver menos que isso, é um save da v2.3 ou anterior.
-            if (linhas.length < 18) {
-                System.out.println(Cores.RED + "Save de versão antiga detectado e incompatível com a Campanha v2.4." + Cores.RESET);
+            // Na v3.0, temos 22 linhas de dados.
+            if (linhas.length < 22) {
+                System.out.println(Cores.RED + "Save de versão antiga detectado e incompatível com a Campanha v3.0." + Cores.RESET);
                 System.out.println(Cores.YELLOW + "Iniciando um novo jogo para garantir a experiência correta." + Cores.RESET);
                 // Deleta o arquivo velho para não atrapalhar o novo save
                 arquivo.delete();
@@ -141,6 +139,9 @@ public class JogoSalvo {
             
             String dadosInventario = (linhas.length > 19) ? linhas[19] : "VAZIO";
 
+            String dadosBestiario = linhas[20];
+            String dadosConquistas = linhas[21];
+
             Personagem heroiCarregado = new Personagem(nome, vidaMax, forca, defesa, classe);
             
             heroiCarregado.setNivel(nivel);
@@ -153,19 +154,21 @@ public class JogoSalvo {
             heroiCarregado.setManaMaxima(manaMax);
             heroiCarregado.setAgilidade(agilidade);
             heroiCarregado.setDestreza(destreza);
-            heroiCarregado.getInventario().carregarDoSave(dadosInventario);
-            heroiCarregado.receberStatus(efeitoStatus, turnosStatus, danoStatus);
 
             if (!linhaArma.equals("VAZIO")) {
-                // Usa nossa fábrica de itens para recriar a espada e equipar direto
                 Equipamento arma = (Equipamento) Item.fromSaveString(linhaArma);
                 heroiCarregado.equiparItem(arma);
             }
-            
             if (!linhaArmadura.equals("VAZIO")) {
                 Equipamento armadura = (Equipamento) Item.fromSaveString(linhaArmadura);
                 heroiCarregado.equiparItem(armadura);
             }
+
+            heroiCarregado.receberStatus(efeitoStatus, turnosStatus, danoStatus);
+            heroiCarregado.getInventario().carregarDoSave(dadosInventario);
+
+            heroiCarregado.setMonstrosDerrotados(deserializarLista(dadosBestiario));
+            heroiCarregado.setConquistas(deserializarLista(dadosConquistas));
             
             System.out.println(Cores.GREEN + "Jogo carregado com sucesso!" + Cores.RESET);
             return heroiCarregado;
@@ -174,5 +177,30 @@ public class JogoSalvo {
             System.out.println(Cores.RED + "Save corrompido ou modificado! Iniciando novo jogo." + Cores.RESET);
             return null;
         }
+    }
+
+    // --- MÉTODOS AUXILIARES PARA LISTAS ---
+    
+    // Transforma ArrayList em String: "Slime###Orc###Dragão"
+    private static String serializarLista(ArrayList<String> lista) {
+        if (lista.isEmpty()) return "VAZIO";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < lista.size(); i++) {
+            sb.append(lista.get(i));
+            if (i < lista.size() - 1) sb.append("###");
+        }
+        return sb.toString();
+    }
+
+    // Transforma String em ArrayList
+    private static ArrayList<String> deserializarLista(String dados) {
+        ArrayList<String> lista = new ArrayList<>();
+        if (dados.equals("VAZIO") || dados.isEmpty()) return lista;
+        
+        String[] partes = dados.split("###");
+        for (String s : partes) {
+            lista.add(s);
+        }
+        return lista;
     }
 }
