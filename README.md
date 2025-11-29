@@ -1,49 +1,56 @@
 # ⚔️ RPG Console - Java Adventure
 
 ![Status](https://img.shields.io/badge/STATUS-CONCLUÍDO-brightgreen?style=for-the-badge)
-![Versão](https://img.shields.io/github/v/release/augusto-projetos/rpg-console?style=for-the-badge&label=VERSÃO&color=blue)
+![Versão](https://img.shields.io/badge/RELEASE-v3.0.0-blue?style=for-the-badge)
 ![Linguagem](https://img.shields.io/badge/JAVA-100%25-orange?style=for-the-badge&logo=java)
 ![Licença](https://img.shields.io/github/license/augusto-projetos/rpg-console?style=for-the-badge)
 
-> **Um RPG de texto estratégico onde suas escolhas de classe definem seu destino.**
+> **Um RPG de texto estratégico onde suas escolhas, gerenciamento e sorte definem seu destino.**
 > 
-> Desenvolvido inteiramente em Java para rodar no console, este projeto foca na aplicação prática de Lógica de Programação, Orientação a Objetos (POO) e Game Design.
+> Desenvolvido inteiramente em Java para rodar no console, este projeto demonstra a aplicação prática de Arquitetura de Software, Lógica Avançada e Orientação a Objetos.
 
 ---
 
 ## 🎮 Sobre o Jogo
 
-O **RPG Console** simula uma campanha completa de RPG textual, combinando estratégia de combate com gestão de recursos. O jogador deve administrar Ouro e Mana, escolher táticas corretas e evoluir seu personagem para sobreviver a uma jornada de desafios crescentes.
+O **RPG Console** simula uma campanha completa de RPG. O jogador deve administrar Ouro e Mana, escolher táticas corretas e evoluir seu personagem para sobreviver a uma jornada de desafios crescentes. O jogo conta com persistência de dados, economia funcional e um sistema de combate profundo.
 
-### Principais Funcionalidades
+### 🌟 Destaques & Funcionalidades
 
-- **🛡️ Classes & Habilidades:** Escolha entre **Guerreiro**, **Mago** ou **Arqueiro**. Cada classe possui status únicos e **Habilidades Especiais** que consomem Mana (MP).
-- **💰 Economia & Loja:** Derrote monstros para ganhar Ouro. Visite o **Mercador** para comprar poções vitais ou investir em **Upgrades Permanentes** de força e defesa.
-- **💾 Sistema de Save/Load:** Seu progresso (Nível, Ouro, Atributos) é salvo localmente em arquivo criptografado, permitindo pausar e continuar sua aventura a qualquer momento.
-- **🔥 Mecânica de Vantagens:** Sistema tático estilo "Pedra, Papel e Tesoura". Escolher a classe certa contra o inimigo certo garante dano massivo.
-- **📖 Modo História:** O jogo segue uma narrativa linear com descrições imersivas e **escolhas de caminho** (ex: *Cemitério* ou *Acampamento*?).
-- **🎒 Sobrevivência Hardcore:** A Vida e Mana **não enchem automaticamente** entre os capítulos. Você deve gerenciar poções e encontrar Fontes Sagradas para continuar vivo.
-- **🔄 Sistema de Farm:** Travou em um chefe difícil? Volte para capítulos anteriores para treinar, ganhar XP e Ouro sem avançar a história.
-- **🗣️ NPCs & Lore:** O Mercador não apenas vende itens, ele vende **Informação**. Pague para ouvir rumores sobre fraquezas de chefes e segredos do mundo.
-- **📊 Interface Visual:** Barra de XP dinâmica e HUD informativo no terminal para acompanhar seu status.
-- **🎲 Fator Aleatoriedade:** Dano variável, chance de Crítico e mecânica de **Fúria** (Inimigos ficam mais perigosos quando estão morrendo).
-- **🧭 Eventos & Exploração:** O mundo é dinâmico. Entre batalhas, você pode encontrar tesouros, cair em armadilhas ou negociar com viajantes misteriosos.
+#### 🗡️ Combate e Estratégia
+- **Sistema de Classes:** Jogue como **Guerreiro** (Tanque), **Mago** (Dano Mágico) ou **Arqueiro** (Crítico). Cada um com status e mecânicas únicas.
+- **Habilidades e Mana:** Gerencie seus pontos de magia (MP) para lançar ataques especiais que nunca erram.
+- **Pedra, Papel e Tesoura:** Sistema de vantagens onde classes específicas causam dano massivo em tipos de inimigos específicos.
+- **Hit & Miss:** Ataques físicos dependem da sua Destreza contra a Agilidade do inimigo. Monstros rápidos podem esquivar!
+
+#### 🎒 Loot e Progressão
+- **Equipamentos Reais:** Monstros dropam armas e armaduras com Tiers de raridade. Equipar o item certo aumenta seu Dano e Defesa.
+- **Economia Viva:** Ganhe Ouro, compre poções vitais ou invista em **Upgrades Permanentes** no Ferreiro.
+- **Sobrevivência Hardcore:** Vida e Mana **não regeneram** sozinhas entre fases. A gestão de recursos é a chave da vitória.
+
+#### 🏆 Metagame (O Legado)
+- **Bestiário:** Um registro permanente de todas as criaturas derrotadas.
+- **Conquistas:** Sistema de *Achievements* que desbloqueia troféus por feitos heroicos (Ex: "Sobrevivente", "Milionário").
+- **Persistência Total:** Sistema de Save/Load criptografado que mantém seu progresso, inventário e conquistas.
+
+#### 🗺️ Mundo e Narrativa
+- **Modo História:** 9 Capítulos com narrativa imersiva e escolhas de caminho ramificadas.
+- **Eventos Aleatórios:** Encontre tesouros, caia em armadilhas ou negocie com viajantes misteriosos entre as batalhas.
+- **NPCs:** Interaja com o Mercador para comprar itens ou pagar por informações secretas (Lore).
 
 ---
 
-## ⚔️ Mecânicas de Combate
+## ⚔️ O Triângulo de Classes
 
-O sistema de batalha exige estratégia. Conheça as vantagens de cada classe:
-
-| Sua Classe | Vantagem Contra (+Dano) | Fraqueza/Desvantagem | Estilo de Jogo |
+| Classe | Vantagem Contra | Fraqueza | Estilo de Jogo |
 | :--- | :--- | :--- | :--- |
-| **⚔️ Guerreiro** | Arqueiros e Feras | Magos | **Tanque:** Alta Vida e Defesa. Aguenta pancada. |
-| **🔮 Mago** | Guerreiros (Orcs/Golems) | Arqueiros e Guerreiros | **Canhão de Vidro:** Dano Explosivo, mas morre rápido. |
-| **🏹 Arqueiro** | Feras (Dragões) e Magos | Guerreiros (Blindados) | **Tático:** Dano Crítico alto e equilibrado. |
+| **🛡️ Guerreiro** | Arqueiros e Feras | Magos | **Tanque:** Alta Vida e Defesa física. |
+| **🔮 Mago** | Guerreiros (Blindados) | Guerreiros | **Burst:** Dano Explosivo que ignora defesa. |
+| **🏹 Arqueiro** | Feras e Magos | - | **Tático:** Alta Precisão e Crítico. |
 
 ---
 
-## 🏆 A Campanha (Capítulos)
+## 🏆 A Campanha (Boss Rush)
 
 1.  **Prólogo:** O Despertar (Tutorial)
 2.  **Capítulo 1:** A Encruzilhada (Escolha seu Destino)
@@ -58,16 +65,16 @@ O sistema de batalha exige estratégia. Conheça as vantagens de cada classe:
 
 ## 🚀 Como Jogar
 
-### Opção 1: Para Jogadores (Executável Windows)
-Quer apenas jogar? Baixe a versão portátil que já vem com tudo configurado (não precisa instalar Java).
+### Opção 1: Para Jogadores (Windows)
+Baixe a versão portátil completa (Java embutido).
 
-1.  Vá até a aba **[Releases](../../releases)** deste repositório.
-2.  Baixe o arquivo `.zip` da versão mais recente.
-3.  Extraia a pasta e execute o arquivo `RPG-Console.exe`.
+1.  Vá até a aba **[Releases](../../releases)**.
+2.  Baixe o arquivo `.zip` da versão **v3.0.0**.
+3.  Extraia a pasta e execute:
+    * **`Corrigir_Cores.bat`** (Recomendado: Garante as cores do terminal - Encontra-se na v2.1).
+    * ou `RPG-Console.exe` (Padrão).
 
-> **⚠️ Aviso sobre Antivírus:**
-> O executável **não possui uma Assinatura Digital** (certificado pago). O Windows pode exibir um alerta de "Arquivo Desconhecido".
-> * **Para jogar:** Clique em *"Mais Informações"* -> *"Executar assim mesmo"*. O código é 100% seguro e aberto.
+> **⚠️ Nota:** Se o Windows exibir um alerta de segurança, é porque o aplicativo não possui certificado digital pago (comum em projetos open-source). Clique em *"Mais Informações"* -> *"Executar assim mesmo"*.
 
 ### Opção 2: Para Desenvolvedores (Código Fonte)
 1.  Clone o repositório:
@@ -75,25 +82,19 @@ Quer apenas jogar? Baixe a versão portátil que já vem com tudo configurado (n
     git clone https://github.com/augusto-projetos/rpg-console.git
     ```
 2.  Abra a pasta no **VS Code**.
-3.  Execute o arquivo `Main.java`.
+3.  Execute o arquivo `src/Main.java`.
 
 ---
 
-## 🛠️ Tecnologias e Conceitos
+## 🛠️ Tecnologias e Arquitetura
 
-Este projeto foi desenvolvido para consolidar conhecimentos avançados de Java:
+Este projeto foi construído para aplicar conceitos avançados de Java:
 
-* **Arquitetura Modular:** Separação clara de responsabilidades (`Capitulos.java` para narrativa, `Batalha.java` para sistema, `Personagem.java` para dados).
-* **POO (Programação Orientada a Objetos):**
-    * **Polimorfismo:** Comportamento de ataque e defesa variável por classe.
-    * **Encapsulamento:** Proteção de atributos vitais (`vidaMaxima`, `xp`) via Getters/Setters.
-* **Lógica de Programação:**
-    * Estruturas condicionais complexas (`switch`, `if/else`) para gerenciamento de fluxo de história.
-    * Laços de repetição (`while`, `do while`) para o game loop.
-* **Java Core:**
-    * `java.util.Scanner` com tratamento de exceções (`try-catch`).
-    * `Thread.sleep()` para efeito de digitação (narrativa).
-    * `File I/O` para sistema de Save/Load.
+* **Arquitetura Modular (MVC Simplificado):** Separação clara entre Lógica (`Personagem`), Sistema (`Batalha`) e Conteúdo (`Capitulos`).
+* **Collections Framework:** Uso extensivo de `ArrayList` para gerenciamento dinâmico de Inventário, Bestiário e Conquistas.
+* **Polimorfismo & Herança:** Sistema de Itens onde `Equipamento extends Item`, alterando comportamento de uso e salvamento.
+* **File I/O & Security:** Sistema de persistência robusto com serialização de dados e criptografia **Base64**.
+* **UX/UI no Console:** Feedback visual com cores ANSI, barras de progresso e tratamento de exceções (`try-catch`) para evitar crashes.
 
 ---
 
