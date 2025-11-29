@@ -403,6 +403,11 @@ public class Personagem {
         System.out.println(Cores.YELLOW + this.nome + " encontrou " + quantidade + " moedas de ouro!" + Cores.RESET);
     }
 
+    // Adiciona Ouro (usado na venda de itens)
+    public void adicionarOuro(int quantidade) {
+        this.ouro += quantidade;
+    }
+
     // Perde uma porcentagem de Ouro (cai do bolso na derrota)
     public void perderOuro(int porcentagem) {
         int perda = (this.ouro * porcentagem) / 100;

@@ -648,8 +648,8 @@ public class Batalha {
 
     // Gera um equipamento baseado na classe e progresso
     private void gerarLootEquipamento() {
-        // 30% de chance de dropar um equipamento (para não encher a mochila de lixo)
-        if (random.nextInt(100) > 30) {
+        // 20% de chance de dropar um equipamento (para não encher a mochila de lixo)
+        if (random.nextInt(100) > 20) {
             return; // Azar, não caiu nada (só ouro/xp)
         }
 
@@ -721,9 +721,9 @@ public class Batalha {
             // DECISÃO: DAR O ITEM OU VENDER?
             if (jaTemNaMochila || jaTemEquipado) {
                 int valorVenda = loot.getPreco() / 2;
-                heroi.ganharOuro(valorVenda);
                 System.out.println(Cores.YELLOW + "DROP REPETIDO: Você já tem " + loot.getNome() + "." + Cores.RESET);
                 System.out.println(Cores.YELLOW + "O item foi convertido em " + valorVenda + " moedas de ouro." + Cores.RESET);
+                heroi.adicionarOuro(valorVenda);
             } else {
                 // Item novo!
                 System.out.println(Cores.PURPLE + "\nDROP! O monstro deixou cair: " + loot.getNome() + "!" + Cores.RESET);
