@@ -38,16 +38,17 @@ public class Item {
     public static Item fromSaveString(String linha) {
         String[] partes = linha.split(",");
         
-        // Se tiver 6 partes, é um EQUIPAMENTO (Arma/Armadura)
-        if (partes.length == 6) {
+        // Se tiver 7 partes, é um EQUIPAMENTO (Arma/Armadura)
+        if (partes.length == 7) {
             String nome = partes[0];
             String tipo = partes[1];
             // partes[2] é o valorEfeito (0 para equips), pulamos ou usamos
             int preco = Integer.parseInt(partes[3]);
             int aumentoStatus = Integer.parseInt(partes[4]);
             String slot = partes[5];
+            String classeIdeal = partes[6];
             
-            return new Equipamento(nome, tipo, aumentoStatus, preco, slot);
+            return new Equipamento(nome, tipo, aumentoStatus, preco, slot, classeIdeal);
         } 
         
         // Se tiver 4 partes, é um ITEM COMUM (Poção)

@@ -245,11 +245,6 @@ public class Personagem {
                     System.out.println("VANTAGEM: Sua lâmina corta fundo em " + alvo.getNome() + "!");
                     danoTotal += 5;
                 }
-
-                if (armaduraEquipada != null) {
-                    danoTotal += this.armaEquipada.getAumentoStatus();
-                    System.out.println(Cores.YELLOW + "Atacando com " + this.armaEquipada.getNome() + " (+" + this.armaEquipada.getAumentoStatus() + " Dano)!" + Cores.RESET);
-                }
             }
 
             // MAGO bate em Guerreiro
@@ -285,17 +280,31 @@ public class Personagem {
                 danoTotal += 6;
             }
         }
+
+        // --- 4. BÔNUS DO EQUIPAMENTO ---
+        if (armaEquipada != null) {
+            String classeDaArma = this.armaEquipada.getClasseIdeal();
+
+            if (classeDaArma.equalsIgnoreCase(this.classe)) {
+                danoTotal += this.armaEquipada.getAumentoStatus();
+                System.out.println(Cores.YELLOW + "Atacando com " + this.armaEquipada.getNome() + " (+" + this.armaEquipada.getAumentoStatus() + " Dano)!\n" + Cores.RESET);
+            }
+        }
         
         return danoTotal;
     }
 
     // Recebe dano considerando a defesa
     public void receberDano(int danoRecebido) {
+        int danoReal = danoRecebido - this.defesa;
         
         if (this.armaduraEquipada != null) {
-            int danoReal = danoRecebido - (this.defesa + this.armaduraEquipada.getAumentoStatus());
-        } else {
-            int danoReal = danoRecebido - this.defesa;
+            String classeDaArmadura = this.armaduraEquipada.getClasseIdeal();
+
+            if (classeDaArmadura.equalsIgnoreCase(this.classe)) {
+                danoReal = danoRecebido - (this.defesa + this.armaduraEquipada.getAumentoStatus());
+                System.out.println(Cores.YELLOW + "Defendendo com " + this.armaduraEquipada.getNome() + " (+" + this.armaduraEquipada.getAumentoStatus() + " Defesa)!\n" + Cores.RESET);
+            }
         }
 
         if (danoReal < 0) {
